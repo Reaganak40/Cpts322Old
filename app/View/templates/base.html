@@ -1,0 +1,46 @@
+<!--    
+# ================================================================
+#   Name:           base html
+#   Description:    UI for site header
+#   Last Changed:   10/26/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Skeleton version of base html
+# ================================================================
+-->
+
+<html>
+    <head>
+       {% if title %}
+          <title>{{ title }} - Lab Opportunities </title>
+       {% else %}
+          <title> Welcome to the Post Portal! </title>
+       {% endif %}
+       <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+
+       {{ moment.include_moment() }}
+    </head>
+
+    <body>
+        <div class ="nav-container">
+        <table>
+            <tr>
+                <td><a href="{{ url_for('routes.index') }}" class = "button">Home</a></td>
+                
+            </tr>
+        </table>
+        </div>
+        <div>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                
+                <div class = "flash-container">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+            {% block content %} {% endblock %}
+        </div>
+
+    </body>
+</html>

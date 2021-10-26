@@ -10,6 +10,13 @@ login.login_view = 'auth.login'
 from flask_moment import Moment
 moment = Moment()
 
+# ================================================================
+#   Name:           Create App
+#   Description:    Congifures and runs program
+#   Last Changed:   10/26/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Basic Implementation of create app
+# ================================================================
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)

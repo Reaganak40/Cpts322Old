@@ -1,0 +1,50 @@
+/*
+# ================================================================
+#   Name:           MAIN CSS
+#   Description:    File contains all styling for app
+#   Last Changed:   10/26/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Skeleton version css
+#=================================================================
+*/
+
+body {
+    margin: 1px 1px 1px 15px;
+    padding: 1px;
+    font-family: Tahoma;
+    text-align: left;
+    
+  
+}
+.nav-container {
+    background:#f6f6f6;
+    font-family: Tahoma;
+    font-size: 12px;
+    height: 32px;
+    text-transform: uppercase;
+}
+a:hover {
+	color:#2387D9;
+}
+
+.button {
+    width : 75px;
+    padding : 3px;    
+    font-size: 16px;
+    margin : 5px;
+    padding : 5px;
+    border: 1px solid lightgray;
+}
+.button:hover {
+    background-color: 157dd3;
+    color: white;
+    cursor:pointer;
+}
+
+.flash-container {
+	background:#99c5ee;
+	font-family: Tahoma;
+	font-size: 16px;
+	padding: 25px;
+	margin: 10px 0px 10px 0px;
+}

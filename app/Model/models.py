@@ -5,13 +5,29 @@ from werkzeug.security import generate_password_hash,check_password_hash
 from flask_login import UserMixin
 from app import login
 
-postTags = db.Table('post_tags',
+# ================================================================
+# Gets User.id for logged in user
+# ================================================================
+@login.user_loader
+def load_user(id):
+    return User.query.get(int(id))
+
+# ================================================================
+# Relationship: Every post can have multiple tags
+# ================================================================
+postTags = db.Table('postTags',
     db.Column('post_id', db.Integer, db.ForeignKey('post.id')),
     db.Column('tag_id', db.Integer, db.ForeignKey('tag.id')))
 def __repr__(self):
         return '<Post ID: {} , Tag Name: {}>'.format(self.post_id,self.tag_name)
 
-
+# ================================================================
+#   Name:           User Model
+#   Description:    Class Definition for User
+#   Last Changed:   10/25/21
+#   Changed By:     Tay Jing Ren
+#   Change Details: Initial implementation of User class
+# ================================================================
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key = True)
     username = db.Column(db.String(64), unique = True, index = True)
@@ -34,22 +50,41 @@ class User(UserMixin, db.Model):
         return self.posts
     
     def is_student(self):
-        if self.user_type is 0:
+        if self.user_type == 0:
             return True
         return False
 
-
-class PositionPost(db.Model):
+# ================================================================
+#   Name:           Post Model
+#   Description:    Class Definition for Posts
+#   Last Changed:   10/26/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Changed class name from PositionPost to Post
+#                   Reason: Avoid relationship errors
+# ================================================================
+class Post(db.Model): 
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     title = db.Column(db.String(150))
     body = db.Column(db.String(1500))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    tags = db.relationship('Tag', backref = 'post_tags', secondary = postTags, primaryjoin = (postTags.c.post_id == id),  lazy = 'dynamic' )
+    tags = db.relationship('Tag', 
+        backref = db.backref('postTags', lazy='dynamic'), 
+        secondary = postTags, 
+        primaryjoin = (postTags.c.post_id == id),  
+        lazy = 'dynamic' 
+    )
 
 
     def get_tags(self):
         return self.tags
-
+# ================================================================
+#   Name:           Tag Model
+#   Description:    Class Definition for Tags
+#   Last Changed:   10/25/21
+#   Changed By:     Tay Jing Ren
+#   Change Details: Initial implementation of Tag class
+# ================================================================
 class Tag(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(20))
