@@ -24,3 +24,4 @@ bp_routes.template_folder = Config.TEMPLATE_FOLDER #'..\\View\\templates'
 @login_required
 def index():
     return render_template('index.html', title="Lab Opportunities")
+

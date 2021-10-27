@@ -1,10 +1,10 @@
 <!--    
 # ================================================================
-#   Name:           base html
+#   Name:           Added routes for login and logout
 #   Description:    UI for site header
-#   Last Changed:   10/26/21
-#   Changed By:     Reagan Kelley
-#   Change Details: Skeleton version of base html
+#   Last Changed:   10/27/21
+#   Changed By:     Tay Jing Ren
+#   Change Details: Added both auth login and logout routes to run on the webpage
 # ================================================================
 -->
 
@@ -26,6 +26,11 @@
             <tr>
                 <td><a href="{{ url_for('routes.index') }}" class = "button">Home</a></td>
                 
+                {% if current_user.is_anonymous %}
+                <td><a href="{{ url_for('auth.login') }}" class = "button"> Login </a></td>
+                {% else %}
+                <td><a href="{{ url_for('auth.logout') }}" class = "button"> Logout </a></td>
+                {% endif %}
             </tr>
         </table>
         </div>

@@ -16,9 +16,9 @@ bp_auth.template_folder = Config.TEMPLATE_FOLDER
 # ================================================================
 #   Name:           Register Route
 #   Description:    Handles Registers Forms, Creates an account for both student and faculty.
-#   Last Changed:   10/26/21
-#   Changed By:     Denise Tanumihardja
-#   Change Details: Initial implementation of register route. (taken from smile project)
+#   Last Changed:   10/27/21
+#   Changed By:     Tay Jing Ren
+#   Change Details: Change naming convention from form_auth to form 
 # ================================================================
 
 @bp_auth.route('/register', methods=['GET', 'POST'])
@@ -33,14 +33,14 @@ def register():
         if new_user.user_type is 0:
             return redirect(url_for('routes.index')) #Change depending on if student account or faculty account
         return redirect(url_for('routes.index')) #If user type is faculty (1)     
-    return render_template('register.html', form_auth = auth)
+    return render_template('register.html', form = auth)
 
 # ================================================================
 #   Name:           Login Route
 #   Description:    Handles Login Forms, Allows user to login
-#   Last Changed:   10/26/21
-#   Changed By:     Denise Tanumihardja
-#   Change Details: Initial implementation of login route. (taken from smile project)
+#   Last Changed:   10/27/21
+#   Changed By:     Tay Jing Ren
+#   Change Details: Change naming convention from login_form to form 
 # ================================================================
 @bp_auth.route('/login', methods = ['GET', 'POST'])
 def login(): 
@@ -57,7 +57,7 @@ def login():
             return redirect(url_for('routes.index')) #Change depending on if student account or faculty account
         login_user(user, remember = form_login.remember_me.data)
         return redirect(url_for('routes.index'))
-    return render_template('login.html', title='Sign In', login_form = form_login)
+    return render_template('login.html', title='Sign In', form = form_login)
 
 # ================================================================
 #   Name:           Logout Route
