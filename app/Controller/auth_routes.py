@@ -17,8 +17,8 @@ bp_auth.template_folder = Config.TEMPLATE_FOLDER
 #   Name:           Register Route
 #   Description:    Handles Registers Forms, Creates an account for both student and faculty.
 #   Last Changed:   10/27/21
-#   Changed By:     Tay Jing Ren
-#   Change Details: Change naming convention from form_auth to form 
+#   Changed By:     Reagan Kelley
+#   Change Details: Changed if statement to use is_student() 
 # ================================================================
 
 @bp_auth.route('/register', methods=['GET', 'POST'])
@@ -30,7 +30,7 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         flash('You are registered!')
-        if new_user.user_type is 0:
+        if new_user.is_student():
             return redirect(url_for('routes.index')) #Change depending on if student account or faculty account
         return redirect(url_for('routes.index')) #If user type is faculty (1)     
     return render_template('register.html', form = auth)
@@ -39,23 +39,30 @@ def register():
 #   Name:           Login Route
 #   Description:    Handles Login Forms, Allows user to login
 #   Last Changed:   10/27/21
-#   Changed By:     Tay Jing Ren
-#   Change Details: Change naming convention from login_form to form 
+#   Changed By:     Reagan Kelley
+#   Change Details: Changed if statement to use is_student() 
+#                   Fixed login bug (wasn't logging in)
 # ================================================================
 @bp_auth.route('/login', methods = ['GET', 'POST'])
 def login(): 
-    if current_user.is_authenticated:
+    if current_user.is_authenticated: ##current user is logged in -> redirect to index
         redirect(url_for('routes.index'))
+
     form_login = LoginForm()
     user = User()
     if form_login.validate_on_submit():
-        user.query.filter_by(username = form_login.username.data).first()
+        user = User.query.filter_by(username = form_login.username.data).first()
+        
         if (user is None) or (user.check_password(form_login.password.data) is False):
             flash('Invalid username or password.')
             return redirect(url_for('auth.login'))
-        if user.user_type is 0:
-            return redirect(url_for('routes.index')) #Change depending on if student account or faculty account
+        
+        print("Logging in")
         login_user(user, remember = form_login.remember_me.data)
+
+        if user.is_student(): ## user is a student
+            return redirect(url_for('routes.index')) #Change depending on if student account or faculty account
+
         return redirect(url_for('routes.index'))
     return render_template('login.html', title='Sign In', form = form_login)
 

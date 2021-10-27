@@ -6,11 +6,11 @@ from flask_login import UserMixin
 from app import login
 
 # ================================================================
-# Gets User.id for logged in user
+# Gets User.id for logged in user (updated 10/27/21): fixed int error
 # ================================================================
 @login.user_loader
 def load_user(id):
-    return User.query.get(int(id))
+    return User.query.get(id)
 
 # ================================================================
 # Relationship: Every post can have multiple tags
