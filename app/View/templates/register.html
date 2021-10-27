@@ -1,0 +1,46 @@
+<!--    
+# ================================================================
+#   Name:           register html
+#   Description:    UI for register route
+#   Last Changed:   10/27/21
+#   Changed By:     Tay Jing Ren
+#   Change Details: Implementation of registration page with labels and styling added for each labels
+# ================================================================
+-->
+
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Register</h1>
+
+    {% if form %}
+
+    <form action="" method="post">
+        
+            {{form.hidden_tag()}}
+
+            {{form.username.label}} <br>
+            {{form.username(class = "forminput")}} <br>
+
+            {{form.email.label}} <br>
+            {{form.email(class = "forminput")}} <br>
+
+            {{form.password.label}} <br>
+            {{form.password(class = "forminput")}} <br>
+
+            {{form.password2.label}} <br>
+            {{form.password2(class = "forminput")}} <br>
+
+            {{form.type.label}} <br>
+            {{form.type(class="formselect") }}<br>
+
+            <br>
+            {{form.submit(class = "button")}}
+
+    </form>
+
+
+    {% endif %}
+
+
+{% endblock %}
