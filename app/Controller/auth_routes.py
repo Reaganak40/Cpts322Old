@@ -3,6 +3,7 @@ import sys
 from flask import Blueprint
 from flask import render_template, flash, redirect, url_for
 from flask_sqlalchemy import sqlalchemy
+from app.Controller.routes import index
 from config import Config
 from app.Model.models import User
 from app import db
@@ -23,6 +24,9 @@ bp_auth.template_folder = Config.TEMPLATE_FOLDER
 
 @bp_auth.route('/register', methods=['GET', 'POST'])
 def register():
+    if current_user.is_authenticated: #logged in users can't re-register
+        flash('You are already registered!')
+        return redirect(url_for('routes.index')) #If user type is faculty (1)     
     auth = RegisterForm()
     if auth.validate_on_submit():
         new_user = User(username = auth.username.data, email = auth.email.data, user_type = auth.type.data)
