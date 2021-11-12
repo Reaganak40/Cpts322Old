@@ -7,9 +7,10 @@ from flask_login import current_user
 # ================================================================
 #   Name:           Register form
 #   Description:    Class definition for Registering new user
-#   Last Changed:   10/26/21
-#   Changed By:     Denise Tanumihardja
-#   Change Details: Initial implementation of RegisterForm class. (taken from smile project)
+#   Last Changed:   11/11/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Fixed Type Selection Field 
+#                   (Student and Faculty numbers we wrong)
 # ================================================================
 
 class RegisterForm(FlaskForm):
@@ -17,7 +18,7 @@ class RegisterForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     password2 = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
-    type = SelectField('User', choices = [(1, 'Student'), (0, 'Faculty')])
+    type = SelectField('User', choices = [(0, 'Student'), (1, 'Faculty')])
     submit = SubmitField('Register')
 
     def validate_username(self, username):

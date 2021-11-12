@@ -16,16 +16,16 @@ bp_auth.template_folder = Config.TEMPLATE_FOLDER
 # ================================================================
 #   Name:           Register Route
 #   Description:    Handles Registers Forms, Creates an account for both student and faculty.
-#   Last Changed:   10/27/21
+#   Last Changed:   11/11/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Changed if statement to use is_student() 
+#   Change Details: Added user_type to new_user initialization
 # ================================================================
 
 @bp_auth.route('/register', methods=['GET', 'POST'])
 def register():
     auth = RegisterForm()
     if auth.validate_on_submit():
-        new_user = User(username = auth.username.data, email = auth.email.data)
+        new_user = User(username = auth.username.data, email = auth.email.data, user_type = auth.type.data)
         new_user.set_password(auth.password.data)
         db.session.add(new_user)
         db.session.commit()

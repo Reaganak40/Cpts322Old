@@ -1,10 +1,10 @@
 <!--    
 # ================================================================
-#   Name:           Added routes for login and logout
+#   Name:           base html
 #   Description:    UI for site header
-#   Last Changed:   10/27/21
-#   Changed By:     Tay Jing Ren
-#   Change Details: Added both auth login and logout routes to run on the webpage
+#   Last Changed:   11/11/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Added New Post Link
 # ================================================================
 -->
 
@@ -26,10 +26,22 @@
             <tr>
                 <td><a href="{{ url_for('routes.index') }}" class = "button">Home</a></td>
                 
+                
+                  
                 {% if current_user.is_anonymous %}
-                <td><a href="{{ url_for('auth.login') }}" class = "button"> Login </a></td>
+
+                    <td><a href="{{ url_for('auth.login') }}" class = "button"> Login </a></td>
+
                 {% else %}
-                <td><a href="{{ url_for('auth.logout') }}" class = "button"> Logout </a></td>
+
+                    {% if current_user.is_student() %}
+                        
+                    {% else %}
+                        <td><a href="{{ url_for('routes.postposition') }}" class = "button"> New Post </a></td>
+                    {% endif %}
+                    
+                    <td><a href="{{ url_for('auth.logout') }}" class = "button"> Logout </a></td>
+
                 {% endif %}
             </tr>
         </table>

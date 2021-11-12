@@ -24,9 +24,10 @@ def __repr__(self):
 # ================================================================
 #   Name:           User Model
 #   Description:    Class Definition for User
-#   Last Changed:   10/25/21
-#   Changed By:     Tay Jing Ren
-#   Change Details: Initial implementation of User class
+#   Last Changed:   11/11/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Fixed is_student error 
+#                   (was returing false for students)
 # ================================================================
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key = True)

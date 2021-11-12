@@ -6,6 +6,7 @@ from config import Config
 
 from app import db
 from app.Model.models import Post, Tag, postTags
+from app.Controller.forms import PostForm
 from flask_login import current_user, login_user, logout_user, login_required
 
 
@@ -25,3 +26,24 @@ bp_routes.template_folder = Config.TEMPLATE_FOLDER #'..\\View\\templates'
 def index():
     return render_template('index.html', title="Lab Opportunities")
 
+# ================================================================
+#   Name:           Post Position Route
+#   Description:    Post Position route for basic flask implementation
+#   Last Changed:   11/11/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Initial Implementation
+# ================================================================
+@bp_routes.route('/postposition', methods=['GET', 'POST'])
+@login_required
+def postposition():
+    pForm = PostForm()
+    if pForm.validate_on_submit():
+        newPost = Post(user_id = current_user.id, title=pForm.title.data, body = pForm.post_message.data, tags = pForm.tag.data)
+        db.session.add(newPost)
+        db.session.commit()
+        flash('New Position Post "' + newPost.title + '" is on the Job Board!')
+        return redirect(url_for('routes.index'))
+    if current_user.is_student():
+        flash('You do not have permission to access this page.')
+        return redirect(url_for('routes.index'))
+    return render_template('create.html', title="New Post", form = pForm)
