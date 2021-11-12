@@ -1,0 +1,52 @@
+
+
+<table class = "posttable" style = "width:50%" valign="top">
+    <tr> 
+        <!-- Print Job Title -->
+        <td colspan="3"><div class="posttitle"> {{post.title}} </div>
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan="3" style = "text-align:left" valign="bottom">  
+              <!-- (milestone3) TODO: include username who posted the post-->
+              <span> Posted by:  <span class = "useritem"> {{post.writer.username }} </span></span>
+
+
+          </td>
+    </tr>
+
+
+    <tr>
+        
+        <td width="80%" >
+            <div>
+              <!-- Print Job Description -->    
+              <div class="postbody">{{ post.body }}</div>
+           </div>
+        </td> 
+
+        <td width = "5%"> 
+
+        </td>
+    </tr>
+    
+    <tr> 
+        <td colspan="3" style = "text-align:left" valign="bottom">  
+            <br>
+            <!-- Print Post Tags -->
+            {% for tag in post.get_tags().all() %}
+                <span class= "posttags"></div>{{ tag.get_name() }} </span>
+            {% endfor %}
+            <div> 
+                <!-- Prints Post Timestamp -->
+                <br>
+                <div class="posttimestamp"><b>Posted at: </b> {{ moment(post.timestamp).format('LLLL') }} </div>
+             </div> 
+
+        </td>
+    </tr>
+
+
+
+</table>

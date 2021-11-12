@@ -21,7 +21,7 @@ def all_tags():
 # ================================================================
 
 class PostForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired()])
-    post_message = TextAreaField("Post Message", [Length(min=0, max = 1500)])
-    tag = QuerySelectMultipleField( 'Tag', query_factory= all_tags, get_label= lambda t: t.get_name(), widget=ListWidget(prefix_label=False), option_widget=CheckboxInput() )
+    title = StringField('Job Title', validators=[DataRequired()])
+    body = TextAreaField("Job Description", [Length(min=0, max = 1500)])
+    tags = QuerySelectMultipleField( 'Application Tags', query_factory= all_tags, get_label= lambda t: t.get_name(), widget=ListWidget(prefix_label=False), option_widget=CheckboxInput() )
     submit = SubmitField('Post')

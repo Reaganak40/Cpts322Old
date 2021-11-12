@@ -27,7 +27,7 @@ def __repr__(self):
 #   Last Changed:   11/11/21
 #   Changed By:     Reagan Kelley
 #   Change Details: Fixed is_student error 
-#                   (was returing false for students)
+#                   (was returning false for students)
 # ================================================================
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key = True)
@@ -82,10 +82,13 @@ class Post(db.Model):
 # ================================================================
 #   Name:           Tag Model
 #   Description:    Class Definition for Tags
-#   Last Changed:   10/25/21
-#   Changed By:     Tay Jing Ren
-#   Change Details: Initial implementation of Tag class
+#   Last Changed:   11/12/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Added get name function
 # ================================================================
 class Tag(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(20))
+
+    def get_name(self):
+        return self.name

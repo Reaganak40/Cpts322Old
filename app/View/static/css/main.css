@@ -2,9 +2,9 @@
 # ================================================================
 #   Name:           MAIN CSS
 #   Description:    File contains all styling for app
-#   Last Changed:   10/27/21
+#   Last Changed:   11/11/21
 #   Changed By:     Tay Jing Ren
-#   Change Details: Added forminput and formselect styling
+#   Change Details: Added Post Form Styling
 #=================================================================
 */
 
@@ -65,4 +65,95 @@ a:hover {
     font-style: normal;
     margin : 5px 0px 0px 0px;
     padding : 5px;
+}
+
+
+.formtitle {
+	padding : 2px;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	width: 600px;
+    height: 25px;
+
+}
+
+.formbody {
+	padding : 2px;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	width: 600px;
+    height: 125px;
+}
+
+.formtags {
+	padding : 20px;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	width: 300px;
+    height: 25px;
+}
+
+.postlist {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.post-box {
+    display: flex;
+    vertical-align: left;
+    background-color: white;
+    margin: auto;
+    padding: 10px;
+    width: 100%;
+    
+}
+
+.posttable { 
+    width : 100%;
+    margin: 0px;
+    
+    background-color: gray;
+    color: white;
+    border: 2px solid black;
+    
+}
+
+.posttitle {
+    text-align: left;
+    font-weight: bold;
+    font-family: Verdana;
+    padding : 5px;
+	font-size: 20px;
+
+}
+
+.postbody {
+    font-family: Verdana;
+    padding : 15px;
+	font-size: 16px;
+
+}
+
+.posttags {
+    text-align: left;
+    font-family: Verdana;
+	font-size: 15px;
+    padding: 4px;
+    margin: 4px 3px 4px 3px;
+    border-radius:4px;
+    border: 2px solid black;
+    border-radius: 4px;
+    background-color:darkred;
+    color: white
+}
+
+.posttimestamp {
+    font-family: Verdana;
+    padding : 5px;
+}
+
+.useritem{
+    text-align: left;
+    padding: 3px;
+    margin: 4px 3px 4px 3px;
+    border: 2px solid black;
+    color: darkred; 
+    text-transform: uppercase;
 }
