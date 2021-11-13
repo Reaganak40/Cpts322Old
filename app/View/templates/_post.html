@@ -43,9 +43,9 @@
     <tr> 
         <td colspan="3" style = "text-align:left" valign="bottom">  
             <br>
-            <!-- Print Post Tags -->
-            {% for tag in post.get_tags().all() %}
-                <span class= "posttags"></div>{{ tag.get_name() }} </span>
+            <!-- Print Major Tags -->
+            {% for major in post.get_majors().all() %}
+                <span class= "posttags"></div>{{ major.get_major_name() }} </span>
             {% endfor %}
             <div> 
                 <!-- Prints Post Timestamp -->

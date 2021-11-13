@@ -34,7 +34,7 @@
 
                 {% else %}
 
-                    {% if current_user.is_student() %}
+                    {% if current_user.get_user_type() == 'Student' %}
                         
                     {% else %}
                         <td><a href="{{ url_for('routes.postposition') }}" class = "button"> New Post </a></td>

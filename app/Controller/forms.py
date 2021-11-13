@@ -6,11 +6,11 @@ from wtforms.validators import  DataRequired, Length
 from wtforms.widgets.core import Select
 from wtforms_sqlalchemy.fields import QuerySelectMultipleField
 from wtforms.widgets import ListWidget, CheckboxInput
-from app.Model.models import Post, Tag
+from app.Model.models import Post, Major
 
 
-def all_tags():
-    return Tag.query.all()
+def all_majors():
+    return Major.query.all()
 
 # ================================================================
 #   Name:           Post form
@@ -23,5 +23,5 @@ def all_tags():
 class PostForm(FlaskForm):
     title = StringField('Job Title', validators=[DataRequired()])
     body = TextAreaField("Job Description", [Length(min=0, max = 1500)])
-    tags = QuerySelectMultipleField( 'Application Tags', query_factory= all_tags, get_label= lambda t: t.get_name(), widget=ListWidget(prefix_label=False), option_widget=CheckboxInput() )
+    majors = QuerySelectMultipleField( 'Recommended Majors', query_factory= all_majors, get_label= lambda t: t.get_major_name(), widget=ListWidget(prefix_label=False), option_widget=CheckboxInput() )
     submit = SubmitField('Post')

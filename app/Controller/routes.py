@@ -5,7 +5,7 @@ from flask import render_template, flash, redirect, url_for, request
 from config import Config
 
 from app import db
-from app.Model.models import Post, Tag, postTags
+from app.Model.models import Post, Major, postMajors
 from app.Controller.forms import PostForm
 from flask_login import current_user, login_user, logout_user, login_required
 
@@ -32,19 +32,20 @@ def index():
 #   Description:    Post Position route for basic flask implementation
 #   Last Changed:   11/11/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Initial Implementation
+#   Change Details: Adjustments to compensate for new database model 
 # ================================================================
 @bp_routes.route('/postposition', methods=['GET', 'POST'])
 @login_required
 def postposition():
+    if current_user.get_user_type() == 'Student':
+        flash('You do not have permission to access this page.')
+        return redirect(url_for('routes.index'))
     pForm = PostForm()
     if pForm.validate_on_submit():
-        newPost = Post(user_id = current_user.id, title=pForm.title.data, body = pForm.body.data, tags = pForm.tags.data)
+        newPost = Post(user_id = current_user.id, title=pForm.title.data, body = pForm.body.data, majors = pForm.majors.data)
         db.session.add(newPost)
         db.session.commit()
         flash('New Position Post "' + newPost.title + '" is on the Job Board!')
         return redirect(url_for('routes.index'))
-    if current_user.is_student():
-        flash('You do not have permission to access this page.')
-        return redirect(url_for('routes.index'))
+
     return render_template('create.html', title="New Post", form = pForm)

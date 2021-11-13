@@ -1,5 +1,5 @@
 from app import create_app, db
-from app.Model.models import Post, Tag, postTags
+from app.Model.models import Post, Major, postMajors
 
 app = create_app()
 
@@ -13,10 +13,10 @@ app = create_app()
 @app.before_first_request
 def initDB(*args, **kwargs):
     db.create_all()
-    if Tag.query.count() == 0:
-         tags = ['funny','inspiring', 'true-story', 'heartwarming', 'friendship'] ##NEED TO: change tag names
-         for t in tags:
-             db.session.add(Tag(name=t))
+    if Major.query.count() == 0:
+         majors = ['Computer Science','Computer Engineering', 'Electrical Engineering', 'Chemical Engineering'] ##NEED TO: change tag names
+         for m in majors:
+             db.session.add(Major(name=m))
          db.session.commit()
 
 if __name__ == "__main__":
