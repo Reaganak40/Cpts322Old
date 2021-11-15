@@ -12,9 +12,9 @@
 
 {% block content %}
     <h1>Student Profile</h1>
-    <h2>Username: {{ profile.username }}</h2>
-    <p><b>WSU ID:</b> {{ profile.wsu_id }}</p>
-    <p><b>Name:</b> {{ profile.first_name }} {{ profile.last_name }}</p>
+    <h2>Username: {{ current_user.username }}</h2>
+    <p><b>WSU ID:</b> {{ current_user.wsu_id }}</p>
+    <p><b>Name:</b> {{ current_user.first_name }} {{ profile.last_name }}</p>
     <p><b>Email:</b> {{ profile.email }}</p>
     <p><b>Phone Number:</b> {{ profile.phone_no }}</p>
     <p><b>Major:</b> {{ profile.major }}</p>

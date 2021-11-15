@@ -65,7 +65,9 @@ def postposition():
 @bp_routes.route('/student_profile', methods=['GET'])
 @login_required
 def student_profile():
-    student_profile = Student.query.filter_by(id = current_user.id)
+    student_profile = Student.query.filter_by(id = current_user.id).first()
+    print(student_profile.wsu_id)
+
     return render_template('profile.html', title="Student Profile", profile = student_profile)
 
 # ================================================================
@@ -83,23 +85,22 @@ def update_student_profile():
     proForm = ProfileForm()
     if proForm.validate_on_submit():
         print('Validated')
-        student_profile = Student.query.filter_by(id = current_user.id)
 
         # update current user with form info
-        student_profile.wsu_id = proForm.wsu_id.data
-        student_profile.first_name = proForm.first_name.data
-        student_profile.last_name = proForm.last_name.data
-        student_profile.phone_no = proForm.phone_no.data
-        student_profile.major = 'To be Implemented'
-        student_profile.gpa = proForm.gpa.data
-        student_profile.expected_grad_date = proForm.expected_grad_date.data
-        student_profile.elect_courses = proForm.elect_courses.data
-        student_profile.research_topics = 'To be Implemented'
-        student_profile.languages = proForm.languages.data
-        student_profile.prior_research = proForm.prior_research.data
+        current_user.wsu_id = proForm.wsu_id.data
+        current_user.first_name = proForm.first_name.data
+        current_user.last_name = proForm.last_name.data
+        current_user.phone_no = proForm.phone_no.data
+        current_user.major = 'To be Implemented'
+        current_user.gpa = proForm.gpa.data
+        current_user.expected_grad_date = proForm.expected_grad_date.data
+        current_user.elect_courses = proForm.elect_courses.data
+        current_user.research_topics = 'To be Implemented'
+        current_user.languages = proForm.languages.data
+        current_user.prior_research = proForm.prior_research.data
 
         # commit changes
-        db.session.add(student_profile)
+        db.session.add(current_user)
         db.session.commit()
         flash('Profile Successfully Updated!')
         return redirect(url_for('routes.student_profile'))

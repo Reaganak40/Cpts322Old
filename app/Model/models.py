@@ -33,8 +33,13 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(64), unique = True, index = True)
     email = db.Column(db.String(120), unique = True, index = True)
     password_hash = db.Column(db.String(128))
-    user_type = db.Column(db.Integer)
+    user_type = db.Column(db.String(20))
     posts = db.relationship('Post', backref='writer', lazy = 'dynamic')
+
+    __mapper_args__ = {
+        'polymorphic_identity':'user',
+        'polymorphic_on': user_type
+    }
 
     def __repr__(self):
         return '<Username: {} - {};>'.format(self.id,self.username)
@@ -46,10 +51,7 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
     def get_user_type(self):
-        if self.user_type == 0:
-            return 'Student'
-        return 'Faculty'
-
+        return self.user_type
     def get_user_posts(self):
         return self.posts
 # ================================================================
@@ -60,6 +62,10 @@ class User(UserMixin, db.Model):
 #   Change Details: Initial Implementation of Student model
 # ================================================================
 class Student(User):
+
+    __tablename__ = 'student'
+
+    id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
     wsu_id = db.Column(db.Integer, unique = True)
     first_name = db.Column(db.String(64))
     last_name = db.Column(db.String(100))
@@ -72,6 +78,10 @@ class Student(User):
     languages = db.Column(db.String(700))
     prior_research = db.Column(db.String(1500))
 
+    __mapper_args__ = {
+        'polymorphic_identity':'student',
+    }
+
     def __repr__(self):
         return '<Username: {} - {}; Type: {}; Class-Object Code: 0>'.format(self.id,self.username, self.get_user_type())
 
@@ -83,8 +93,13 @@ class Student(User):
 #   Change Details: I changed the posts relationship and def get_user_posts by moving them into the User model
 # ================================================================
 class Faculty(User):
+    __tablename__ = 'faculty'
+
     #posts = db.relationship('Post', backref='writer', lazy = 'dynamic')
 
+    __mapper_args__ = {
+        'polymorphic_identity':'faculty',
+    }
     def __repr__(self):
         return '<Username: {} - {}; Type: {}; Class-Object Code: 1>'.format(self.id,self.username, self.get_user_type())
 
