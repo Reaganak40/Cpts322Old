@@ -2,9 +2,9 @@
 # ================================================================
 #   Name:           register html
 #   Description:    UI for register route
-#   Last Changed:   10/27/21
-#   Changed By:     Tay Jing Ren
-#   Change Details: Implementation of registration page with labels and styling added for each labels
+#   Last Changed:   11/15/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Added register error checks
 # ================================================================
 -->
 
@@ -19,23 +19,41 @@
         
             {{form.hidden_tag()}}
 
-            {{form.username.label}} <br>
-            {{form.username(class = "forminput")}} <br>
+            <p>{{ form.username.label }} </p>
+            <p>{{ form.username(class = 'forminput') }} </p>
 
-            {{form.email.label}} <br>
-            {{form.email(class = "forminput")}} <br>
+            {% for error in form.username.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
 
-            {{form.password.label}} <br>
-            {{form.password(class = "forminput")}} <br>
+            <p>{{ form.email.label }} </p>
+            <p>{{ form.email(class = 'forminput') }} </p>
 
-            {{form.password2.label}} <br>
-            {{form.password2(class = "forminput")}} <br>
+            {% for error in form.email.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+
+            <p>{{ form.password.label }} </p>
+            <p>{{ form.password(class = 'forminput') }} </p>
+
+            {% for error in form.password.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+
+            <p>{{ form.password2.label }} </p>
+            <p>{{ form.password2(class = 'forminput') }} </p>
+
+            {% for error in form.password2.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
 
             {{form.type.label}} <br>
             {{form.type(class="formselect") }}<br>
 
             <br>
             {{form.submit(class = "button")}}
+
+            
 
     </form>
 

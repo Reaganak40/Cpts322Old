@@ -60,19 +60,15 @@ class User(UserMixin, db.Model):
 #   Change Details: Initial Implementation of Student model
 # ================================================================
 class Student(User):
-    id = User.id
     wsu_id = db.Column(db.Integer, unique = True)
-    username = User.username
-    email = User.email
-    password = User.password_hash
     first_name = db.Column(db.String(64))
     last_name = db.Column(db.String(100))
     phone_no = db.Column(db.String(10))
-    major = db.Relationship('Major') #TODO: Complete the relationship
-    gpa = db.Column(db.Float(precision = 1, length = 4.0))
+    major = db.Column(db.String(20)) ## TODO: Need to impelement majors
+    gpa = db.Column(db.Float(precision = 1))
     expected_grad_date = db.Column(db.Date)
     elect_courses = db.Column(db.String(1500))
-    research_topics = db.Relationship('ResearchField') #TODO: Change for when the class is fixed
+    research_topics = db.Column(db.String(20)) ## TODO: Need to implement research topics
     languages = db.Column(db.String(700))
     prior_research = db.Column(db.String(1500))
 

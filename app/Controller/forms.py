@@ -1,6 +1,8 @@
+from typing import Text
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField
-from wtforms.fields.core import BooleanField, DateField, IntegerField
+from wtforms import validators
+from wtforms.fields.core import BooleanField, DateField, FloatField
 from wtforms.fields.simple import TextAreaField
 from wtforms.validators import  DataRequired, Email, Length, NumberRange, Length, ValidationError
 from wtforms.widgets.core import Select
@@ -39,22 +41,23 @@ class SortForm(FlaskForm):
 # ================================================================
 #   Name:           Profile form
 #   Description:    Class definition to update user's profile information
-#   Last Changed:   11/14/21
-#   Changed By:     Denise Tanumihardja
-#   Change Details: Initial Implementation
+#   Last Changed:   11/15/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Fixed run-time issues with form (Needs more work)
 # ================================================================
 
 class ProfileForm(FlaskForm):
     first_name = StringField('First Name')
     last_name = StringField('Last Name')
-    wsu_id = StringField('WSU ID', validators=[Length(min = 9, max = 9)])
-    email = StringField('Email', validators = [Email()])
+    wsu_id = StringField('WSU ID', validators=[Length(min = 8, max = 9)])
     phone_no = StringField('Phone Number', validators=[Length(max = 10)])
-    major = SelectField('Major', choices = [(0, 'CptS - Computer Science'), (1, 'EE - Electrical Engineering'), (2, 'CptSE - Computer Engineering'), (3, 'SE - Software Engineering'), (4, 'DA - Data Analytics')])
-    gpa = IntegerField('GPA', validators = [NumberRange(min = 0.0, max = 4.0)])
+    ##major = SelectField('Major', choices = [(0, 'CptS - Computer Science'), (1, 'EE - Electrical Engineering'), (2, 'CptSE - Computer Engineering'), (3, 'SE - Software Engineering'), (4, 'DA - Data Analytics')])
+    #major = TextAreaField("Filler for Major (Implement later)") ## TODO: Implement student major 
+    gpa = FloatField('GPA', validators = [NumberRange(min = 0.0, max = 5.0)])
     expected_grad_date = DateField('Expected Graduation Date (mm/dd/yyyy)', format = '%m/%d/%Y')
     elect_courses = TextAreaField("Technical Elective Courses (Include Grades)")
-    research_topics = QuerySelectMultipleField('Select Resarch Topics') #TODO: Add tags from relationship
+    ## research_topics = QuerySelectMultipleField('Select Resarch Topics') #TODO: Add tags from relationship
+    #research_topics = TextAreaField("Filler for research topics (Implement later)")
     languages = TextAreaField('Programming Languages Experience')
     prior_research = TextAreaField('Describe your Prior Research Experience (If Any)')
     save = SubmitField('Save Changes')

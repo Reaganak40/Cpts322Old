@@ -65,15 +65,16 @@ def postposition():
 @bp_routes.route('/student_profile', methods=['GET'])
 @login_required
 def student_profile():
-    student_pro = Student.query.filter_by(id = current_user.id)
-    return render_template('profile.html', title="Student Profile", profile = student_pro)
+    student_profile = Student.query.filter_by(id = current_user.id)
+    return render_template('profile.html', title="Student Profile", profile = student_profile)
 
 # ================================================================
 #   Name:           Student Profile Update Route
 #   Description:    Updates the student profile with inputed information
-#   Last Changed:   11/14/21
-#   Changed By:     Denise Tanumihardja
-#   Change Details: Initial Implementation
+#   Last Changed:   11/15/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Worked on current bug with updating user info
+#                   (still broken)
 # ================================================================
 
 @bp_routes.route('/student_profile_update', methods=['GET', 'POST'])
@@ -81,21 +82,26 @@ def student_profile():
 def update_student_profile():
     proForm = ProfileForm()
     if proForm.validate_on_submit():
-        student_pro = Student(wsu_id = proForm.wsu_id.data,
-                              email = proForm.email.data,
-                              first_name = proForm.first_name.data,
-                              last_name = proForm.last_name.data,
-                              phone_no = proForm.phone_no.data,
-                              major = proForm.major.data,
-                              gpa = proForm.gpa.data,
-                              expected_grad_date = proForm.expected_grad_date.data,
-                              elect_courses = proForm.elect_courses.data,
-                              research_topics = proForm.research_topics.data,
-                              languages = proForm.languages.data,
-                              prior_research = proForm.prior_research.data)
-        db.session.add(student_pro)
+        print('Validated')
+        student_profile = Student.query.filter_by(id = current_user.id)
+
+        # update current user with form info
+        student_profile.wsu_id = proForm.wsu_id.data
+        student_profile.first_name = proForm.first_name.data
+        student_profile.last_name = proForm.last_name.data
+        student_profile.phone_no = proForm.phone_no.data
+        student_profile.major = 'To be Implemented'
+        student_profile.gpa = proForm.gpa.data
+        student_profile.expected_grad_date = proForm.expected_grad_date.data
+        student_profile.elect_courses = proForm.elect_courses.data
+        student_profile.research_topics = 'To be Implemented'
+        student_profile.languages = proForm.languages.data
+        student_profile.prior_research = proForm.prior_research.data
+
+        # commit changes
+        db.session.add(student_profile)
         db.session.commit()
         flash('Profile Successfully Updated!')
-        return redirect(url_for('profile.html'))
+        return redirect(url_for('routes.student_profile'))
     return render_template('updateprofile.html', title = "Student Profile", update = proForm, user = current_user)
         

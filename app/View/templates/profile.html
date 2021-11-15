@@ -3,8 +3,8 @@
 #   Name:           Profile html
 #   Description:    UI for profile route
 #   Last Changed:   11/14/21
-#   Changed By:     Denise Tanumihardja
-#   Change Details: Initial Implementation
+#   Changed By:     Reagan Kelley
+#   Change Details: Changed url_for path
 # ================================================================
 -->
 
@@ -25,6 +25,6 @@
     <p><b>Programming Languages Experience:</b><br> {{ profile.languages }}</p><br>
     <p><b>Prior Research Experience:</b><br> {{ profile.prior_research }}</p><br><br>
 
-    <p><a href = "{{ url_for('routes.student_profile_update') }}"> Update Profile </a></p>
+   <a href = "{{ url_for('routes.update_student_profile') }}"> Update Profile </a></p> 
 
 {% endblock %}
