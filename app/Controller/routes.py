@@ -5,8 +5,8 @@ from flask import render_template, flash, redirect, url_for, request
 from config import Config
 
 from app import db
-from app.Model.models import Post, Major, postMajors
-from app.Controller.forms import PostForm
+from app.Model.models import Post, Major, postMajors, Faculty
+from app.Controller.forms import PostForm, SortForm
 from flask_login import current_user, login_user, logout_user, login_required
 
 
@@ -25,7 +25,11 @@ bp_routes.template_folder = Config.TEMPLATE_FOLDER #'..\\View\\templates'
 @login_required
 def index():
     posts = Post.query.order_by(Post.timestamp.desc())
-    return render_template('index.html', title="Lab Opportunities", posts=posts.all(), post_count = posts.count())
+    sform = SortForm()
+    if sform.validate_on_submit():
+        if (sform.checkbox.data == True):
+            posts = current_user.get_user_posts()
+    return render_template('index.html', title="Lab Opportunities", posts=posts.all(), post_count = posts.count(), form= sform)
 
 # ================================================================
 #   Name:           Post Position Route

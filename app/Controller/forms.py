@@ -14,8 +14,8 @@ def all_majors():
 
 # ================================================================
 #   Name:           Post form
-#   Description:    Class definition to create a new position post
-#   Last Changed:   11/11/21
+#   Description:    Added sortform for filter posts on faculty view
+#   Last Changed:   14/11/21
 #   Changed By:     Reagan Kelley
 #   Change Details: Initial Implementation
 # ================================================================
@@ -25,3 +25,7 @@ class PostForm(FlaskForm):
     body = TextAreaField("Job Description", [Length(min=0, max = 1500)])
     majors = QuerySelectMultipleField( 'Recommended Majors', query_factory= all_majors, get_label= lambda t: t.get_major_name(), widget=ListWidget(prefix_label=False), option_widget=CheckboxInput() )
     submit = SubmitField('Post')
+
+class SortForm(FlaskForm):
+    refresh = SubmitField('Refresh')
+    checkbox = BooleanField('Display all other posts')

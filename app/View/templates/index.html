@@ -14,9 +14,13 @@
     
     <h1>Welcome to Lab Opportunities!</h1>
     <h2> "A ship does not sail with yesterday's winds." </h2> <br>
+    {% if current_user.get_user_type() == 'Faculty' %}
+    <form action= "" method = "post" class = "formselect"> <div>Sort by: {{form.hidden_tag()}} {{form.checkbox.label}}  {{form.checkbox}} {{form.refresh}} </div> </form>
+    {% else %}
 
+    {% endif %}
     <h3>Number of Posts: {{ post_count }} </h3>
-
+    
     <!-- Make Lists of Posts -->
     <div class = "postlist">
     {% for post in posts %}

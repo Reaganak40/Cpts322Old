@@ -25,8 +25,8 @@ def __repr__(self):
 #   Name:           User Model
 #   Description:    Class Definition for User
 #   Last Changed:   11/12/21
-#   Changed By:     Reagan Kelley
-#   Change Details: Revised Database Model
+#   Changed By:     Tay Jing Ren
+#   Change Details: I added the posts relationship and def get_user_posts here
 # ================================================================
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key = True)
@@ -34,6 +34,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique = True, index = True)
     password_hash = db.Column(db.String(128))
     user_type = db.Column(db.Integer)
+    posts = db.relationship('Post', backref='writer', lazy = 'dynamic')
 
     def __repr__(self):
         return '<Username: {} - {};>'.format(self.id,self.username)
@@ -49,6 +50,8 @@ class User(UserMixin, db.Model):
             return 'Student'
         return 'Faculty'
 
+    def get_user_posts(self):
+        return self.posts
 # ================================================================
 #   Name:           Student Model
 #   Description:    Class Definition for Student (Child of User)
@@ -66,17 +69,17 @@ class Student(User):
 #   Name:           Faculty Model
 #   Description:    Class Definition for Faculty (Child of User)
 #   Last Changed:   11/12/21
-#   Changed By:     Reagan Kelley
-#   Change Details: Initial Implementation of Faculty
+#   Changed By:     Tay Jing Ren
+#   Change Details: I changed the posts relationship and def get_user_posts by moving them into the User model
 # ================================================================
 class Faculty(User):
-    posts = db.relationship('Post', backref='writer', lazy = 'dynamic')
+    #posts = db.relationship('Post', backref='writer', lazy = 'dynamic')
 
     def __repr__(self):
         return '<Username: {} - {}; Type: {}; Class-Object Code: 1>'.format(self.id,self.username, self.get_user_type())
 
-    def get_user_posts(self):
-        return self.posts
+    # def get_user_posts(self):
+    #     return self.posts
 
 # ================================================================
 #   Name:           Post Model
@@ -102,6 +105,8 @@ class Post(db.Model):
 
     def get_majors(self):
         return self.majors
+
+    
 # ================================================================
 #   Name:           Major Model
 #   Description:    Class Definition for Major (Tag)
