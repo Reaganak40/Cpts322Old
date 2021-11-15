@@ -55,12 +55,26 @@ class User(UserMixin, db.Model):
 # ================================================================
 #   Name:           Student Model
 #   Description:    Class Definition for Student (Child of User)
-#   Last Changed:   11/12/21
-#   Changed By:     Reagan Kelley
-#   Change Details: Initial Implementation of Student
+#   Last Changed:   11/14/21
+#   Changed By:     Denise Tanumihardja
+#   Change Details: Initial Implementation of Student model
 # ================================================================
 class Student(User):
+    id = User.id
     wsu_id = db.Column(db.Integer, unique = True)
+    username = User.username
+    email = User.email
+    password = User.password_hash
+    first_name = db.Column(db.String(64))
+    last_name = db.Column(db.String(100))
+    phone_no = db.Column(db.String(10))
+    major = db.Relationship('Major') #TODO: Complete the relationship
+    gpa = db.Column(db.Float(precision = 1, length = 4.0))
+    expected_grad_date = db.Column(db.Date)
+    elect_courses = db.Column(db.String(1500))
+    research_topics = db.Relationship('ResearchField') #TODO: Change for when the class is fixed
+    languages = db.Column(db.String(700))
+    prior_research = db.Column(db.String(1500))
 
     def __repr__(self):
         return '<Username: {} - {}; Type: {}; Class-Object Code: 0>'.format(self.id,self.username, self.get_user_type())

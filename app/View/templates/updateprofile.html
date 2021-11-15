@@ -1,0 +1,63 @@
+<!--    
+# ================================================================
+#   Name:           Update Profile html
+#   Description:    UI for profile route
+#   Last Changed:   11/14/21
+#   Changed By:     Denise Tanumihardja
+#   Change Details: Initial Implementation
+# ================================================================
+-->
+
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Register</h1>
+
+    {% If update %}
+
+    <form action="" method="post">
+        {{ update.hidden_tag() }}
+
+        {{ update.first_name.label }} <br>
+        {{ update.first_name(class = "formtitle") }} <br>
+
+        {{ update.last_name.label }} <br>
+        {{ update.last_name(class = "formtitle") }} <br>
+
+        {{ update.wsu_id.label }} <br>
+        {{ update.wsu_id(class = "formtitle") }} <br>
+
+        {{ update.email.label }} <br>
+        {{ update.email(class = "formtitle") }} <br>
+
+        {{ update.phone_no.label }} <br>
+        {{ update.phone_no(class = "formtitle") }} <br>
+
+        {{ update.major.label }} <br>
+        {{ update.major(class = "selector") }} <br>
+
+        {{ update.gpa.label }} <br>
+        {{ update.gpa(class = "formtitle") }} <br>
+
+        {{ update.expected_grad_date.label }} <br>
+        {{ update.expected_grad_date(class = "formtitle") }} <br>
+
+        {{ update.elect_courses.label }} <br>
+        {{ update.elect_courses(class = "formbody") }} <br>
+
+        {{ update.research_topics }} <br>
+
+        {{ update.languages.label }} <br>
+        {{ update.languages(class = "formbody") }} <br>
+
+        {{ update.prior_research.label }} <br>
+        {{ update.prior_research(class = "formbody") }} <br>
+
+        <br>
+        {{ update.save(class = "button") }}
+
+    </form>
+
+    {% endif %}
+
+{% endblock %}

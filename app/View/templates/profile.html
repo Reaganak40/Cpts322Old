@@ -1,0 +1,30 @@
+<!--    
+# ================================================================
+#   Name:           Profile html
+#   Description:    UI for profile route
+#   Last Changed:   11/14/21
+#   Changed By:     Denise Tanumihardja
+#   Change Details: Initial Implementation
+# ================================================================
+-->
+
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Student Profile</h1>
+    <h2>Username: {{ profile.username }}</h2>
+    <p><b>WSU ID:</b> {{ profile.wsu_id }}</p>
+    <p><b>Name:</b> {{ profile.first_name }} {{ profile.last_name }}</p>
+    <p><b>Email:</b> {{ profile.email }}</p>
+    <p><b>Phone Number:</b> {{ profile.phone_no }}</p>
+    <p><b>Major:</b> {{ profile.major }}</p>
+    <p><b>GPA:</b> {{ profile.gpa }}</p>
+    <p><b>Expected Graduation Date:</b> {{ profile.expected_grad_date }}</p>
+    <p><b>Interested Research Topics:</b> {{ profile.research_topics }}</p><br>
+    <p><b>Technical Elective Courses:</b><br> {{ profile.elect_courses }}</p><br>
+    <p><b>Programming Languages Experience:</b><br> {{ profile.languages }}</p><br>
+    <p><b>Prior Research Experience:</b><br> {{ profile.prior_research }}</p><br><br>
+
+    <p><a href = "{{ url_for('routes.student_profile_update') }}"> Update Profile </a></p>
+
+{% endblock %}

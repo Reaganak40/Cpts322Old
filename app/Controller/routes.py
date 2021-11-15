@@ -5,8 +5,8 @@ from flask import render_template, flash, redirect, url_for, request
 from config import Config
 
 from app import db
-from app.Model.models import Post, Major, postMajors, Faculty
-from app.Controller.forms import PostForm, SortForm
+from app.Model.models import Post, Major, Student, postMajors, Faculty
+from app.Controller.forms import PostForm, ProfileForm, SortForm
 from flask_login import current_user, login_user, logout_user, login_required
 
 
@@ -53,3 +53,49 @@ def postposition():
         return redirect(url_for('routes.index'))
 
     return render_template('create.html', title="New Post", form = pForm)
+
+# ================================================================
+#   Name:           Student Profile Update Route
+#   Description:    Updates the student profile with inputed information
+#   Last Changed:   11/14/21
+#   Changed By:     Denise Tanumihardja
+#   Change Details: Initial Implementation
+# ================================================================
+
+@bp_routes.route('/student_profile', methods=['GET'])
+@login_required
+def student_profile():
+    student_pro = Student.query.filter_by(id = current_user.id)
+    return render_template('profile.html', title="Student Profile", profile = student_pro)
+
+# ================================================================
+#   Name:           Student Profile Update Route
+#   Description:    Updates the student profile with inputed information
+#   Last Changed:   11/14/21
+#   Changed By:     Denise Tanumihardja
+#   Change Details: Initial Implementation
+# ================================================================
+
+@bp_routes.route('/student_profile_update', methods=['GET', 'POST'])
+@login_required
+def update_student_profile():
+    proForm = ProfileForm()
+    if proForm.validate_on_submit():
+        student_pro = Student(wsu_id = proForm.wsu_id.data,
+                              email = proForm.email.data,
+                              first_name = proForm.first_name.data,
+                              last_name = proForm.last_name.data,
+                              phone_no = proForm.phone_no.data,
+                              major = proForm.major.data,
+                              gpa = proForm.gpa.data,
+                              expected_grad_date = proForm.expected_grad_date.data,
+                              elect_courses = proForm.elect_courses.data,
+                              research_topics = proForm.research_topics.data,
+                              languages = proForm.languages.data,
+                              prior_research = proForm.prior_research.data)
+        db.session.add(student_pro)
+        db.session.commit()
+        flash('Profile Successfully Updated!')
+        return redirect(url_for('profile.html'))
+    return render_template('updateprofile.html', title = "Student Profile", update = proForm, user = current_user)
+        
