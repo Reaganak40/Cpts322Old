@@ -56,6 +56,9 @@ class User(UserMixin, db.Model):
     def get_user_posts(self):
         return self.posts
 
+    def get_permissions(self):
+        return Permissions.query.filter_by(user_id = self.id).first()
+
     def apply(self, thepost): ##apply to a position
         if not self.has_applied(thepost):
             newApplication = Application(position_for = thepost)
@@ -80,6 +83,9 @@ class Application(db.Model):
 
     def __repr__(self):
         return '<Application for {} - by {};>'.format(self.post_id,self.applicant_id)
+
+    def get_applicant(self):
+        return User.query.filter_by(id = self.applicant_id).first()
     
 # ================================================================
 #   Name:           Permissions Model
@@ -145,6 +151,8 @@ class Post(db.Model):
 
     applicants = db.relationship('Application', back_populates = 'position_for')
 
+    def get_applicants(self):
+        return self.applicants
 
 
     def get_majors(self):

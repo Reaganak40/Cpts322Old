@@ -5,7 +5,7 @@ from flask import render_template, flash, redirect, url_for, request
 from config import Config
 
 from app import db
-from app.Model.models import Permissions, Post, Major, User, postMajors
+from app.Model.models import Application, Permissions, Post, Major, User, postMajors
 from app.Controller.forms import PostForm, ProfileForm, SortForm
 from flask_login import current_user, login_user, logout_user, login_required
 
@@ -140,3 +140,17 @@ def unapply(postid):
     db.session.commit()
     flash('You redrew your application for: {}!'.format(thepost.title))
     return redirect(url_for('routes.index'))
+
+# ================================================================
+#   Name:           Applications Route
+#   Description:    Prints all applications for faculty postion posts
+#   Last Changed:   11/16/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Initial Implementation
+# ================================================================
+@bp_routes.route('/applications', methods=['GET', 'POST'])
+@login_required
+def applications():
+    myposts = current_user.get_user_posts()
+    print(myposts.count())
+    return render_template('applications.html', title="Applications", posts = myposts)

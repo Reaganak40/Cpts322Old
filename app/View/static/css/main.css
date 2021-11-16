@@ -185,3 +185,14 @@ a:hover {
 	background-color: red;
 	color: white;
 }
+
+.coursetable tr:hover{
+	background-color: lightgray;
+}
+
+.coursetable {
+	text-align: left;
+	border: 1px black solid;
+	width : 80%;
+	font-size : 18px
+}
