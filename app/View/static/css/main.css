@@ -196,3 +196,17 @@ a:hover {
 	width : 80%;
 	font-size : 18px
 }
+
+.review_button {
+	width:100px;
+	font-size: 18px;
+	margin: 10px 0px 0px 0px;
+	padding : 5px;
+	border: 1px solid gray;
+	background-color: rgb(192, 238,192);
+}
+
+.review_button:hover{
+	background-color: green;
+	color: white;
+}

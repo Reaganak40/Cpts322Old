@@ -67,3 +67,11 @@ class ProfileForm(FlaskForm):
         for student_email in user_emails:
             if(student_email.id != current_user):
                 raise ValidationError('The email is already associated with another account! Please use a different email address.')
+
+class ApplicationForm(FlaskForm):
+    personal_statement = TextAreaField("Brief Statement - Why do you want this position?", validators=[DataRequired(), Length(min=0, max = 1500)])
+    faculty_ref_name = StringField("Provide One Faculty reference and their contact information", validators=[DataRequired(), Length(min=0, max = 60)])
+    submit = SubmitField('Send Application')
+
+
+

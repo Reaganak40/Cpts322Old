@@ -59,9 +59,12 @@ class User(UserMixin, db.Model):
     def get_permissions(self):
         return Permissions.query.filter_by(user_id = self.id).first()
 
-    def apply(self, thepost): ##apply to a position
+    def apply(self, thepost, brief, ref): ##apply to a position
         if not self.has_applied(thepost):
-            newApplication = Application(position_for = thepost)
+            newApplication = Application(position_for = thepost, 
+                                         status = 'Pending', 
+                                         personal_statement = brief,
+                                         faculty_ref = ref)
             self.applications.append(newApplication)
             db.session.commit()
 
@@ -74,6 +77,11 @@ class User(UserMixin, db.Model):
     def has_applied(self, newpost):
         return (Application.query.filter_by(applicant_id=self.id).filter_by(post_id = newpost.id).count() > 0)
 
+    def get_status(self, newpost):
+        application = Application.query.filter_by(applicant_id=self.id).filter_by(post_id = newpost.id).first()
+        return application.status
+
+
 class Application(db.Model):
     applicant_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key = True)
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'), primary_key = True)
@@ -81,11 +89,22 @@ class Application(db.Model):
     student_applied = db.relationship('User')
     position_for = db.relationship('Post')
 
+    status = db.Column(db.String(20))
+    personal_statement = db.Column(db.String(1500))
+    faculty_ref = db.Column(db.String(60))
+
     def __repr__(self):
         return '<Application for {} - by {};>'.format(self.post_id,self.applicant_id)
 
     def get_applicant(self):
         return User.query.filter_by(id = self.applicant_id).first()
+
+    def get_position(self):
+        return Post.query.filter_by(id = self.post_id).first().title
+
+    def get_status(self):
+        return self.status
+
     
 # ================================================================
 #   Name:           Permissions Model

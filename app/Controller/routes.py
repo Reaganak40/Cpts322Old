@@ -6,7 +6,7 @@ from config import Config
 
 from app import db
 from app.Model.models import Application, Permissions, Post, Major, User, postMajors
-from app.Controller.forms import PostForm, ProfileForm, SortForm
+from app.Controller.forms import ApplicationForm, PostForm, ProfileForm, SortForm
 from flask_login import current_user, login_user, logout_user, login_required
 
 
@@ -28,7 +28,7 @@ def index():
     sform = SortForm()
     print(current_user.get_user_type())
     if sform.validate_on_submit():
-        if (sform.checkbox.data == True):
+        if (sform.checkbox.data == False):
             posts = current_user.get_user_posts()
     return render_template('index.html', title="Lab Opportunities", posts=posts.all(), post_count = posts.count(), form= sform)
 
@@ -117,14 +117,14 @@ def update_student_profile():
         return redirect(url_for('routes.student_profile'))
     return render_template('updateprofile.html', title = "Student Profile", update = proForm, user = current_user)
 
-@bp_routes.route('/apply/<postid>', methods = ['POST'])
+@bp_routes.route('/apply/<postid>/<brief>/<ref>', methods = ['GET', 'POST'])
 @login_required
-def apply(postid):
+def apply(postid, brief, ref):
     thepost = Post.query.filter_by(id = postid).first()
     if thepost is None:
         flash('Class with id "{}" not found.'.format(postid))
         return redirect(url_for('routes.index'))
-    current_user.apply(thepost)
+    current_user.apply(thepost, brief, ref)
     db.session.commit()
     flash('You applied for: {}!'.format(thepost.title))
     return redirect(url_for('routes.index'))
@@ -141,6 +141,20 @@ def unapply(postid):
     flash('You redrew your application for: {}!'.format(thepost.title))
     return redirect(url_for('routes.index'))
 
+@bp_routes.route('/submit_application/<postid>', methods = ['GET', 'POST'])
+@login_required
+def submit_application(postid):
+    thepost = Post.query.filter_by(id = postid).first()
+    aForm = ApplicationForm()
+    profile = Permissions.query.filter_by(user_id = current_user.id).first()
+    
+
+    if aForm.validate_on_submit():
+        return redirect(url_for('routes.apply', postid = postid, brief = aForm.personal_statement.data, ref = aForm.faculty_ref_name.data))
+
+    return render_template('submit.html', title="Apply for Position", post = thepost, form = aForm, profile = profile)
+
+
 # ================================================================
 #   Name:           Applications Route
 #   Description:    Prints all applications for faculty postion posts
@@ -154,3 +168,46 @@ def applications():
     myposts = current_user.get_user_posts()
     print(myposts.count())
     return render_template('applications.html', title="Applications", posts = myposts)
+
+
+@bp_routes.route('/review/<postid>/<userid>', methods = ['GET', 'POST'])
+@login_required
+def review(postid, userid):
+    thepost = Post.query.filter_by(id = postid).first()
+    applicants = thepost.get_applicants()
+    application = Application.query.filter_by(applicant_id = userid).first()
+
+    for applicant in applicants: ##look through list of applicants
+        user = applicant.get_applicant() ## get user object for applicant
+        if user.id == userid:
+            application = applicant
+            break
+
+
+
+    print(type(application))
+    return render_template('review.html', title="Review Application", application = application)
+
+
+@bp_routes.route('/update/<postid>/<userid>/<change>', methods = ['GET', 'POST'])
+@login_required
+def update(postid, userid, change):
+    
+    thepost = Post.query.filter_by(id = postid).first()
+    applicants = thepost.get_applicants()
+    application = Application.query.filter_by(applicant_id = userid).first()
+
+    for applicant in applicants: ##look through list of applicants
+        user = applicant.get_applicant() ## get user object for applicant
+        if user.id == userid:
+            application = applicant
+            break
+
+    if change == 'Interview':
+        application.status = 'Interview'
+    elif (change == 'Reject'):
+        application.status = 'Reject'
+    
+    db.session.commit()
+
+    return redirect(url_for('routes.applications'))
