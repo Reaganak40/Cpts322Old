@@ -173,19 +173,8 @@ def applications():
 @bp_routes.route('/review/<postid>/<userid>', methods = ['GET', 'POST'])
 @login_required
 def review(postid, userid):
-    thepost = Post.query.filter_by(id = postid).first()
-    applicants = thepost.get_applicants()
-    application = Application.query.filter_by(applicant_id = userid).first()
-
-    for applicant in applicants: ##look through list of applicants
-        user = applicant.get_applicant() ## get user object for applicant
-        if user.id == userid:
-            application = applicant
-            break
-
-
-
-    print(type(application))
+    application = Application.query.filter_by(applicant_id = userid, post_id = postid).first()
+    print(application)
     return render_template('review.html', title="Review Application", application = application)
 
 
@@ -193,15 +182,7 @@ def review(postid, userid):
 @login_required
 def update(postid, userid, change):
     
-    thepost = Post.query.filter_by(id = postid).first()
-    applicants = thepost.get_applicants()
-    application = Application.query.filter_by(applicant_id = userid).first()
-
-    for applicant in applicants: ##look through list of applicants
-        user = applicant.get_applicant() ## get user object for applicant
-        if user.id == userid:
-            application = applicant
-            break
+    application = Application.query.filter_by(applicant_id = userid, post_id = postid).first()
 
     if change == 'Interview':
         application.status = 'Interview'
