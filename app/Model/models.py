@@ -78,11 +78,20 @@ class Permissions(db.Model):
     languages = db.Column(db.String(700))
     prior_research = db.Column(db.String(1500))
 
+    def init_permissions(self):
+        if self.permission_identifier == 'Student':
+            self.first_name = 'No'
+            self.last_name = 'Name'
+
     def get_permission_identifier(self):
         return self.permission_identifier
 
     def get_user_posts(self):
         return self.posts
+
+    def __repr__(self):
+        owner = User.query.filter_by(id = self.user_id).first()
+        return "<Permissions Object for: {}>".format(owner.id)
 
 # ================================================================
 #   Name:           Post Model

@@ -5,7 +5,7 @@ from flask import render_template, flash, redirect, url_for, request
 from config import Config
 
 from app import db
-from app.Model.models import Post, Major, User, postMajors
+from app.Model.models import Permissions, Post, Major, User, postMajors
 from app.Controller.forms import PostForm, ProfileForm, SortForm
 from flask_login import current_user, login_user, logout_user, login_required
 
@@ -66,8 +66,9 @@ def postposition():
 @bp_routes.route('/student_profile', methods=['GET'])
 @login_required
 def student_profile():
-    
-    return render_template('profile.html', title="Student Profile", profile = current_user)
+    profile = Permissions.query.filter_by(user_id = current_user.id).first()
+    print(profile)
+    return render_template('profile.html', title="Student Profile", profile = profile)
 
 
 
@@ -86,22 +87,23 @@ def update_student_profile():
     proForm = ProfileForm()
     if proForm.validate_on_submit():
         print('Validated')
+        profile = Permissions.query.filter_by(user_id = current_user.id).first()
 
         # update current user with form info
-        current_user.wsu_id = proForm.wsu_id.data
-        current_user.first_name = proForm.first_name.data
-        current_user.last_name = proForm.last_name.data
-        current_user.phone_no = proForm.phone_no.data
-        current_user.major = 'To be Implemented'
-        current_user.gpa = proForm.gpa.data
-        current_user.expected_grad_date = proForm.expected_grad_date.data
-        current_user.elect_courses = proForm.elect_courses.data
-        current_user.research_topics = 'To be Implemented'
-        current_user.languages = proForm.languages.data
-        current_user.prior_research = proForm.prior_research.data
+        profile.wsu_id = proForm.wsu_id.data
+        profile.first_name = proForm.first_name.data
+        profile.last_name = proForm.last_name.data
+        profile.phone_no = proForm.phone_no.data
+        profile.major = 'To be Implemented'
+        profile.gpa = proForm.gpa.data
+        profile.expected_grad_date = proForm.expected_grad_date.data
+        profile.elect_courses = proForm.elect_courses.data
+        profile.research_topics = 'To be Implemented'
+        profile.languages = proForm.languages.data
+        profile.prior_research = proForm.prior_research.data
 
         # commit changes
-        db.session.add(current_user)
+        db.session.add(profile)
         db.session.commit()
         flash('Profile Successfully Updated!')
         return redirect(url_for('routes.student_profile'))

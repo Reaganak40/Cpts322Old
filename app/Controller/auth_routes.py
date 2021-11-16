@@ -36,12 +36,15 @@ def register():
         else: # New User is a faculty
             new_user = User(username = rForm.username.data, email = rForm.email.data, user_type = 'Faculty')
 
-        new_permissions = Permissions(user_id = new_user.id)
-
         new_user.set_password(rForm.password.data)
         db.session.add(new_user)
+        db.session.commit()
+
+        new_permissions = Permissions(user_id = new_user.id, permission_identifier = new_user.user_type)
+        new_permissions.init_permissions()
         db.session.add(new_permissions)
         db.session.commit()
+
         flash('You are registered!')
         return redirect(url_for('routes.index')) #redirect new registed user
     return render_template('register.html', form = rForm)
@@ -72,7 +75,6 @@ def login():
         login_user(user, remember = form_login.remember_me.data)
             
         print(current_user)
-        current_user.init()
 
 
         if current_user.get_user_type() == 'Student': ## user is a student
