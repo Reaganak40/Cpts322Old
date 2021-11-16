@@ -24,9 +24,9 @@ def __repr__(self):
 # ================================================================
 #   Name:           User Model
 #   Description:    Class Definition for User
-#   Last Changed:   11/12/21
-#   Changed By:     Tay Jing Ren
-#   Change Details: I added the posts relationship and def get_user_posts here
+#   Last Changed:   11/16/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Revised User database model
 # ================================================================
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key = True)
@@ -34,12 +34,9 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique = True, index = True)
     password_hash = db.Column(db.String(128))
     user_type = db.Column(db.String(20))
-    posts = db.relationship('Post', backref='writer', lazy = 'dynamic')
 
-    __mapper_args__ = {
-        'polymorphic_identity':'user',
-        'polymorphic_on': user_type
-    }
+    permissions = db.relationship('Permissions', backref='writer', lazy = 'dynamic')
+    posts = db.relationship('Post', backref='writer', lazy = 'dynamic')
 
     def __repr__(self):
         return '<Username: {} - {};>'.format(self.id,self.username)
@@ -52,21 +49,23 @@ class User(UserMixin, db.Model):
 
     def get_user_type(self):
         return self.user_type
-        
+
     def get_user_posts(self):
         return self.posts
 # ================================================================
-#   Name:           Student Model
-#   Description:    Class Definition for Student (Child of User)
-#   Last Changed:   11/14/21
-#   Changed By:     Denise Tanumihardja
-#   Change Details: Initial Implementation of Student model
+#   Name:           Permissions Model
+#   Description:    Class Definition for Permissions
+#   Last Changed:   11/16/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Initial Implementation
 # ================================================================
-class Student(User):
+class Permissions(db.Model):
 
-    __tablename__ = 'student'
+    permission_identifier = db.Column(db.String)
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-    id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+    # Student Permissions
     wsu_id = db.Column(db.Integer, unique = True)
     first_name = db.Column(db.String(64))
     last_name = db.Column(db.String(100))
@@ -79,33 +78,11 @@ class Student(User):
     languages = db.Column(db.String(700))
     prior_research = db.Column(db.String(1500))
 
-    __mapper_args__ = {
-        'polymorphic_identity':'student',
-    }
+    def get_permission_identifier(self):
+        return self.permission_identifier
 
-    def __repr__(self):
-        return '<Username: {} - {}; Type: {}; Class-Object Code: 0>'.format(self.id,self.username, self.get_user_type())
-
-# ================================================================
-#   Name:           Faculty Model
-#   Description:    Class Definition for Faculty (Child of User)
-#   Last Changed:   11/12/21
-#   Changed By:     Tay Jing Ren
-#   Change Details: I changed the posts relationship and def get_user_posts by moving them into the User model
-# ================================================================
-class Faculty(User):
-    __tablename__ = 'faculty'
-
-    #posts = db.relationship('Post', backref='writer', lazy = 'dynamic')
-
-    __mapper_args__ = {
-        'polymorphic_identity':'faculty',
-    }
-    def __repr__(self):
-        return '<Username: {} - {}; Type: {}; Class-Object Code: 1>'.format(self.id,self.username, self.get_user_type())
-
-    # def get_user_posts(self):
-    #     return self.posts
+    def get_user_posts(self):
+        return self.posts
 
 # ================================================================
 #   Name:           Post Model

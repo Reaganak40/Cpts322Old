@@ -34,7 +34,7 @@
 
                 {% else %}
 
-                    {% if current_user.get_user_type() == 'student' %}
+                    {% if current_user.get_user_type() == 'Student' %}
                         <td><a href = "{{ url_for('routes.student_profile') }}"> Profile </a></td>
                     {% else %}
                         <td><a href="{{ url_for('routes.postposition') }}" class = "button"> New Post </a></td>

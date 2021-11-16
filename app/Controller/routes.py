@@ -42,7 +42,7 @@ def index():
 @bp_routes.route('/postposition', methods=['GET', 'POST'])
 @login_required
 def postposition():
-    if current_user.get_user_type() == 'Student':
+    if current_user.get_user_type() == 'student':
         flash('You do not have permission to access this page.')
         return redirect(url_for('routes.index'))
     pForm = PostForm()
@@ -66,10 +66,10 @@ def postposition():
 @bp_routes.route('/student_profile', methods=['GET'])
 @login_required
 def student_profile():
-    student_profile = User.query.filter_by(id = current_user.id).first()
-    print(student_profile.wsu_id)
+    
+    return render_template('profile.html', title="Student Profile", profile = current_user)
 
-    return render_template('profile.html', title="Student Profile", profile = student_profile)
+
 
 # ================================================================
 #   Name:           Student Profile Update Route

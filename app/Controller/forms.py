@@ -8,7 +8,7 @@ from wtforms.validators import  DataRequired, Email, Length, NumberRange, Length
 from wtforms.widgets.core import Select
 from wtforms_sqlalchemy.fields import QuerySelectMultipleField
 from wtforms.widgets import ListWidget, CheckboxInput
-from app.Model.models import Post, Major, User, Student
+from app.Model.models import Post, Major, User
 from flask_login import current_user
 
 

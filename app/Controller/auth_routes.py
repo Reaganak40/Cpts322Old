@@ -5,7 +5,7 @@ from flask import render_template, flash, redirect, url_for
 from flask_sqlalchemy import sqlalchemy
 from app.Controller.routes import index
 from config import Config
-from app.Model.models import Faculty, User, Student
+from app.Model.models import Permissions, User
 from app import db
 from flask_login import current_user, login_user, logout_user, login_required
 from app.Controller.auth_forms import LoginForm, RegisterForm
@@ -32,12 +32,15 @@ def register():
     if rForm.validate_on_submit():
 
         if(rForm.type.data == '0'): # New user is a student
-            new_user = User(username = rForm.username.data, email = rForm.email.data, user_type = 'student')
+            new_user = User(username = rForm.username.data, email = rForm.email.data, user_type = 'Student')
         else: # New User is a faculty
-            new_user = User(username = rForm.username.data, email = rForm.email.data, user_type = 'faculty')
+            new_user = User(username = rForm.username.data, email = rForm.email.data, user_type = 'Faculty')
+
+        new_permissions = Permissions(user_id = new_user.id)
 
         new_user.set_password(rForm.password.data)
         db.session.add(new_user)
+        db.session.add(new_permissions)
         db.session.commit()
         flash('You are registered!')
         return redirect(url_for('routes.index')) #redirect new registed user
@@ -69,6 +72,7 @@ def login():
         login_user(user, remember = form_login.remember_me.data)
             
         print(current_user)
+        current_user.init()
 
 
         if current_user.get_user_type() == 'Student': ## user is a student
