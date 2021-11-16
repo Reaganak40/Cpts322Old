@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, BooleanField, SelectField
 from wtforms.validators import  ValidationError, DataRequired, EqualTo, Length, Email
-from app.Model.models import User
+from app.Model.models import User, Major
 from flask_login import current_user
 
 # ================================================================
@@ -12,6 +12,8 @@ from flask_login import current_user
 #   Change Details: Fixed Type Selection Field 
 #                   (Student and Faculty numbers we wrong)
 # ================================================================
+
+
 
 class RegisterForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])

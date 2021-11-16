@@ -28,7 +28,7 @@ def index():
     sform = SortForm()
     print(current_user.get_user_type())
     if sform.validate_on_submit():
-        if (sform.checkbox.data == True):
+        if (sform.checkbox.data == False):
             posts = current_user.get_user_posts()
     return render_template('index.html', title="Lab Opportunities", posts=posts.all(), post_count = posts.count(), form= sform)
 
@@ -94,7 +94,7 @@ def update_student_profile():
         profile.first_name = proForm.first_name.data
         profile.last_name = proForm.last_name.data
         profile.phone_no = proForm.phone_no.data
-        profile.major = 'To be Implemented'
+        profile.major = proForm.major.data
         profile.gpa = proForm.gpa.data
         profile.expected_grad_date = proForm.expected_grad_date.data
         profile.elect_courses = proForm.elect_courses.data

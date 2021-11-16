@@ -1,5 +1,5 @@
 from app import create_app, db
-from app.Model.models import Post, Major, postMajors
+from app.Model.models import Post, Major, Field, postMajors
 
 app = create_app()
 
@@ -18,6 +18,13 @@ def initDB(*args, **kwargs):
          for m in majors:
              db.session.add(Major(name=m))
          db.session.commit()
+
+    # if Field.query.count() is None:
+    #     field_name = [{'field_name':'Artificial Intelligence', 'major_name':'Computer Science'}]
+    #     for f in field_name:
+    #         db.session.add(Field(majors = f['majors'], field = f['field']))
+    #     db.session.commit()
+
 
 if __name__ == "__main__":
     app.run(debug=True)
