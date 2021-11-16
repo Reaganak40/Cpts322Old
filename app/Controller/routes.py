@@ -5,7 +5,7 @@ from flask import render_template, flash, redirect, url_for, request
 from config import Config
 
 from app import db
-from app.Model.models import Post, Major, Student, postMajors, Faculty
+from app.Model.models import Post, Major, User, postMajors
 from app.Controller.forms import PostForm, ProfileForm, SortForm
 from flask_login import current_user, login_user, logout_user, login_required
 
@@ -26,6 +26,7 @@ bp_routes.template_folder = Config.TEMPLATE_FOLDER #'..\\View\\templates'
 def index():
     posts = Post.query.order_by(Post.timestamp.desc())
     sform = SortForm()
+    print(current_user.get_user_type())
     if sform.validate_on_submit():
         if (sform.checkbox.data == True):
             posts = current_user.get_user_posts()
@@ -65,7 +66,7 @@ def postposition():
 @bp_routes.route('/student_profile', methods=['GET'])
 @login_required
 def student_profile():
-    student_profile = Student.query.filter_by(id = current_user.id).first()
+    student_profile = User.query.filter_by(id = current_user.id).first()
     print(student_profile.wsu_id)
 
     return render_template('profile.html', title="Student Profile", profile = student_profile)

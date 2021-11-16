@@ -52,6 +52,7 @@ class User(UserMixin, db.Model):
 
     def get_user_type(self):
         return self.user_type
+        
     def get_user_posts(self):
         return self.posts
 # ================================================================

@@ -17,7 +17,7 @@ bp_auth.template_folder = Config.TEMPLATE_FOLDER
 # ================================================================
 #   Name:           Register Route
 #   Description:    Handles Registers Forms, Creates an account for both student and faculty.
-#   Last Changed:   11/12/21
+#   Last Changed:   11/15/21
 #   Changed By:     Reagan Kelley
 #   Change Details: FIxed register to compensate for 
 #                   new database model
@@ -31,10 +31,10 @@ def register():
     rForm = RegisterForm()
     if rForm.validate_on_submit():
 
-        if(rForm.type.data == 0): # New user is a student
-            new_user = Student(username = rForm.username.data, email = rForm.email.data, user_type = rForm.type.data)
+        if(rForm.type.data == '0'): # New user is a student
+            new_user = User(username = rForm.username.data, email = rForm.email.data, user_type = 'student')
         else: # New User is a faculty
-            new_user = Faculty(username = rForm.username.data, email = rForm.email.data, user_type = rForm.type.data)
+            new_user = User(username = rForm.username.data, email = rForm.email.data, user_type = 'faculty')
 
         new_user.set_password(rForm.password.data)
         db.session.add(new_user)
@@ -46,7 +46,7 @@ def register():
 # ================================================================
 #   Name:           Login Route
 #   Description:    Handles Login Forms, Allows user to login
-#   Last Changed:   11/12/21
+#   Last Changed:   11/15/21
 #   Changed By:     Reagan Kelley
 #   Change Details: Login heavily revised to work with new 
 #                   database model
@@ -65,13 +65,6 @@ def login():
         if (user is None) or user.check_password(form_login.password.data) is False:
                 flash('Invalid username or password.')
                 return redirect(url_for('auth.login'))
-
-        if(user.get_user_type() == 'Student'):
-            # If logged-in user is a student, current_user will be a Student type
-            user = Student.query.filter_by(username = form_login.username.data).first()
-        else:
-            # If logged-in user is a student, current_user will be a Faculty type
-            user = Faculty.query.filter_by(username = form_login.username.data).first()
 
         login_user(user, remember = form_login.remember_me.data)
             
