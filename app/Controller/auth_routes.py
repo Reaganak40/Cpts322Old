@@ -41,7 +41,6 @@ def register():
         db.session.commit()
 
         new_permissions = Permissions(user_id = new_user.id, permission_identifier = new_user.user_type)
-        new_permissions.init_permissions()
         db.session.add(new_permissions)
         db.session.commit()
 

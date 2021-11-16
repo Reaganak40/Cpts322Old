@@ -93,9 +93,29 @@ def update_student_profile():
         flash('You do not have permission to access this page.')
         return redirect(url_for('routes.index'))
     proForm = ProfileForm()
+    profile = Permissions.query.filter_by(user_id = current_user.id).first()
+
+    if request.method == 'GET': # Populate fields with existing data
+        proForm.first_name.data = profile.first_name
+        proForm.last_name.data = profile.last_name
+        proForm.wsu_id.data = profile.wsu_id
+        proForm.phone_no.data = profile.phone_no
+        proForm.gpa.data = profile.gpa
+        proForm.expected_grad_date.data = profile.expected_grad_date
+        proForm.elect_courses.data = profile.elect_courses
+        proForm.languages.data = profile.languages
+        proForm.prior_research.data = profile.prior_research
+
     if proForm.validate_on_submit():
         print('Validated')
         profile = Permissions.query.filter_by(user_id = current_user.id).first()
+
+        if(Permissions.query.filter_by(wsu_id = proForm.wsu_id.data).count() > 0): ##if wsu_id already exists
+            if(Permissions.query.filter_by(wsu_id = proForm.wsu_id.data).first().wsu_id != profile.wsu_id): ## if its not your current one
+                flash('That WSUID is already in use!')
+                return render_template('updateprofile.html', title = "Student Profile", update = proForm, user = current_user)
+
+
 
         # update current user with form info
         profile.wsu_id = proForm.wsu_id.data
