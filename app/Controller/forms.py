@@ -63,7 +63,7 @@ class ProfileForm(FlaskForm):
     save = SubmitField('Save Changes')
 
     def is_email(self, email):
-        user_emails = Student.query.filter_by(email = email.data).all()
+        user_emails = User.query.filter_by(email = email.data).all()
         for student_email in user_emails:
             if(student_email.id != current_user):
                 raise ValidationError('The email is already associated with another account! Please use a different email address.')

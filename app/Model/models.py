@@ -36,7 +36,10 @@ class User(UserMixin, db.Model):
     user_type = db.Column(db.String(20))
 
     permissions = db.relationship('Permissions', backref='writer', lazy = 'dynamic')
+
     posts = db.relationship('Post', backref='writer', lazy = 'dynamic')
+    applications = db.relationship('Application', back_populates = 'student_applied')
+
 
     def __repr__(self):
         return '<Username: {} - {};>'.format(self.id,self.username)
@@ -52,6 +55,32 @@ class User(UserMixin, db.Model):
 
     def get_user_posts(self):
         return self.posts
+
+    def apply(self, thepost): ##apply to a position
+        if not self.has_applied(thepost):
+            newApplication = Application(position_for = thepost)
+            self.applications.append(newApplication)
+            db.session.commit()
+
+    def unapply(self, oldpost):
+        if self.has_applied(oldpost):
+            curApplication = Application.query.filter_by(applicant_id=self.id).filter_by(post_id = oldpost.id).first()
+            db.session.delete(curApplication)
+            db.session.commit()
+
+    def has_applied(self, newpost):
+        return (Application.query.filter_by(applicant_id=self.id).filter_by(post_id = newpost.id).count() > 0)
+
+class Application(db.Model):
+    applicant_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key = True)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), primary_key = True)
+
+    student_applied = db.relationship('User')
+    position_for = db.relationship('Post')
+
+    def __repr__(self):
+        return '<Application for {} - by {};>'.format(self.post_id,self.applicant_id)
+    
 # ================================================================
 #   Name:           Permissions Model
 #   Description:    Class Definition for Permissions
@@ -113,6 +142,9 @@ class Post(db.Model):
         primaryjoin = (postMajors.c.post_id == id),  
         lazy = 'dynamic' 
     )
+
+    applicants = db.relationship('Application', back_populates = 'position_for')
+
 
 
     def get_majors(self):

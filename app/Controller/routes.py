@@ -42,7 +42,7 @@ def index():
 @bp_routes.route('/postposition', methods=['GET', 'POST'])
 @login_required
 def postposition():
-    if current_user.get_user_type() == 'student':
+    if current_user.get_user_type() == 'Student':
         flash('You do not have permission to access this page.')
         return redirect(url_for('routes.index'))
     pForm = PostForm()
@@ -66,6 +66,11 @@ def postposition():
 @bp_routes.route('/student_profile', methods=['GET'])
 @login_required
 def student_profile():
+    if(current_user.get_user_type() == 'Faculty'):
+        flash('You do not have permission to access this page.')
+        return redirect(url_for('routes.index'))
+
+
     profile = Permissions.query.filter_by(user_id = current_user.id).first()
     print(profile)
     return render_template('profile.html', title="Student Profile", profile = profile)
@@ -84,6 +89,9 @@ def student_profile():
 @bp_routes.route('/student_profile_update', methods=['GET', 'POST'])
 @login_required
 def update_student_profile():
+    if(current_user.get_user_type() == 'Faculty'):
+        flash('You do not have permission to access this page.')
+        return redirect(url_for('routes.index'))
     proForm = ProfileForm()
     if proForm.validate_on_submit():
         print('Validated')
@@ -108,4 +116,27 @@ def update_student_profile():
         flash('Profile Successfully Updated!')
         return redirect(url_for('routes.student_profile'))
     return render_template('updateprofile.html', title = "Student Profile", update = proForm, user = current_user)
-        
+
+@bp_routes.route('/apply/<postid>', methods = ['POST'])
+@login_required
+def apply(postid):
+    thepost = Post.query.filter_by(id = postid).first()
+    if thepost is None:
+        flash('Class with id "{}" not found.'.format(postid))
+        return redirect(url_for('routes.index'))
+    current_user.apply(thepost)
+    db.session.commit()
+    flash('You applied for: {}!'.format(thepost.title))
+    return redirect(url_for('routes.index'))
+
+@bp_routes.route('/unapply/<postid>', methods = ['POST'])
+@login_required
+def unapply(postid):
+    thepost = Post.query.filter_by(id = postid).first()
+    if thepost is None:
+        flash('Class with id "{}" not found.'.format(postid))
+        return redirect(url_for('routes.index'))
+    current_user.unapply(thepost)
+    db.session.commit()
+    flash('You redrew your application for: {}!'.format(thepost.title))
+    return redirect(url_for('routes.index'))
