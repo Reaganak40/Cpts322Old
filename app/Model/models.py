@@ -81,6 +81,12 @@ class User(UserMixin, db.Model):
         application = Application.query.filter_by(applicant_id=self.id).filter_by(post_id = newpost.id).first()
         return application.status
 
+    def can_apply(self):
+        if self.get_user_type() == 'Faculty':
+            return False
+        permissions = Permissions.query.filter_by(user_id = self.id).first()
+        return permissions.can_apply()
+
 
 class Application(db.Model):
     applicant_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key = True)
@@ -142,6 +148,11 @@ class Permissions(db.Model):
 
     def get_user_posts(self):
         return self.posts
+
+    def can_apply(self):
+        if self.first_name is None:
+            return False
+
 
     def __repr__(self):
         owner = User.query.filter_by(id = self.user_id).first()

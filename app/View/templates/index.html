@@ -13,7 +13,18 @@
 {% block content %}
     
     <h1>Welcome to Lab Opportunities!</h1>
-    <h2> "A ship does not sail with yesterday's winds." </h2> <br>
+    <h2> "A ship does not sail with yesterday's winds." </h2> 
+    {% if current_user.get_user_type() == 'Student' %}
+    {% if current_user.can_apply() == False %}
+    
+    <h3><span style="color:red"> ** Your Profile Information needs to be updated! ** <br><br> Go to
+    
+        <a href = "{{ url_for('routes.student_profile') }}"> Profile</a> to update. </span> 
+    </h3>
+
+    {% endif %}
+    {% endif %}
+
     {% if current_user.get_user_type() == 'Faculty' %}
     <form action= "" method = "post" class = "formselect"> <div>Sort by: {{form.hidden_tag()}} {{form.checkbox.label}}  {{form.checkbox}} {{form.refresh}} </div> </form>
     {% else %}
