@@ -1,17 +1,18 @@
 from typing import Text
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField
-from wtforms import validators
 from wtforms.fields.core import BooleanField, DateField, FloatField
 from wtforms.fields.simple import TextAreaField
 from wtforms.validators import  DataRequired, Email, Length, NumberRange, Length, ValidationError
 from wtforms.widgets.core import Select
-from wtforms_sqlalchemy.fields import QuerySelectMultipleField
 from wtforms.widgets import ListWidget, CheckboxInput
-from app.Model.models import Post, Major, User
+from wtforms_sqlalchemy.fields import QuerySelectMultipleField, QuerySelectField
+from app.Model.models import Permissions, Post, Major, User, Field
 from flask_login import current_user
 
 
+def get_majorlabel(theMajor):
+    return theMajor.name
 
 def all_majors():
     return Major.query.all()
@@ -51,12 +52,13 @@ class ProfileForm(FlaskForm):
     last_name = StringField('Last Name')
     wsu_id = StringField('WSU ID', validators=[Length(min = 8, max = 9)])
     phone_no = StringField('Phone Number', validators=[Length(max = 10)])
-    ##major = SelectField('Major', choices = [(0, 'CptS - Computer Science'), (1, 'EE - Electrical Engineering'), (2, 'CptSE - Computer Engineering'), (3, 'SE - Software Engineering'), (4, 'DA - Data Analytics')])
+    #major = SelectField('Major', choices = [(0, 'CptS - Computer Science'), (1, 'EE - Electrical Engineering'), (2, 'CptSE - Computer Engineering'), (3, 'SE - Software Engineering'), (4, 'DA - Data Analytics')])
+    major = QuerySelectField('Major', query_factory = all_majors, get_label = get_majorlabel, allow_blank = False)
     #major = TextAreaField("Filler for Major (Implement later)") ## TODO: Implement student major 
     gpa = FloatField('GPA', validators = [NumberRange(min = 0.0, max = 5.0)])
     expected_grad_date = DateField('Expected Graduation Date (mm/dd/yyyy)', format = '%m/%d/%Y')
     elect_courses = TextAreaField("Technical Elective Courses (Include Grades)")
-    ## research_topics = QuerySelectMultipleField('Select Resarch Topics') #TODO: Add tags from relationship
+    #research_topics = QuerySelectField('Select Resarch Topics') #TODO: Add tags from relationship
     #research_topics = TextAreaField("Filler for research topics (Implement later)")
     languages = TextAreaField('Programming Languages Experience')
     prior_research = TextAreaField('Describe your Prior Research Experience (If Any)')
