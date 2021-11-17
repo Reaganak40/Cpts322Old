@@ -1,0 +1,44 @@
+<!--    
+# ================================================================
+#   Name:           review html
+#   Description:    View page to review an application
+#   Last Changed:   11/16/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Initial Implementation
+# ================================================================
+-->
+
+{% extends "base.html" %}
+
+{% block content %}
+    
+    <h3> Applicant's General Information </h3>
+    {% set student = application.get_applicant() %}
+    {% set profile = student.get_permissions() %}
+
+    {% include '_profile.html' %}
+
+    <h3> Applicant's Personal Statement </h3>
+
+    {{ application.personal_statement }}
+
+    <h3> Applicant's Reference </h3>
+
+    {{ application.faculty_ref }}
+
+    <br>
+    <br>
+
+    <h3> What would you like to do with this application? </h3>
+    
+    <form action = "{{url_for('routes.update', postid = application.post_id, userid = application.applicant_id, change = 'Interview')}}" method="post">
+        <input type="submit", value="Approve for Interview", class="apply_button">
+     </form>
+
+     <form action = "{{url_for('routes.update', postid = application.post_id, userid = application.applicant_id, change = 'Reject')}}" method="post">
+        <input type="submit", value="Reject Applicant", class="unapply_button">
+     </form>
+
+
+
+{% endblock %}

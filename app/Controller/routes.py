@@ -5,8 +5,8 @@ from flask import render_template, flash, redirect, url_for, request
 from config import Config
 
 from app import db
-from app.Model.models import Permissions, Post, Major, User, postMajors
-from app.Controller.forms import PostForm, ProfileForm, SortForm
+from app.Model.models import Application, Permissions, Post, Major, User, postMajors
+from app.Controller.forms import ApplicationForm, PostForm, ProfileForm, SortForm
 from flask_login import current_user, login_user, logout_user, login_required
 
 
@@ -42,7 +42,7 @@ def index():
 @bp_routes.route('/postposition', methods=['GET', 'POST'])
 @login_required
 def postposition():
-    if current_user.get_user_type() == 'student':
+    if current_user.get_user_type() == 'Student':
         flash('You do not have permission to access this page.')
         return redirect(url_for('routes.index'))
     pForm = PostForm()
@@ -66,6 +66,11 @@ def postposition():
 @bp_routes.route('/student_profile', methods=['GET'])
 @login_required
 def student_profile():
+    if(current_user.get_user_type() == 'Faculty'):
+        flash('You do not have permission to access this page.')
+        return redirect(url_for('routes.index'))
+
+
     profile = Permissions.query.filter_by(user_id = current_user.id).first()
     print(profile)
     return render_template('profile.html', title="Student Profile", profile = profile)
@@ -84,10 +89,33 @@ def student_profile():
 @bp_routes.route('/student_profile_update', methods=['GET', 'POST'])
 @login_required
 def update_student_profile():
+    if(current_user.get_user_type() == 'Faculty'):
+        flash('You do not have permission to access this page.')
+        return redirect(url_for('routes.index'))
     proForm = ProfileForm()
+    profile = Permissions.query.filter_by(user_id = current_user.id).first()
+
+    if request.method == 'GET': # Populate fields with existing data
+        proForm.first_name.data = profile.first_name
+        proForm.last_name.data = profile.last_name
+        proForm.wsu_id.data = profile.wsu_id
+        proForm.phone_no.data = profile.phone_no
+        proForm.gpa.data = profile.gpa
+        proForm.expected_grad_date.data = profile.expected_grad_date
+        proForm.elect_courses.data = profile.elect_courses
+        proForm.languages.data = profile.languages
+        proForm.prior_research.data = profile.prior_research
+
     if proForm.validate_on_submit():
         print('Validated')
         profile = Permissions.query.filter_by(user_id = current_user.id).first()
+
+        if(Permissions.query.filter_by(wsu_id = proForm.wsu_id.data).count() > 0): ##if wsu_id already exists
+            if(Permissions.query.filter_by(wsu_id = proForm.wsu_id.data).first().wsu_id != profile.wsu_id): ## if its not your current one
+                flash('That WSUID is already in use!')
+                return render_template('updateprofile.html', title = "Student Profile", update = proForm, user = current_user)
+
+
 
         # update current user with form info
         profile.wsu_id = proForm.wsu_id.data
@@ -108,4 +136,79 @@ def update_student_profile():
         flash('Profile Successfully Updated!')
         return redirect(url_for('routes.student_profile'))
     return render_template('updateprofile.html', title = "Student Profile", update = proForm, user = current_user)
-        
+
+@bp_routes.route('/apply/<postid>/<brief>/<ref>', methods = ['GET', 'POST'])
+@login_required
+def apply(postid, brief, ref):
+    thepost = Post.query.filter_by(id = postid).first()
+    if thepost is None:
+        flash('Class with id "{}" not found.'.format(postid))
+        return redirect(url_for('routes.index'))
+    current_user.apply(thepost, brief, ref)
+    db.session.commit()
+    flash('You applied for: {}!'.format(thepost.title))
+    return redirect(url_for('routes.index'))
+
+@bp_routes.route('/unapply/<postid>', methods = ['POST'])
+@login_required
+def unapply(postid):
+    thepost = Post.query.filter_by(id = postid).first()
+    if thepost is None:
+        flash('Class with id "{}" not found.'.format(postid))
+        return redirect(url_for('routes.index'))
+    current_user.unapply(thepost)
+    db.session.commit()
+    flash('You redrew your application for: {}!'.format(thepost.title))
+    return redirect(url_for('routes.index'))
+
+@bp_routes.route('/submit_application/<postid>', methods = ['GET', 'POST'])
+@login_required
+def submit_application(postid):
+    thepost = Post.query.filter_by(id = postid).first()
+    aForm = ApplicationForm()
+    profile = Permissions.query.filter_by(user_id = current_user.id).first()
+    
+
+    if aForm.validate_on_submit():
+        return redirect(url_for('routes.apply', postid = postid, brief = aForm.personal_statement.data, ref = aForm.faculty_ref_name.data))
+
+    return render_template('submit.html', title="Apply for Position", post = thepost, form = aForm, profile = profile)
+
+
+# ================================================================
+#   Name:           Applications Route
+#   Description:    Prints all applications for faculty postion posts
+#   Last Changed:   11/16/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Initial Implementation
+# ================================================================
+@bp_routes.route('/applications', methods=['GET', 'POST'])
+@login_required
+def applications():
+    myposts = current_user.get_user_posts()
+    print(myposts.count())
+    return render_template('applications.html', title="Applications", posts = myposts)
+
+
+@bp_routes.route('/review/<postid>/<userid>', methods = ['GET', 'POST'])
+@login_required
+def review(postid, userid):
+    application = Application.query.filter_by(applicant_id = userid, post_id = postid).first()
+    print(application)
+    return render_template('review.html', title="Review Application", application = application)
+
+
+@bp_routes.route('/update/<postid>/<userid>/<change>', methods = ['GET', 'POST'])
+@login_required
+def update(postid, userid, change):
+    
+    application = Application.query.filter_by(applicant_id = userid, post_id = postid).first()
+
+    if change == 'Interview':
+        application.status = 'Interview'
+    elif (change == 'Reject'):
+        application.status = 'Reject'
+    
+    db.session.commit()
+
+    return redirect(url_for('routes.applications'))

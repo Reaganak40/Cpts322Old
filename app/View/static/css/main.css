@@ -157,3 +157,56 @@ a:hover {
     color: darkred; 
     text-transform: uppercase;
 }
+
+.apply_button {
+	width:200px;
+	font-size: 18px;
+	margin: 10px 0px 0px 0px;
+	padding : 5px;
+	border: 1px solid gray;
+	background-color: rgb(192, 238,192);
+}
+
+.apply_button:hover{
+	background-color: green;
+	color: white;
+}
+
+.unapply_button {
+	width:200px;
+	font-size: 18px;
+	margin: 10px 0px 0px 0px;
+	padding : 5px;
+	border: 1px solid gray;
+	background-color: rgb(238, 192,192);
+}
+
+.unapply_button:hover{
+	background-color: red;
+	color: white;
+}
+
+.coursetable tr:hover{
+	background-color: lightgray;
+}
+
+.coursetable {
+	text-align: left;
+	border: 1px black solid;
+	width : 80%;
+	font-size : 18px
+}
+
+.review_button {
+	width:100px;
+	font-size: 18px;
+	margin: 10px 0px 0px 0px;
+	padding : 5px;
+	border: 1px solid gray;
+	background-color: rgb(192, 238,192);
+}
+
+.review_button:hover{
+	background-color: green;
+	color: white;
+}

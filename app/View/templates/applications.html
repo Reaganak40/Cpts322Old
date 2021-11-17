@@ -1,0 +1,40 @@
+<!--    
+# ================================================================
+#   Name:           applications html
+#   Description:    Displays all applications for faculty postions
+#   Last Changed:   11/16/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Initial Implementation
+# ================================================================
+-->
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<table class = "coursetable">
+    <thead>
+    <tr valign = "bottom">
+        <td width = "20%"> Position</td>
+        <td width = "20%"> Applicant</td>
+        <td width = "20%"> Email</td>
+        <td width = "15%"> Major </td>
+        <td width = "10%"> GPA </td>
+        <td width = "15%"> Status </td>
+
+
+    </tr>
+    </thead>
+</table>
+{% for post in posts %}
+    {% for applicant in post.get_applicants() %}
+        {% set student = applicant.get_applicant() %}
+        {% set profile = student.get_permissions() %}
+        {% set position_name = applicant.get_position() %}
+        {% include '_studentapplication.html' %}
+    {% endfor %}
+{% endfor %}
+
+
+
+{% endblock %}

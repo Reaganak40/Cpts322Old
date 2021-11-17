@@ -38,6 +38,8 @@
                         <td><a href = "{{ url_for('routes.student_profile') }}"> Profile </a></td>
                     {% else %}
                         <td><a href="{{ url_for('routes.postposition') }}" class = "button"> New Post </a></td>
+                        <td><a href="{{ url_for('routes.applications') }}" class = "button"> Applications </a></td>
+
                     {% endif %}
                     
                     <td><a href="{{ url_for('auth.logout') }}" class = "button"> Logout </a></td>
