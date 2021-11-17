@@ -94,6 +94,7 @@ def update_student_profile():
         return redirect(url_for('routes.index'))
     proForm = ProfileForm()
     profile = Permissions.query.filter_by(user_id = current_user.id).first()
+   
 
     if request.method == 'GET': # Populate fields with existing data
         proForm.first_name.data = profile.first_name
@@ -109,7 +110,7 @@ def update_student_profile():
     if proForm.validate_on_submit():
         print('Validated')
         profile = Permissions.query.filter_by(user_id = current_user.id).first()
-
+        major_name = Major.query.filter_by(id = (proForm.major.data).id).first()
         if(Permissions.query.filter_by(wsu_id = proForm.wsu_id.data).count() > 0): ##if wsu_id already exists
             if(Permissions.query.filter_by(wsu_id = proForm.wsu_id.data).first().wsu_id != profile.wsu_id): ## if its not your current one
                 flash('That WSUID is already in use!')
@@ -122,7 +123,7 @@ def update_student_profile():
         profile.first_name = proForm.first_name.data
         profile.last_name = proForm.last_name.data
         profile.phone_no = proForm.phone_no.data
-        profile.major = proForm.major.data
+        profile.major = major_name.get_major_name()
         profile.gpa = proForm.gpa.data
         profile.expected_grad_date = proForm.expected_grad_date.data
         profile.elect_courses = proForm.elect_courses.data

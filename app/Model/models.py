@@ -25,10 +25,10 @@ def __repr__(self):
 # Relationship: Every subfield can have multiple majors
 # ================================================================
 subField = db.Table('subField', 
-    db.Column('major_id', db.Integer, db.ForeignKey('major.id')),
-    db.Column('field_id', db.Integer, db.ForeignKey('field.id')))
+     db.Column('major_id', db.Integer, db.ForeignKey('major.id')),
+     db.Column('field_id', db.Integer, db.ForeignKey('field.id')))
 def __repr__ (self):
-    return '<Major Name: {}, Field Name: {}>'.format(self.major_name, self.field_name)
+     return '<Major Name: {}, Field Name: {}>'.format(self.major_name, self.field_name)
 # ================================================================
 #   Name:           User Model
 #   Description:    Class Definition for User
@@ -132,9 +132,7 @@ class Permissions(db.Model):
     first_name = db.Column(db.String(64))
     last_name = db.Column(db.String(100))
     phone_no = db.Column(db.String(10))
-    #major = db.Column(db.ForeignKey('major.id'))
-    #print(major)
-    majorofstudent = db.relationship('StudentMajor', back_populates = '_permissions') ## TODO: Need to impelement majors
+    major = db.Column(db.String(20), db.ForeignKey('major.id'))
     gpa = db.Column(db.Float(precision = 1))
     expected_grad_date = db.Column(db.Date)
     elect_courses = db.Column(db.String(1500))
@@ -197,21 +195,19 @@ class Post(db.Model):
 # ================================================================
 class Major(db.Model):
     id = db.Column(db.Integer, primary_key = True)
-    name = db.Column(db.String(20), primary_key = True)
-    studentsinmajor = db.relationship('StudentMajor', back_populates = '_major')
-    print(name)
+    name = db.Column(db.String(20))
     def get_major_name(self):
         return self.name
 
-class StudentMajor(db.Model):
-      studentmajor = db.Column(db.String(20), db.ForeignKey('major.name'), primary_key = True)
-      studentid = db.Column(db.Integer, db.ForeignKey('permissions.id'), primary_key = True)
-      startdate = db.Column(db.DateTime)
-      primary = db.Column(db.Boolean)
-      _permissions = db.relationship('Permissions')
-      _major = db.relationship('Major')
-      def __repr__(self):
-          return '<StudentMajor ({}, {}, {}, {}) >'.format(self.studentmajor, self.studentid, self.startdate, self.primary)
+# class StudentMajor(db.Model):
+#       studentmajor = db.Column(db.String(20), db.ForeignKey('major.name'), primary_key = True)
+#       studentid = db.Column(db.Integer, db.ForeignKey('permissions.id'), primary_key = True)
+#       startdate = db.Column(db.DateTime)
+#       primary = db.Column(db.Boolean)
+#       _permissions = db.relationship('Permissions')
+#       _major = db.relationship('Major')
+#       def __repr__(self):
+#           return '<StudentMajor ({}, {}, {}, {}) >'.format(self.studentmajor, self.studentid, self.startdate, self.primary)
 
 
 
@@ -226,13 +222,13 @@ class StudentMajor(db.Model):
 
 
 class Field(Major):
-    id = db.Column(db.Integer, primary_key = True)
-    #field = db.Column(db.String(50), primary_key = True)
-    #major_name= db.Column(db.String(30))
-    #major_id = db.Column(db.Integer, db.ForeignKey('major.id'))
-    majors = db.relationship('Major', backref = db.backref('subField', lazy = 'dynamic'), secondary = subField)
-    def get_research_field(self):
-        return self.field_name
+     id = db.Column(db.Integer, primary_key = True)
+     field = db.Column(db.String(50), primary_key = True)
+     major_name= db.Column(db.String(30))
+     major_id = db.Column(db.Integer, db.ForeignKey('major.id'))
+     majors = db.relationship('Major', backref = db.backref('subField', lazy = 'dynamic'), secondary = subField)
+     def get_research_field(self):
+         return self.field_name
 
 
 
