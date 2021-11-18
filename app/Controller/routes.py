@@ -18,7 +18,7 @@ bp_routes.template_folder = Config.TEMPLATE_FOLDER #'..\\View\\templates'
 #   Description:    index route for basic flask implementation
 #   Last Changed:   11/12/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Added posts query to get all position posts
+#   Change Details: Added posts query to get all position posts :)
 # ================================================================
 @bp_routes.route('/', methods=['GET', 'POST'])
 @bp_routes.route('/index', methods=['GET', 'POST'])
