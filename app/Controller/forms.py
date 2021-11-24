@@ -7,7 +7,7 @@ from wtforms.validators import  DataRequired, Email, Length, NumberRange, Length
 from wtforms.widgets.core import Select
 from wtforms.widgets import ListWidget, CheckboxInput
 from wtforms_sqlalchemy.fields import QuerySelectMultipleField, QuerySelectField
-from app.Model.models import Permissions, Post, Major, User, Field
+from app.Model.models import Post, Major, User, Field
 from flask_login import current_user
 
 
@@ -28,13 +28,13 @@ def all_research_topics():
 #   Changed By:     Reagan Kelley
 #   Change Details: Initial Implementation
 # ================================================================
-
 class PostForm(FlaskForm):
     title = StringField('Job Title', validators=[DataRequired()])
     body = TextAreaField("Job Description", [Length(min=0, max = 1500)])
     majors = QuerySelectMultipleField('Recommended Majors', query_factory= all_majors, get_label= lambda t: t.get_major_name(), widget=ListWidget(prefix_label=False), option_widget=CheckboxInput() )
     submit = SubmitField('Post')
 
+## Sort Form: Credit unknown TODO: Make comment block. Take responsibility for your actions.
 class SortForm(FlaskForm):
     refresh = SubmitField('Refresh')
     checkbox = BooleanField('Display all other posts')
@@ -46,7 +46,6 @@ class SortForm(FlaskForm):
 #   Changed By:     Reagan Kelley
 #   Change Details: Fixed run-time issues with form (Needs more work)
 # ================================================================
-
 class ProfileForm(FlaskForm):
     first_name = StringField('First Name')
     last_name = StringField('Last Name')
@@ -70,6 +69,13 @@ class ProfileForm(FlaskForm):
             if(student_email.id != current_user):
                 raise ValidationError('The email is already associated with another account! Please use a different email address.')
 
+# ================================================================
+#   Name:           Application form
+#   Description:    Class definition to update user's profile information
+#   Last Changed:   11/15/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Initial Implementation of Application Form
+# ================================================================
 class ApplicationForm(FlaskForm):
     personal_statement = TextAreaField("Brief Statement - Why do you want this position?", validators=[DataRequired(), Length(min=0, max = 1500)])
     faculty_ref_name = StringField("Provide One Faculty reference and their contact information", validators=[DataRequired(), Length(min=0, max = 60)])

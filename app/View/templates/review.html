@@ -14,7 +14,7 @@
     
     <h3> Applicant's General Information </h3>
     {% set student = application.get_applicant() %}
-    {% set profile = student.get_permissions() %}
+    {% set profile = student %}
 
     {% include '_profile.html' %}
 

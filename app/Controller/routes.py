@@ -5,7 +5,7 @@ from flask import render_template, flash, redirect, url_for, request
 from config import Config
 
 from app import db
-from app.Model.models import Application, Permissions, Post, Major, User, postMajors
+from app.Model.models import Application, Post, Major, User, Student, Faculty, postMajors
 from app.Controller.forms import ApplicationForm, PostForm, ProfileForm, SortForm
 from flask_login import current_user, login_user, logout_user, login_required
 
@@ -26,7 +26,7 @@ bp_routes.template_folder = Config.TEMPLATE_FOLDER #'..\\View\\templates'
 def index():
     posts = Post.query.order_by(Post.timestamp.desc())
     sform = SortForm()
-    print(current_user.get_user_type())
+    print(current_user)
     if sform.validate_on_submit():
         if (sform.checkbox.data == False):
             posts = current_user.get_user_posts()
@@ -42,7 +42,7 @@ def index():
 @bp_routes.route('/postposition', methods=['GET', 'POST'])
 @login_required
 def postposition():
-    if current_user.get_user_type() == 'Student':
+    if current_user.get_user_type() == 'student':
         flash('You do not have permission to access this page.')
         return redirect(url_for('routes.index'))
     pForm = PostForm()
@@ -62,30 +62,24 @@ def postposition():
 #   Changed By:     Denise Tanumihardja
 #   Change Details: Initial Implementation
 # ================================================================
-
 @bp_routes.route('/student_profile', methods=['GET'])
 @login_required
 def student_profile():
-    if(current_user.get_user_type() == 'Faculty'):
+    if(current_user.get_user_type() == 'faculty'):
         flash('You do not have permission to access this page.')
         return redirect(url_for('routes.index'))
 
-
-    profile = Permissions.query.filter_by(user_id = current_user.id).first()
-    print(profile)
-    return render_template('profile.html', title="Student Profile", profile = profile)
+    return render_template('profile.html', title="Student Profile", profile = current_user)
 
 
 
 # ================================================================
 #   Name:           Student Profile Update Route
 #   Description:    Updates the student profile with inputed information
-#   Last Changed:   11/15/21
+#   Last Changed:   11/24/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Worked on current bug with updating user info
-#                   (still broken)
+#   Change Details: Revised to compensate for new database model
 # ================================================================
-
 @bp_routes.route('/student_profile_update', methods=['GET', 'POST'])
 @login_required
 def update_student_profile():
@@ -93,51 +87,52 @@ def update_student_profile():
         flash('You do not have permission to access this page.')
         return redirect(url_for('routes.index'))
     proForm = ProfileForm()
-    profile = Permissions.query.filter_by(user_id = current_user.id).first()
    
 
     if request.method == 'GET': # Populate fields with existing data
-        proForm.first_name.data = profile.first_name
-        proForm.last_name.data = profile.last_name
-        proForm.wsu_id.data = profile.wsu_id
-        proForm.phone_no.data = profile.phone_no
-        proForm.gpa.data = profile.gpa
-        proForm.expected_grad_date.data = profile.expected_grad_date
-        proForm.elect_courses.data = profile.elect_courses
-        proForm.languages.data = profile.languages
-        proForm.prior_research.data = profile.prior_research
+        proForm.first_name.data = current_user.first_name
+        proForm.last_name.data = current_user.last_name
+        proForm.wsu_id.data = current_user.wsu_id
+        proForm.phone_no.data = current_user.phone_no
+        proForm.gpa.data = current_user.gpa
+        proForm.expected_grad_date.data = current_user.expected_grad_date
+        proForm.elect_courses.data = current_user.elect_courses
+        proForm.languages.data = current_user.languages
+        proForm.prior_research.data = current_user.prior_research
 
     if proForm.validate_on_submit():
-        print('Validated')
-        profile = Permissions.query.filter_by(user_id = current_user.id).first()
         major_name = Major.query.filter_by(id = (proForm.major.data).id).first()
-        if(Permissions.query.filter_by(wsu_id = proForm.wsu_id.data).count() > 0): ##if wsu_id already exists
-            if(Permissions.query.filter_by(wsu_id = proForm.wsu_id.data).first().wsu_id != profile.wsu_id): ## if its not your current one
+        if(Student.query.filter_by(wsu_id = proForm.wsu_id.data).count() > 0): ##if wsu_id already exists
+            if(Student.query.filter_by(wsu_id = proForm.wsu_id.data).first().wsu_id != current_user.wsu_id): ## if its not your current one
                 flash('That WSUID is already in use!')
                 return render_template('updateprofile.html', title = "Student Profile", update = proForm, user = current_user)
 
-
-
         # update current user with form info
-        profile.wsu_id = proForm.wsu_id.data
-        profile.first_name = proForm.first_name.data
-        profile.last_name = proForm.last_name.data
-        profile.phone_no = proForm.phone_no.data
-        profile.major = major_name.get_major_name()
-        profile.gpa = proForm.gpa.data
-        profile.expected_grad_date = proForm.expected_grad_date.data
-        profile.elect_courses = proForm.elect_courses.data
-        profile.research_topics = 'To be Implemented'
-        profile.languages = proForm.languages.data
-        profile.prior_research = proForm.prior_research.data
+        current_user.wsu_id = proForm.wsu_id.data
+        current_user.first_name = proForm.first_name.data
+        current_user.last_name = proForm.last_name.data
+        current_user.phone_no = proForm.phone_no.data
+        current_user.major = major_name.get_major_name()
+        current_user.gpa = proForm.gpa.data
+        current_user.expected_grad_date = proForm.expected_grad_date.data
+        current_user.elect_courses = proForm.elect_courses.data
+        current_user.research_topics = 'To be Implemented'
+        current_user.languages = proForm.languages.data
+        current_user.prior_research = proForm.prior_research.data
 
         # commit changes
-        db.session.add(profile)
         db.session.commit()
         flash('Profile Successfully Updated!')
         return redirect(url_for('routes.student_profile'))
     return render_template('updateprofile.html', title = "Student Profile", update = proForm, user = current_user)
 
+# ================================================================
+#   Name:           Apply Route
+#   Description:    Backend route to apply to position post
+#   Last Changed:   11/16/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Initial Implementation
+# ================================================================
 @bp_routes.route('/apply/<postid>/<brief>/<ref>', methods = ['GET', 'POST'])
 @login_required
 def apply(postid, brief, ref):
@@ -150,6 +145,13 @@ def apply(postid, brief, ref):
     flash('You applied for: {}!'.format(thepost.title))
     return redirect(url_for('routes.index'))
 
+# ================================================================
+#   Name:           Unapply Route
+#   Description:    Backend route to unapply to position post
+#   Last Changed:   11/16/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Initial Implementation
+# ================================================================
 @bp_routes.route('/unapply/<postid>', methods = ['POST'])
 @login_required
 def unapply(postid):
@@ -162,26 +164,31 @@ def unapply(postid):
     flash('You redrew your application for: {}!'.format(thepost.title))
     return redirect(url_for('routes.index'))
 
+# ================================================================
+#   Name:           Submit Application Route
+#   Description:    Form Page students are directed to when they 
+#                   want to apply to a postion post.
+#   Last Changed:   11/24/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Revised to compensate for new database model
+# ================================================================
 @bp_routes.route('/submit_application/<postid>', methods = ['GET', 'POST'])
 @login_required
 def submit_application(postid):
     thepost = Post.query.filter_by(id = postid).first()
     aForm = ApplicationForm()
-    profile = Permissions.query.filter_by(user_id = current_user.id).first()
-    
 
     if aForm.validate_on_submit():
         return redirect(url_for('routes.apply', postid = postid, brief = aForm.personal_statement.data, ref = aForm.faculty_ref_name.data))
 
-    return render_template('submit.html', title="Apply for Position", post = thepost, form = aForm, profile = profile)
-
+    return render_template('submit.html', title="Apply for Position", post = thepost, form = aForm, profile = current_user)
 
 # ================================================================
 #   Name:           Applications Route
 #   Description:    Prints all applications for faculty postion posts
-#   Last Changed:   11/16/21
+#   Last Changed:   11/24/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Initial Implementation
+#   Change Details: Revised to compensate for new database model
 # ================================================================
 @bp_routes.route('/applications', methods=['GET', 'POST'])
 @login_required
@@ -190,15 +197,28 @@ def applications():
     print(myposts.count())
     return render_template('applications.html', title="Applications", posts = myposts)
 
-
+# ================================================================
+#   Name:           Review Route
+#   Description:    Displays application of desired student who 
+#                   applied to the faculty's position post.
+#   Last Changed:   11/16/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Initial Implementation
+# ================================================================
 @bp_routes.route('/review/<postid>/<userid>', methods = ['GET', 'POST'])
 @login_required
 def review(postid, userid):
     application = Application.query.filter_by(applicant_id = userid, post_id = postid).first()
-    print(application)
     return render_template('review.html', title="Review Application", application = application)
 
-
+# ================================================================
+#   Name:           Update Route
+#   Description:    Backend route that changes 
+#                   the status of an application
+#   Last Changed:   11/16/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Initial Implementation
+# ================================================================
 @bp_routes.route('/update/<postid>/<userid>/<change>', methods = ['GET', 'POST'])
 @login_required
 def update(postid, userid, change):

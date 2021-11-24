@@ -2,10 +2,10 @@
 # ================================================================
 #   Name:           post html
 #   Description:    UI for create route
-#   Last Changed:   11/12/21
+#   Last Changed:   11/24/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Inital Implementation of post 
-#                   (Prints a Post)
+#   Change Details: Fixed issues to compensate for 
+#                   new database model
 # ================================================================
 -->
 
@@ -52,7 +52,7 @@
                 <br>
                 <div class="posttimestamp"><b>Posted at: </b> {{ moment(post.timestamp).format('LLLL') }}
 
-                {% if current_user.get_user_type() == 'Student' %}
+                {% if current_user.get_user_type() == 'student' %}
                 {% if current_user.has_applied(post) == false %}
                 <form action = "{{url_for('routes.submit_application', postid = post.id)}}" method="post">
                     <input type="submit", value="Send Application", class="apply_button">

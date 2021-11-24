@@ -2,9 +2,9 @@
 # ================================================================
 #   Name:           Profile html
 #   Description:    UI for profile route
-#   Last Changed:   11/14/21
+#   Last Changed:   11/24/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Changed url_for path
+#   Change Details: Revised to compensate for new database model
 # ================================================================
 -->
 
@@ -15,7 +15,6 @@
     <h2>Username: {{ current_user.username }}</h2>
     
     {% set student = current_user %}
-    {% set profile = current_user.get_permissions() %}
 
     {% include '_profile.html' %}
 

@@ -12,9 +12,6 @@ from flask_login import current_user
 #   Change Details: Fixed Type Selection Field 
 #                   (Student and Faculty numbers we wrong)
 # ================================================================
-
-
-
 class RegisterForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -40,7 +37,6 @@ class RegisterForm(FlaskForm):
 #   Changed By:     Denise Tanumihardja
 #   Change Details: Initial implementation of LoginForm class. (taken from smile project)
 # ================================================================
-
 class LoginForm(FlaskForm):
     username = StringField('User', validators = [DataRequired()])
     password = PasswordField('Password', validators = [DataRequired()])

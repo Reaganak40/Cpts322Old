@@ -5,7 +5,7 @@ from flask import render_template, flash, redirect, url_for
 from flask_sqlalchemy import sqlalchemy
 from app.Controller.routes import index
 from config import Config
-from app.Model.models import Permissions, User
+from app.Model.models import User, Student, Faculty
 from app import db
 from flask_login import current_user, login_user, logout_user, login_required
 from app.Controller.auth_forms import LoginForm, RegisterForm
@@ -17,12 +17,11 @@ bp_auth.template_folder = Config.TEMPLATE_FOLDER
 # ================================================================
 #   Name:           Register Route
 #   Description:    Handles Registers Forms, Creates an account for both student and faculty.
-#   Last Changed:   11/15/21
+#   Last Changed:   11/24/21
 #   Changed By:     Reagan Kelley
-#   Change Details: FIxed register to compensate for 
-#                   new database model
+#   Change Details: Revised to compensate 
+#                   for new and improved database model
 # ================================================================
-
 @bp_auth.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated: #logged in users can't re-register
@@ -32,16 +31,12 @@ def register():
     if rForm.validate_on_submit():
 
         if(rForm.type.data == '0'): # New user is a student
-            new_user = User(username = rForm.username.data, email = rForm.email.data, user_type = 'Student')
+            new_user = Student(username = rForm.username.data, email = rForm.email.data, user_type = 'student')
         else: # New User is a faculty
-            new_user = User(username = rForm.username.data, email = rForm.email.data, user_type = 'Faculty')
+            new_user = Faculty(username = rForm.username.data, email = rForm.email.data, user_type = 'faculty')
 
         new_user.set_password(rForm.password.data)
         db.session.add(new_user)
-        db.session.commit()
-
-        new_permissions = Permissions(user_id = new_user.id, permission_identifier = new_user.user_type)
-        db.session.add(new_permissions)
         db.session.commit()
 
         flash('You are registered!')
@@ -72,9 +67,7 @@ def login():
                 return redirect(url_for('auth.login'))
 
         login_user(user, remember = form_login.remember_me.data)
-            
         print(current_user)
-
 
         if current_user.get_user_type() == 'Student': ## user is a student
             return redirect(url_for('routes.index')) #Change depending on if student account or faculty account

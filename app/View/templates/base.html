@@ -2,9 +2,9 @@
 # ================================================================
 #   Name:           base html
 #   Description:    UI for site header
-#   Last Changed:   11/14/21
-#   Changed By:     Denise Tanumihardja
-#   Change Details: Added link to student profile
+#   Last Changed:   11/24/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Revised to compensate for new database model
 # ================================================================
 -->
 
@@ -34,7 +34,7 @@
 
                 {% else %}
 
-                    {% if current_user.get_user_type() == 'Student' %}
+                    {% if current_user.get_user_type() == 'student' %}
                         <td><a href = "{{ url_for('routes.student_profile') }}"> Profile </a></td>
                     {% else %}
                         <td><a href="{{ url_for('routes.postposition') }}" class = "button"> New Post </a></td>
