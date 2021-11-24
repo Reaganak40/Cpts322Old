@@ -26,7 +26,6 @@ def create_app(config_class=Config):
     db.init_app(app)
     login.init_app(app)
     moment.init_app(app)
-
     from app.Controller.errors import bp_errors as errors
     app.register_blueprint(errors)
     from app.Controller.auth_routes import bp_auth as auth
