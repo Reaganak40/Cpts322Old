@@ -21,8 +21,9 @@ def initDB(*args, **kwargs):
          db.session.commit()
 
     if(app.debug):
-        print("Debug: Initializing with pre-existing data...")
-        fill_db()
+        if(User.query.count() == 0): # Don't reinitialize if already initialzed (duh)
+            print("Debug: Initializing with pre-existing data...")
+            fill_db()
 
     # if Field.query.count() is None:
     #     field_name = [{'field_name':'Artificial Intelligence', 'major_name':'Computer Science'}]
@@ -102,7 +103,7 @@ def fill_db():
     student_user.first_name = 'Reagan'
     student_user.last_name = 'Kelley'
     student_user.phone_no = '2094804983'
-    student_user.major = Major.query.filter_by(id = 0).first()
+    student_user.major = Major.query.filter_by(id = 0).first() # TODO: Does not work
     student_user.gpa = 3.96
     student_user.expected_grad_date = datetime.datetime(2023, 5, 20)
     student_user.elect_courses = 'cs360 - A\ncs355 - A\ncs122 - A'
