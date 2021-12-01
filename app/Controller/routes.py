@@ -225,6 +225,8 @@ def update(postid, userid, change):
         application.status = 'Interview'
     elif (change == 'Reject'):
         application.status = 'Reject'
+    elif (change == 'Hired'):
+        application.status = 'Hired'
     
     db.session.commit()
 
