@@ -26,6 +26,13 @@
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
 
+            <p>{{ form.wsu_id.label }}</p>
+            <p>{{ form.wsu_id(class = 'forminput') }}</p>
+
+            {% for error in form.wsu_id.errors %}
+            <span style="color:red;">{{ error }}</span>
+            {% endfor %}
+
             <p>{{ form.email.label }} </p>
             <p>{{ form.email(class = 'forminput') }} </p>
 

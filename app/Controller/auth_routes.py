@@ -31,9 +31,9 @@ def register():
     if rForm.validate_on_submit():
 
         if(rForm.type.data == '0'): # New user is a student
-            new_user = Student(username = rForm.username.data, email = rForm.email.data, user_type = 'student')
+            new_user = Student(username = rForm.username.data, email = rForm.email.data, wsu_id = rForm.wsu_id.data, user_type = 'student')
         else: # New User is a faculty
-            new_user = Faculty(username = rForm.username.data, email = rForm.email.data, user_type = 'faculty')
+            new_user = Faculty(username = rForm.username.data, email = rForm.email.data, wsu_id = rForm.wsu_id.data, user_type = 'faculty')
 
         new_user.set_password(rForm.password.data)
         db.session.add(new_user)
