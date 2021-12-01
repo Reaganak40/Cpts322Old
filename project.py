@@ -48,7 +48,7 @@ def fill_db():
     # User: denise
     # Type: Student
     # Password: abc
-    new_user = Student(username = 'denise', email = 'denisetanumihardja@gmail.com', user_type = 'student')
+    new_user = Student(username = 'denise', email = 'denisetanumihardja@wsu.edu', user_type = 'student')
     new_user.set_password('abc')
     db.session.add(new_user)
     print("Debug: Added New Student: [denise]")
@@ -56,7 +56,7 @@ def fill_db():
     # User: tay
     # Type: Student
     # Password: abc
-    new_user = Student(username = 'tay', email = 'jrtay123456@gmail.com', user_type = 'student')
+    new_user = Student(username = 'tay', email = 'jrtay123456@wsu.edu', user_type = 'student')
     new_user.set_password('abc')
     db.session.add(new_user)
     print("Debug: Added New Student: [tay]")
