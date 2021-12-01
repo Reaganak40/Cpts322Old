@@ -38,6 +38,14 @@
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
 
+            <!--Displays the form item for the post's ` time commitment`.-->   
+            {{ form.time_commitment.label }}<br>
+            {{ form.time_commitment(class="formtitle") }}<br><br>
+            
+            <!-- Time Commitment Form Errors -->   
+            {% for error in form.time_commitment.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
              
         </div>
             

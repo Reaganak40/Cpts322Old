@@ -180,16 +180,16 @@ class Application(db.Model):
 # ================================================================
 #   Name:           Post Model
 #   Description:    Class Definition for Posts
-#   Last Changed:   11/24/21
+#   Last Changed:   12/1/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Connected posts to a faculty user, 
-#                   rather than a user
+#   Change Details: Added Time Commitment
 # ================================================================
 class Post(db.Model): 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('faculty.id'))
     title = db.Column(db.String(150))
     body = db.Column(db.String(1500))
+    time_commitment = db.Column(db.String(10))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     majors = db.relationship('Major', 
         backref = db.backref('postMajors', lazy='dynamic'), 

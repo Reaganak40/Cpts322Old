@@ -35,6 +35,13 @@ def initDB(*args, **kwargs):
 if __name__ == "__main__":
     app.run(debug=True)
 
+# ================================================================
+#   Name:           Fill Database
+#   Description:    If in debug fills database with data
+#   Last Changed:   12/1/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Added time commitment to posts
+# ================================================================
 def fill_db():
 
     # User: Reagan
@@ -83,7 +90,9 @@ def fill_db():
     faculty_user = User.query.filter_by(username = 'sakire').first()
     newPost = Post(user_id = faculty_user.id, title= 'Database Integrity', 
             body = 'We are looking for 3-4 year undergrad students who enjoy working in the fields of networking and cybersecurity. We are teaming up with Amazon to make penetration software that will test the integrity of their AWS systems. You do not need to be an expert on databases nor security, but it would be very helpful.', 
-            majors = majors)
+            majors = majors,
+            time_commitment = '25'
+            )
     db.session.add(newPost)
     print("Debug: Added New Post: [Database Integrity]")
 
@@ -93,7 +102,9 @@ def fill_db():
     faculty_user = User.query.filter_by(username = 'andy').first()
     newPost = Post(user_id = faculty_user.id, title= 'Everyone Loves Checkers', 
             body = 'If you are interested in machine learning, do I have a lab position for you. We are teaming up with the International Association for Professional Checkers Players to create a machine learning AI that will test the skills of the best checker players across the world. Applicants who have taken intro to machine learning courses and further will have a competitive advantage in receiving a position for this lab.', 
-            majors = majors)
+            majors = majors,
+            time_commitment = '10-20'
+            )
     db.session.add(newPost)
     print("Debug: Added New Post: [Everyone Loves Checkers]")
 

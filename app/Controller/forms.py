@@ -24,15 +24,54 @@ def all_research_topics():
 # ================================================================
 #   Name:           Post form
 #   Description:    Added sortform for filter posts on faculty view
-#   Last Changed:   14/11/21
+#   Last Changed:   12/1/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Initial Implementation
+#   Change Details: Added time commitment
 # ================================================================
 class PostForm(FlaskForm):
     title = StringField('Job Title', validators=[DataRequired()])
     body = TextAreaField("Job Description", [Length(min=0, max = 1500)])
     majors = QuerySelectMultipleField('Recommended Majors', query_factory= all_majors, get_label= lambda t: t.get_major_name(), widget=ListWidget(prefix_label=False), option_widget=CheckboxInput() )
+    time_commitment = StringField('Time Commitment (Hours Per Week)', [Length(min = 1, max = 10)])
     submit = SubmitField('Post')
+
+    # time_commitment should contain an integer. 
+    # NOTE: We make time_commitment a string to allow inputs like 30-40 hours.
+    def validate_time_commitment(self, time_commitment):
+        has_digit = False
+        digits = []
+        current_number = ""
+        for char in time_commitment.data:
+            if char.isdigit():
+                has_digit = True
+                current_number += char
+            else: #if char is not a digit                
+                if(len(current_number) > 0): # number has been built
+                    digits.append(current_number)
+                    current_number = ""   
+
+        # One last check in case number was last in string
+        if(len(current_number) > 0):
+            digits.append(current_number)
+
+        if(has_digit is False):
+            raise ValidationError('Please enter desired hours as an integer.')
+
+        if(len(digits) > 2):
+            raise ValidationError('Please keep hours to either one integer or a range (ex. 20-30 hours)')
+        time_commitment.data = ""
+        time_commitment.data += (digits[0])
+
+        if(len(digits) == 2): #if hour range -> add second hour
+            time_commitment.data += (' - ')
+            time_commitment.data += (digits[1])
+        print(time_commitment.data)
+
+
+        
+        
+
+        
 
 ## Sort Form: Credit unknown TODO: Make comment block. Take responsibility for your actions.
 class SortForm(FlaskForm):

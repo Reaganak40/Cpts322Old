@@ -35,9 +35,9 @@ def index():
 # ================================================================
 #   Name:           Post Position Route
 #   Description:    Post Position route for basic flask implementation
-#   Last Changed:   11/11/21
+#   Last Changed:   12/1/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Adjustments to compensate for new database model 
+#   Change Details: Added time commitment
 # ================================================================
 @bp_routes.route('/postposition', methods=['GET', 'POST'])
 @login_required
@@ -47,7 +47,11 @@ def postposition():
         return redirect(url_for('routes.index'))
     pForm = PostForm()
     if pForm.validate_on_submit():
-        newPost = Post(user_id = current_user.id, title=pForm.title.data, body = pForm.body.data, majors = pForm.majors.data)
+        newPost = Post(user_id = current_user.id, 
+                       title=pForm.title.data, 
+                       body = pForm.body.data, 
+                       majors = pForm.majors.data, 
+                       time_commitment = pForm.time_commitment.data)
         db.session.add(newPost)
         db.session.commit()
         flash('New Position Post "' + newPost.title + '" is on the Job Board!')
