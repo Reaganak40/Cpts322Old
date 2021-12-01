@@ -2,10 +2,9 @@
 # ================================================================
 #   Name:           post html
 #   Description:    UI for create route
-#   Last Changed:   11/24/21
+#   Last Changed:   12/1/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Fixed issues to compensate for 
-#                   new database model
+#   Change Details: Added Writer's email to post
 # ================================================================
 -->
 
@@ -18,8 +17,7 @@
 
     <tr>
         <td colspan="3" style = "text-align:left" valign="bottom">  
-              <!-- (milestone3) TODO: include username who posted the post-->
-              <span> Posted by:  <span class = "useritem"> {{post.writer.username }} </span></span>
+              <span> Posted by:  <span class = "useritem"> {{post.writer.username }} | {{post.writer.email}}</span></span>
 
 
           </td>
