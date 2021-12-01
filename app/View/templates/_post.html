@@ -1,0 +1,87 @@
+<!--    
+# ================================================================
+#   Name:           post html
+#   Description:    UI for create route
+#   Last Changed:   11/24/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Fixed issues to compensate for 
+#                   new database model
+# ================================================================
+-->
+
+<table class = "posttable" style = "width:50%" valign="top">
+    <tr> 
+        <!-- Print Job Title -->
+        <td colspan="3"><div class="posttitle"> {{post.title}} </div>
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan="3" style = "text-align:left" valign="bottom">  
+              <!-- (milestone3) TODO: include username who posted the post-->
+              <span> Posted by:  <span class = "useritem"> {{post.writer.username }} </span></span>
+
+
+          </td>
+    </tr>
+
+
+    <tr>
+        
+        <td width="80%" >
+            <div>
+              <!-- Print Job Description -->    
+              <div class="postbody">{{ post.body }}</div>
+           </div>
+        </td> 
+
+        <td width = "5%"> 
+
+        </td>
+    </tr>
+    
+    <tr> 
+        <td colspan="3" style = "text-align:left" valign="bottom">  
+            <br>
+            <!-- Print Major Tags -->
+            {% for major in post.get_majors().all() %}
+                <span class= "posttags"></div>{{ major.get_major_name() }} </span>
+            {% endfor %}
+            <div> 
+                <!-- Prints Post Timestamp -->
+                <br>
+                <div class="posttimestamp"><b>Posted at: </b> {{ moment(post.timestamp).format('LLLL') }}
+
+                {% if current_user.get_user_type() == 'student' %}
+                {% if current_user.has_applied(post) == false %}
+                <form action = "{{url_for('routes.submit_application', postid = post.id)}}" method="post">
+                    <input type="submit", value="Send Application", class="apply_button">
+                 </form>
+
+                 {% elif current_user.get_status(post) == 'Pending' %}
+
+                 <form action = "{{url_for('routes.unapply', postid = post.id)}}" method="post">
+                    <input type="submit", value="Withdraw Application", class="unapply_button">
+                 </form>
+
+                 {% elif current_user.get_status(post) ==  'Reject' %}
+
+                 <p style="color:red"> Rejected </p>
+   
+                {% elif current_user.get_status(post) == 'Interview' %}
+   
+                <p style="color:lightsalmon"> Approved for Interview </p>
+
+                 {% endif %}
+
+                 {% endif %}
+
+                 </div>
+             </div> 
+
+        </td>
+    </tr>
+
+
+
+</table>

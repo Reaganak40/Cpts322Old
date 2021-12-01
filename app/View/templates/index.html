@@ -1,0 +1,45 @@
+<!--    
+# ================================================================
+#   Name:           Index html
+#   Description:    UI for index route
+#   Last Changed:   11/24/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Revised to compensate for new database model
+# ================================================================
+-->
+
+{% extends "base.html" %}
+
+{% block content %}
+    
+    <h1>Welcome to Lab Opportunities!</h1>
+    <h2> "A ship does not sail with yesterday's winds." </h2> 
+    {% if current_user.get_user_type() == 'student' %}
+    {% if current_user.can_apply() == False %}
+    
+    <h3><span style="color:red"> ** Your Profile Information needs to be updated! ** <br><br> Go to
+    
+        <a href = "{{ url_for('routes.student_profile') }}"> Profile</a> to update. </span> 
+    </h3>
+
+    {% endif %}
+    {% endif %}
+
+    {% if current_user.get_user_type() == 'faculty' %}
+    <form action= "" method = "post" class = "formselect"> <div>Sort by: {{form.hidden_tag()}} {{form.checkbox.label}}  {{form.checkbox}} {{form.refresh}} </div> </form>
+    {% else %}
+
+    {% endif %}
+    <h3>Number of Posts: {{ post_count }} </h3>
+    
+    <!-- Make Lists of Posts -->
+    <div class = "postlist">
+    {% for post in posts %}
+       
+       <div class = "post-box">{% include '_post.html' %}</div> 
+
+    {% endfor %}
+    </div>
+
+    
+{% endblock %}

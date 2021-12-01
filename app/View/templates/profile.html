@@ -1,0 +1,24 @@
+<!--    
+# ================================================================
+#   Name:           Profile html
+#   Description:    UI for profile route
+#   Last Changed:   11/24/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Revised to compensate for new database model
+# ================================================================
+-->
+
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Student Profile</h1>
+    <h2>Username: {{ current_user.username }}</h2>
+    
+    {% set student = current_user %}
+
+    {% include '_profile.html' %}
+
+    
+   <a href = "{{ url_for('routes.update_student_profile') }}"> Update Profile </a></p> 
+
+{% endblock %}

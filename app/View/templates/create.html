@@ -1,0 +1,55 @@
+<!--    
+# ================================================================
+#   Name:           create html
+#   Description:    UI for create route
+#   Last Changed:   11/24/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Revised to compensate for new database model
+# ================================================================
+-->
+
+
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Create New Position Post</h1>
+
+    {% if form %}
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        
+        <div>
+            <!--Displays the form item for the post's `title`.--> 
+            {{ form.title.label }}<br>
+            {{ form.title(class="formtitle") }}<br><br>
+
+
+            <!-- Title Form Errors -->   
+            {% for error in form.title.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+
+            <!--Displays the form item for the post's ` body`.-->   
+            {{ form.body.label }}<br>
+            {{ form.body(class="formbody") }}<br><br>
+            
+            <!-- Body Form Errors -->   
+            {% for error in form.body.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+
+             
+        </div>
+            
+            <!--Displays the form item for the post's ` tags`.-->  
+            {{ form.majors.label}} 
+            {{ form.majors(class="formtags") }}<br><br><br><br>
+
+            <!-- Submit Button -->   
+            {{ form.submit(class="button") }}
+    </form>
+
+    {% endif %}
+
+
+{% endblock %}

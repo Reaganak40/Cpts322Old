@@ -1,0 +1,39 @@
+<!--    
+# ================================================================
+#   Name:           login html
+#   Description:    UI for login route
+#   Last Changed:   10/27/21
+#   Changed By:     Tay Jing Ren
+#   Change Details: Added labels and attached styling 
+# ================================================================
+-->
+
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Sign In</h1>
+
+    {% if form %}
+    <form action="" method="post">
+
+            {{form.hidden_tag()}}
+
+            {{form.username.label}} <br>
+            {{form.username (class = "forminput")}} <br>
+
+            {{form.password.label}} <br>
+            {{form.password (class = "forminput")}} <br>
+
+            <br>
+            {{form.remember_me}} Remember Me <br>
+
+            <br>
+            {{form.submit (class = "button")}}
+
+    </form>
+
+    {% endif %}
+
+    <p>New User? <a href="{{url_for('auth.register')}}">Click to Register!</a></p>
+{% endblock %}
+

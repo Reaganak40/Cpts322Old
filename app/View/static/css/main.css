@@ -1,0 +1,212 @@
+/*
+# ================================================================
+#   Name:           MAIN CSS
+#   Description:    File contains all styling for app
+#   Last Changed:   11/11/21
+#   Changed By:     Tay Jing Ren
+#   Change Details: Added Post Form Styling
+#=================================================================
+*/
+
+body {
+    margin: 1px 1px 1px 15px;
+    padding: 1px;
+    font-family: Tahoma;
+    text-align: left;
+    
+  
+}
+.nav-container {
+    background:#f6f6f6;
+    font-family: Tahoma;
+    font-size: 12px;
+    height: 32px;
+    text-transform: uppercase;
+}
+a:hover {
+	color:#2387D9;
+}
+
+.button {
+    width : 75px;
+    padding : 3px;    
+    font-size: 16px;
+    margin : 5px;
+    padding : 5px;
+    border: 1px solid lightgray;
+}
+.button:hover {
+    background-color: 157dd3;
+    color: white;
+    cursor:pointer;
+}
+
+.flash-container {
+	background:#99c5ee;
+	font-family: Tahoma;
+	font-size: 16px;
+	padding: 25px;
+	margin: 10px 0px 10px 0px;
+}
+
+.forminput{
+    width : 40%;
+    margin : 5px 5px 5px 5px;
+    padding : 5px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-style: normal;
+    font-size: 15px;
+
+}
+
+.formselect{
+    width : 15%;
+    height : 5%;
+    font-style: normal;
+    margin : 5px 0px 0px 0px;
+    padding : 5px;
+}
+
+
+.formtitle {
+	padding : 2px;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	width: 600px;
+    height: 25px;
+
+}
+
+.formbody {
+	padding : 2px;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	width: 600px;
+    height: 125px;
+}
+
+.formtags {
+	padding : 20px;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	width: 300px;
+    height: 25px;
+}
+
+.postlist {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.post-box {
+    display: flex;
+    vertical-align: left;
+    background-color: white;
+    margin: auto;
+    padding: 10px;
+    width: 100%;
+    
+}
+
+.posttable { 
+    width : 100%;
+    margin: 0px;
+    
+    background-color: gray;
+    color: white;
+    border: 2px solid black;
+    
+}
+
+.posttitle {
+    text-align: left;
+    font-weight: bold;
+    font-family: Verdana;
+    padding : 5px;
+	font-size: 20px;
+
+}
+
+.postbody {
+    font-family: Verdana;
+    padding : 15px;
+	font-size: 16px;
+
+}
+
+.posttags {
+    text-align: left;
+    font-family: Verdana;
+	font-size: 15px;
+    padding: 4px;
+    margin: 4px 3px 4px 3px;
+    border-radius:4px;
+    border: 2px solid black;
+    border-radius: 4px;
+    background-color:darkred;
+    color: white
+}
+
+.posttimestamp {
+    font-family: Verdana;
+    padding : 5px;
+}
+
+.useritem{
+    text-align: left;
+    padding: 3px;
+    margin: 4px 3px 4px 3px;
+    border: 2px solid black;
+    color: darkred; 
+    text-transform: uppercase;
+}
+
+.apply_button {
+	width:200px;
+	font-size: 18px;
+	margin: 10px 0px 0px 0px;
+	padding : 5px;
+	border: 1px solid gray;
+	background-color: rgb(192, 238,192);
+}
+
+.apply_button:hover{
+	background-color: green;
+	color: white;
+}
+
+.unapply_button {
+	width:200px;
+	font-size: 18px;
+	margin: 10px 0px 0px 0px;
+	padding : 5px;
+	border: 1px solid gray;
+	background-color: rgb(238, 192,192);
+}
+
+.unapply_button:hover{
+	background-color: red;
+	color: white;
+}
+
+.coursetable tr:hover{
+	background-color: lightgray;
+}
+
+.coursetable {
+	text-align: left;
+	border: 1px black solid;
+	width : 80%;
+	font-size : 18px
+}
+
+.review_button {
+	width:100px;
+	font-size: 18px;
+	margin: 10px 0px 0px 0px;
+	padding : 5px;
+	border: 1px solid gray;
+	background-color: rgb(192, 238,192);
+}
+
+.review_button:hover{
+	background-color: green;
+	color: white;
+}

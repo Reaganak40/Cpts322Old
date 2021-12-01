@@ -1,0 +1,71 @@
+<!--    
+# ================================================================
+#   Name:           _profile html
+#   Description:    Displays all profile information
+#   Last Changed:   11/16/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Added Checks to see if data is filled
+# ================================================================
+-->
+
+{% if profile.first_name %}
+<p><b>Name:</b> {{ profile.first_name }} {{ profile.last_name }}</p>
+{% else %}
+<p><b>Name:</b>
+<span style="color:red"> No Name </span> </p> 
+{% endif %}
+
+{% if profile.wsu_id %}
+<p><b>WSU ID:</b> {{ profile.wsu_id }}</p>
+{% else %}
+<p><b>WSU ID:</b>
+<span style="color:red"> Not Provided </span> </p> 
+{% endif %}
+
+<p><b>Email:</b> {{ student.email }}</p>
+
+{% if profile.phone_no %}
+<p><b>Phone Number:</b> {{ profile.phone_no }}</p>
+{% else %}
+<p><b>Phone Number:</b>
+<span style="color:red"> Not Provided </span> </p> 
+{% endif %}
+
+<p><b>Major:</b> {{ profile.major }}</p>
+
+{% if profile.gpa %}
+<p><b>GPA:</b> {{ profile.gpa }}</p>
+{% else %}
+<p><b>GPA:</b>
+<span style="color:red"> Not Provided </span> </p> 
+{% endif %}
+
+{% if profile.expected_grad_date %}
+<p><b>Expected Graduation Date:</b> {{ profile.expected_grad_date }}</p>
+{% else %}
+<p><b>Expected Graduation Date:</b>
+<span style="color:red"> Not Provided </span> </p> 
+{% endif %}
+
+<p><b>Interested Research Topics:</b> {{ profile.research_topics }}</p>
+
+{% if profile.elect_courses %}
+<p><b>Technical Elective Courses:</b><br> {{ profile.elect_courses }}</p>
+{% else %}
+<p><b>Technical Elective Courses:</b>
+<span style="color:red"> Not Provided </span> </p> 
+{% endif %}
+
+{% if profile.languages %}
+<p><b>Programming Languages Experience:</b><br> {{ profile.languages }}</p>
+{% else %}
+<p><b>Programming Languages Experience:</b>
+<span style="color:red"> Not Provided </span> </p> 
+{% endif %}
+
+{% if profile.prior_research %}
+<p><b>Prior Research Experience:</b><br> {{ profile.prior_research }}</p>
+{% else %}
+<p><b>Prior Research Experience:</b>
+<span style="color:red"> Not Provided </span> </p> 
+{% endif %}
