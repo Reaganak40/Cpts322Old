@@ -182,7 +182,7 @@ class Application(db.Model):
 #   Description:    Class Definition for Posts
 #   Last Changed:   12/1/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Added Time Commitment
+#   Change Details: Added Time Commitmen, start & end dates
 # ================================================================
 class Post(db.Model): 
     id = db.Column(db.Integer, primary_key=True)
@@ -190,6 +190,8 @@ class Post(db.Model):
     title = db.Column(db.String(150))
     body = db.Column(db.String(1500))
     time_commitment = db.Column(db.String(10))
+    start_date = db.Column(db.Date)
+    end_date = db.Column(db.Date)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     majors = db.relationship('Major', 
         backref = db.backref('postMajors', lazy='dynamic'), 

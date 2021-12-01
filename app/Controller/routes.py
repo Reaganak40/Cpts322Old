@@ -51,7 +51,9 @@ def postposition():
                        title=pForm.title.data, 
                        body = pForm.body.data, 
                        majors = pForm.majors.data, 
-                       time_commitment = pForm.time_commitment.data)
+                       time_commitment = pForm.time_commitment.data,
+                       start_date = pForm.start_date.data,
+                       end_date = pForm.end_date.data)
         db.session.add(newPost)
         db.session.commit()
         flash('New Position Post "' + newPost.title + '" is on the Job Board!')

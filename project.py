@@ -1,4 +1,3 @@
-from sqlalchemy.sql.sqltypes import DateTime
 from app import create_app, db
 from app.Model.models import Faculty, User, Student, Post, Major, Field, postMajors
 import datetime
@@ -91,7 +90,9 @@ def fill_db():
     newPost = Post(user_id = faculty_user.id, title= 'Database Integrity', 
             body = 'We are looking for 3-4 year undergrad students who enjoy working in the fields of networking and cybersecurity. We are teaming up with Amazon to make penetration software that will test the integrity of their AWS systems. You do not need to be an expert on databases nor security, but it would be very helpful.', 
             majors = majors,
-            time_commitment = '25'
+            time_commitment = '25',
+            start_date = datetime.datetime(2022, 1, 10),
+            end_date = datetime.datetime(2022, 5, 21)
             )
     db.session.add(newPost)
     print("Debug: Added New Post: [Database Integrity]")
@@ -103,7 +104,9 @@ def fill_db():
     newPost = Post(user_id = faculty_user.id, title= 'Everyone Loves Checkers', 
             body = 'If you are interested in machine learning, do I have a lab position for you. We are teaming up with the International Association for Professional Checkers Players to create a machine learning AI that will test the skills of the best checker players across the world. Applicants who have taken intro to machine learning courses and further will have a competitive advantage in receiving a position for this lab.', 
             majors = majors,
-            time_commitment = '10-20'
+            time_commitment = '10-20',
+            start_date = datetime.datetime(2022, 6, 2),
+            end_date = datetime.datetime(2022, 8, 28)
             )
     db.session.add(newPost)
     print("Debug: Added New Post: [Everyone Loves Checkers]")

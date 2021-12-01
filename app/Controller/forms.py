@@ -9,7 +9,7 @@ from wtforms.widgets import ListWidget, CheckboxInput
 from wtforms_sqlalchemy.fields import QuerySelectMultipleField, QuerySelectField
 from app.Model.models import Post, Major, User, Field
 from flask_login import current_user
-
+from datetime import datetime
 
 def get_majorlabel(theMajor):
     return theMajor.name
@@ -26,13 +26,15 @@ def all_research_topics():
 #   Description:    Added sortform for filter posts on faculty view
 #   Last Changed:   12/1/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Added time commitment
+#   Change Details: Added time commitment, start & end date
 # ================================================================
 class PostForm(FlaskForm):
     title = StringField('Job Title', validators=[DataRequired()])
-    body = TextAreaField("Job Description", [Length(min=0, max = 1500)])
+    body = TextAreaField("Job Description", [Length(min=0, max = 1500), DataRequired()])
     majors = QuerySelectMultipleField('Recommended Majors', query_factory= all_majors, get_label= lambda t: t.get_major_name(), widget=ListWidget(prefix_label=False), option_widget=CheckboxInput() )
-    time_commitment = StringField('Time Commitment (Hours Per Week)', [Length(min = 1, max = 10)])
+    time_commitment = StringField('Time Commitment (Hours Per Week)', [Length(min = 1, max = 10), DataRequired()])
+    start_date = DateField('Start Date', [DataRequired()], format = '%m/%d/%Y')
+    end_date = DateField('End Date', [DataRequired()], format = '%m/%d/%Y')
     submit = SubmitField('Post')
 
     # time_commitment should contain an integer. 
@@ -59,13 +61,19 @@ class PostForm(FlaskForm):
 
         if(len(digits) > 2):
             raise ValidationError('Please keep hours to either one integer or a range (ex. 20-30 hours)')
+        # rebuild time commitment string
         time_commitment.data = ""
         time_commitment.data += (digits[0])
 
         if(len(digits) == 2): #if hour range -> add second hour
             time_commitment.data += (' - ')
             time_commitment.data += (digits[1])
-        print(time_commitment.data)
+
+    def validate_end_date(self, end_date):
+        # start date must be before end date
+        if (self.start_date.data > end_date.data):
+            raise ValidationError('Start Date must be before End Date')
+
 
 
         

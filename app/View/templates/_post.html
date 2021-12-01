@@ -4,7 +4,8 @@
 #   Description:    UI for create route
 #   Last Changed:   12/1/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Added Writer's email to post
+#   Change Details: Added Writer's email to post, time commitment, 
+#                   and start to end date
 # ================================================================
 -->
 
@@ -31,6 +32,7 @@
               <!-- Print Job Description -->    
               <div class="postbody">{{ post.body }}</div>
               <div class ="postitle"> {{ post.time_commitment }} hours per week.</div>
+              <div class="posttimestamp"><b>From</b> {{ post.start_date }} <b>To</b> {{ post.end_date }} </div>
            </div>
         </td> 
 
@@ -49,7 +51,7 @@
             <div> 
                 <!-- Prints Post Timestamp -->
                 <br>
-                <div class="posttimestamp"><b>Posted at: </b> {{ moment(post.timestamp).format('LLLL') }}
+                <div class="posttimestamp"><b>Posted at: </b> {{ moment(post.timestamp).format('LLLL') }} </div>
 
                 {% if current_user.get_user_type() == 'student' %}
                 {% if current_user.has_applied(post) == false %}
