@@ -14,6 +14,7 @@ from flask_login import current_user
 class RegisterForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
+    wsu_id = StringField('WSU ID', validators=[DataRequired(), Length(min = 8, max = 9)])
     password = PasswordField('Password', validators=[DataRequired()])
     password2 = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     type = SelectField('User', choices = [(0, 'Student'), (1, 'Faculty')])

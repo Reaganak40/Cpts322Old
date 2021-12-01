@@ -102,10 +102,6 @@ def update_student_profile():
 
     if proForm.validate_on_submit():
         major_name = Major.query.filter_by(id = (proForm.major.data).id).first()
-        if(Student.query.filter_by(wsu_id = proForm.wsu_id.data).count() > 0): ##if wsu_id already exists
-            if(Student.query.filter_by(wsu_id = proForm.wsu_id.data).first().wsu_id != current_user.wsu_id): ## if its not your current one
-                flash('That WSUID is already in use!')
-                return render_template('updateprofile.html', title = "Student Profile", update = proForm, user = current_user)
 
         # update current user with form info
         current_user.wsu_id = proForm.wsu_id.data
@@ -229,6 +225,8 @@ def update(postid, userid, change):
         application.status = 'Interview'
     elif (change == 'Reject'):
         application.status = 'Reject'
+    elif (change == 'Hired'):
+        application.status = 'Hired'
     
     db.session.commit()
 

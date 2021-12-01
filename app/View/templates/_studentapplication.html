@@ -32,6 +32,10 @@
 
              <p style="color:lightsalmon"> Approved for Interview </p>
 
+             {% elif applicant.get_status() == 'Hired' %}
+              
+             <p style="color: green"> Hired </p>
+
             {% endif %}
 
         </td>
