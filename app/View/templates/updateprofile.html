@@ -11,11 +11,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Update Profile</h1>
+    <h1 style = "margin-left: 10%;">Update Profile</h1>
 
     {% if update %}
 
-    <form action="" method="post">
+    <form action="" method="post" style = "margin-left: 15%;">
         {{ update.hidden_tag() }}
 
         <!-- First Name -->
@@ -42,9 +42,13 @@
         <span style="color: red;">[{{ error }}]</span>
         {% endfor %}
 
+
+        <!-- Major -->
         {{ update.major.label }} <br>
         {{ update.major(class = "forminput") }} <br>
 
+        <!-- Research Topics-->
+        
         <!-- GPA -->
         {{ update.gpa.label }} <br>
         {{ update.gpa(class = "formtitle") }} <br>

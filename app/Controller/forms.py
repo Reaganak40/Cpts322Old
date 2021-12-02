@@ -9,30 +9,79 @@ from wtforms.widgets import ListWidget, CheckboxInput
 from wtforms_sqlalchemy.fields import QuerySelectMultipleField, QuerySelectField
 from app.Model.models import Post, Major, User, Field
 from flask_login import current_user
-
+from datetime import datetime
 
 def get_majorlabel(theMajor):
     return theMajor.name
 
+def get_fieldlabel(theField):
+    return theField.name
+
 def all_majors():
     return Major.query.all()
 
-def all_research_topics():
-    #return ResearchField.query.all() #TODO: Change based on ResarchField object in models.py, otherwise comment out for testing
-    pass
+def all_fields():
+   return Field.query.all()
 
 # ================================================================
 #   Name:           Post form
 #   Description:    Added sortform for filter posts on faculty view
-#   Last Changed:   14/11/21
+#   Last Changed:   12/1/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Initial Implementation
+#   Change Details: Added time commitment, start & end date
 # ================================================================
 class PostForm(FlaskForm):
     title = StringField('Job Title', validators=[DataRequired()])
-    body = TextAreaField("Job Description", [Length(min=0, max = 1500)])
+    body = TextAreaField("Job Description", [Length(min=0, max = 1500), DataRequired()])
     majors = QuerySelectMultipleField('Recommended Majors', query_factory= all_majors, get_label= lambda t: t.get_major_name(), widget=ListWidget(prefix_label=False), option_widget=CheckboxInput() )
+    time_commitment = StringField('Time Commitment (Hours Per Week)', [Length(min = 1, max = 10), DataRequired()])
+    start_date = DateField('Start Date', [DataRequired()], format = '%m/%d/%Y')
+    end_date = DateField('End Date', [DataRequired()], format = '%m/%d/%Y')
     submit = SubmitField('Post')
+
+    # time_commitment should contain an integer. 
+    # NOTE: We make time_commitment a string to allow inputs like 30-40 hours.
+    def validate_time_commitment(self, time_commitment):
+        has_digit = False
+        digits = []
+        current_number = ""
+        for char in time_commitment.data:
+            if char.isdigit():
+                has_digit = True
+                current_number += char
+            else: #if char is not a digit                
+                if(len(current_number) > 0): # number has been built
+                    digits.append(current_number)
+                    current_number = ""   
+
+        # One last check in case number was last in string
+        if(len(current_number) > 0):
+            digits.append(current_number)
+
+        if(has_digit is False):
+            raise ValidationError('Please enter desired hours as an integer.')
+
+        if(len(digits) > 2):
+            raise ValidationError('Please keep hours to either one integer or a range (ex. 20-30 hours)')
+        # rebuild time commitment string
+        time_commitment.data = ""
+        time_commitment.data += (digits[0])
+
+        if(len(digits) == 2): #if hour range -> add second hour
+            time_commitment.data += (' - ')
+            time_commitment.data += (digits[1])
+
+    def validate_end_date(self, end_date):
+        # start date must be before end date
+        if (self.start_date.data > end_date.data):
+            raise ValidationError('Start Date must be before End Date')
+
+
+
+        
+        
+
+        
 
 ## Sort Form: Credit unknown TODO: Make comment block. Take responsibility for your actions.
 class SortForm(FlaskForm):
@@ -57,7 +106,7 @@ class ProfileForm(FlaskForm):
     gpa = FloatField('GPA', validators = [NumberRange(min = 0.0, max = 5.0)])
     expected_grad_date = DateField('Expected Graduation Date (mm/dd/yyyy)', format = '%m/%d/%Y')
     elect_courses = TextAreaField("Technical Elective Courses (Include Grades)")
-    #research_topics = QuerySelectField('Select Resarch Topics') #TODO: Add tags from relationship
+   # research_topics = QuerySelectMultipleField('Select Resarch Topics', query_factory = all_research_topics, get_label = get_fieldlabel, allow_blank = False) #TODO: Add tags from relationship
     #research_topics = TextAreaField("Filler for research topics (Implement later)")
     languages = TextAreaField('Programming Languages Experience')
     prior_research = TextAreaField('Describe your Prior Research Experience (If Any)')

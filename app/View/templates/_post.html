@@ -2,14 +2,14 @@
 # ================================================================
 #   Name:           post html
 #   Description:    UI for create route
-#   Last Changed:   11/24/21
+#   Last Changed:   12/1/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Fixed issues to compensate for 
-#                   new database model
+#   Change Details: Added Writer's email to post, time commitment, 
+#                   and start to end date. Added research fields
 # ================================================================
 -->
 
-<table class = "posttable" style = "width:50%" valign="top">
+<table class = "posttable" style = "width:100%; margin-left: 17%; " valign="top" >
     <tr> 
         <!-- Print Job Title -->
         <td colspan="3"><div class="posttitle"> {{post.title}} </div>
@@ -18,8 +18,7 @@
 
     <tr>
         <td colspan="3" style = "text-align:left" valign="bottom">  
-              <!-- (milestone3) TODO: include username who posted the post-->
-              <span> Posted by:  <span class = "useritem"> {{post.writer.username }} </span></span>
+              <span style = "margin-left: 1%;"> Posted by:  <span class = "useritem"> {{post.writer.username }} | {{post.writer.email}}</span></span>
 
 
           </td>
@@ -28,10 +27,14 @@
 
     <tr>
         
-        <td width="80%" >
+        <td width="80%">
             <div>
               <!-- Print Job Description -->    
-              <div class="postbody">{{ post.body }}</div>
+              <div class="postbody" style="text-align: left">{{ post.body }}</div>
+              
+              <div class ="postitle" style="margin: 10px; "> <i class = "fa fa-clock-o"><b style="font:bold; font-family: sans-serif;"> Estimated time commitment: </i></b> {{ post.time_commitment }} hours per week.</div>
+              
+              <div class="posttimestamp" style = "margin: 5px;"> <i class = "fa fa-calendar"> <b style = "font:bold; font-family: sans-serif;"> Duration of hiring: </i></b> <b>From </b>{{ post.start_date }} <b>To</b> {{ post.end_date }} </div>
            </div>
         </td> 
 
@@ -47,10 +50,14 @@
             {% for major in post.get_majors().all() %}
                 <span class= "posttags"></div>{{ major.get_major_name() }} </span>
             {% endfor %}
+            <br> <br>
+            {% for field in post.get_fields().all() %}
+            <span class= "fieldtags"></div>{{ field.get_name() }} </span>
+            {% endfor %}
             <div> 
                 <!-- Prints Post Timestamp -->
                 <br>
-                <div class="posttimestamp"><b>Posted at: </b> {{ moment(post.timestamp).format('LLLL') }}
+                <div class="posttimestamp"><b>Posted at: </b> {{ moment(post.timestamp).format('LLLL') }} </div>
 
                 {% if current_user.get_user_type() == 'student' %}
                 {% if current_user.has_applied(post) == false %}

@@ -5,7 +5,7 @@ from flask import render_template, flash, redirect, url_for, request
 from config import Config
 
 from app import db
-from app.Model.models import Application, Post, Major, User, Student, Faculty, postMajors
+from app.Model.models import Application, Field, Post, Major, User, Student, Faculty, postMajors
 from app.Controller.forms import ApplicationForm, PostForm, ProfileForm, SortForm
 from flask_login import current_user, login_user, logout_user, login_required
 
@@ -26,7 +26,7 @@ bp_routes.template_folder = Config.TEMPLATE_FOLDER #'..\\View\\templates'
 def index():
     posts = Post.query.order_by(Post.timestamp.desc())
     sform = SortForm()
-    print(current_user)
+    #print(current_user)
     if sform.validate_on_submit():
         if (sform.checkbox.data == False):
             posts = current_user.get_user_posts()
@@ -35,9 +35,9 @@ def index():
 # ================================================================
 #   Name:           Post Position Route
 #   Description:    Post Position route for basic flask implementation
-#   Last Changed:   11/11/21
+#   Last Changed:   12/1/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Adjustments to compensate for new database model 
+#   Change Details: Added time commitment
 # ================================================================
 @bp_routes.route('/postposition', methods=['GET', 'POST'])
 @login_required
@@ -47,7 +47,13 @@ def postposition():
         return redirect(url_for('routes.index'))
     pForm = PostForm()
     if pForm.validate_on_submit():
-        newPost = Post(user_id = current_user.id, title=pForm.title.data, body = pForm.body.data, majors = pForm.majors.data)
+        newPost = Post(user_id = current_user.id, 
+                       title=pForm.title.data, 
+                       body = pForm.body.data, 
+                       majors = pForm.majors.data, 
+                       time_commitment = pForm.time_commitment.data,
+                       start_date = pForm.start_date.data,
+                       end_date = pForm.end_date.data)
         db.session.add(newPost)
         db.session.commit()
         flash('New Position Post "' + newPost.title + '" is on the Job Board!')
@@ -101,6 +107,7 @@ def update_student_profile():
         proForm.prior_research.data = current_user.prior_research
 
     if proForm.validate_on_submit():
+        
         major_name = Major.query.filter_by(id = (proForm.major.data).id).first()
         if(Student.query.filter_by(wsu_id = proForm.wsu_id.data).count() > 0): ##if wsu_id already exists
             if(Student.query.filter_by(wsu_id = proForm.wsu_id.data).first().wsu_id != current_user.wsu_id): ## if its not your current one
@@ -116,7 +123,7 @@ def update_student_profile():
         current_user.gpa = proForm.gpa.data
         current_user.expected_grad_date = proForm.expected_grad_date.data
         current_user.elect_courses = proForm.elect_courses.data
-        current_user.research_topics = 'To be Implemented'
+        ##current_user.research_topics = research_tags.get_research_field()
         current_user.languages = proForm.languages.data
         current_user.prior_research = proForm.prior_research.data
 
