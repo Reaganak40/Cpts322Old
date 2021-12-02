@@ -22,11 +22,20 @@ def __repr__(self):
         return '<Post ID: {} , Major Name: {}>'.format(self.post_id,self.major_name)
 
 # ================================================================
-# Relationship: Every subfield can have multiple majors
+# Relationship: Every post can have multiple fields
 # ================================================================
-subField = db.Table('subField', 
-     db.Column('major_id', db.Integer, db.ForeignKey('major.id')),
-     db.Column('field_id', db.Integer, db.ForeignKey('field.id')))
+postFields = db.Table('postFields',
+    db.Column('post_id', db.Integer, db.ForeignKey('post.id')),
+    db.Column('field_id', db.Integer, db.ForeignKey('field.id')))
+def __repr__(self):
+        return '<Post ID: {} , Field Name: {}>'.format(self.post_id,self.field_name)
+
+# ================================================================
+# Relationship: Every Research Field can have multiple majors
+# ================================================================
+majorFields = db.Table('majorFields', 
+     db.Column('field_id', db.Integer, db.ForeignKey('field.id')),
+     db.Column('major_id', db.Integer, db.ForeignKey('major.id')))
 def __repr__ (self):
      return '<Major Name: {}, Field Name: {}>'.format(self.major_name, self.field_name)
      
@@ -180,21 +189,32 @@ class Application(db.Model):
 # ================================================================
 #   Name:           Post Model
 #   Description:    Class Definition for Posts
-#   Last Changed:   11/24/21
+#   Last Changed:   12/1/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Connected posts to a faculty user, 
-#                   rather than a user
+#   Change Details: Added Time Commitmen, start & end dates
+#                   Added fields to posts.
 # ================================================================
 class Post(db.Model): 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('faculty.id'))
     title = db.Column(db.String(150))
     body = db.Column(db.String(1500))
+    time_commitment = db.Column(db.String(10))
+    start_date = db.Column(db.Date)
+    end_date = db.Column(db.Date)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    
     majors = db.relationship('Major', 
         backref = db.backref('postMajors', lazy='dynamic'), 
         secondary = postMajors, 
         primaryjoin = (postMajors.c.post_id == id),  
+        lazy = 'dynamic' 
+    )
+
+    fields = db.relationship('Field', 
+        backref = db.backref('postFields', lazy='dynamic'), 
+        secondary = postFields, 
+        primaryjoin = (postFields.c.post_id == id),  
         lazy = 'dynamic' 
     )
 
@@ -203,6 +223,8 @@ class Post(db.Model):
     def get_applicants(self):
         return self.applicants
 
+    def get_fields(self):
+        return self.fields
 
     def get_majors(self):
         return self.majors
@@ -211,31 +233,55 @@ class Post(db.Model):
 # ================================================================
 #   Name:           Major Model
 #   Description:    Class Definition for Major (Tag)
-#   Last Changed:   11/12/21
+#   Last Changed:   12/1/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Added get name function
+#   Change Details: Created relationship with fields
 # ================================================================
 class Major(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(20))
+
+    # A major can have multiple research fields
+    fields = db.relationship('Field', secondary = majorFields, back_populates = 'majors')
     def get_major_name(self):
         return self.name
+    
+    def __repr__(self):
+         return "< Major: [{}] - with field(s): {}>".format(self.name, self.get_fields())
+
+    def get_fields(self):
+        field_list = []
+        for field in self.fields:
+            field_list.append(field.get_name())
+        return field_list
+
 
 # ================================================================
 #   Name:           Research Field Model
 #   Description:    Class Definition for Research Field (Tag)
-#   Last Changed:   11/16/21
-#   Changed By:     Tay Jing Ren
-#   Change Details: Skeleton Code
+#   Last Changed:   12/1/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Implented with majors
 # ================================================================
 class Field(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
-    name = db.Column(db.String(50), primary_key = True)
-    major_name= db.Column(db.String(30))
-    major_id = db.Column(db.Integer, db.ForeignKey('major.id'))
-    majors = db.relationship('Major', backref = db.backref('subField', lazy = 'dynamic'), secondary = subField)
-    def get_research_field(self):
-         return self.name
+     __tablename__ = 'field'
+     id = db.Column(db.Integer, primary_key = True)
+     field = db.Column(db.String(50), primary_key = True)
+
+     # A field can have multiple majors
+     majors = db.relationship('Major', secondary = majorFields, back_populates = 'fields')
+     
+     def get_name(self):
+        return "{}".format(self.field)
+
+     def get_majors(self):
+        major_list = []
+        for major in self.majors:
+            major_list.append(major.get_major_name())
+        return major_list
+
+     def __repr__(self):
+        return "< Field: [{}] - of major(s): {}>".format(self.field, self.get_majors())
 
 
 
