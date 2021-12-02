@@ -8,6 +8,9 @@
 # ================================================================
 -->
 
+
+
+
 <html>
     <head>
        {% if title %}
@@ -20,20 +23,18 @@
        {{ moment.include_moment() }}
     </head>
 
-    <body>
-        <div class ="nav-container">
+    <body style = "background-color: white;">
+        <div class ="nav-container" style="background-color: white;">
         <table>
+            
             <tr>
-                <td><a href="{{ url_for('routes.index') }}" class = "button">Home</a></td>
-                
-                
-                  
                 {% if current_user.is_anonymous %}
 
-                    <td><a href="{{ url_for('auth.login') }}" class = "button"> Login </a></td>
+                
 
                 {% else %}
-
+            
+                    <td><a href="{{ url_for('routes.index') }}" class = "button">Home</a></td> 
                     {% if current_user.get_user_type() == 'student' %}
                         <td><a href = "{{ url_for('routes.student_profile') }}"> Profile </a></td>
                     {% else %}

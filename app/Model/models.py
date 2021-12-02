@@ -229,13 +229,13 @@ class Major(db.Model):
 #   Change Details: Skeleton Code
 # ================================================================
 class Field(db.Model):
-     id = db.Column(db.Integer, primary_key = True)
-     field = db.Column(db.String(50), primary_key = True)
-     major_name= db.Column(db.String(30))
-     major_id = db.Column(db.Integer, db.ForeignKey('major.id'))
-     majors = db.relationship('Major', backref = db.backref('subField', lazy = 'dynamic'), secondary = subField)
-     def get_research_field(self):
-         return self.field_name
+    id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String(50), primary_key = True)
+    major_name= db.Column(db.String(30))
+    major_id = db.Column(db.Integer, db.ForeignKey('major.id'))
+    majors = db.relationship('Major', backref = db.backref('subField', lazy = 'dynamic'), secondary = subField)
+    def get_research_field(self):
+         return self.name
 
 
 

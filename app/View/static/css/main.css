@@ -42,7 +42,7 @@ a:hover {
 }
 
 .flash-container {
-	background:#99c5ee;
+	background:white;
 	font-family: Tahoma;
 	font-size: 16px;
 	padding: 25px;
@@ -209,4 +209,33 @@ a:hover {
 .review_button:hover{
 	background-color: green;
 	color: white;
+}
+
+
+.login{
+  width: 30%;
+  padding: 12px 20px;
+  margin: 5px 525px;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.button_login{
+  background-color: rgb(150, 56, 56);
+  color: white;
+  padding: 14px 20px;
+  margin: 5px 600px;
+  border: none;
+  cursor: pointer;
+  width: 20%;
+}
+
+.button_login:hover{
+    opacity: 0.8;
+}
+
+.img{
+    max-width : 100%;
+    height : auto;
 }
