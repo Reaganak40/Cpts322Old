@@ -22,6 +22,15 @@ def __repr__(self):
         return '<Post ID: {} , Major Name: {}>'.format(self.post_id,self.major_name)
 
 # ================================================================
+# Relationship: Every post can have multiple fields
+# ================================================================
+postFields = db.Table('postFields',
+    db.Column('post_id', db.Integer, db.ForeignKey('post.id')),
+    db.Column('field_id', db.Integer, db.ForeignKey('field.id')))
+def __repr__(self):
+        return '<Post ID: {} , Field Name: {}>'.format(self.post_id,self.field_name)
+
+# ================================================================
 # Relationship: Every Research Field can have multiple majors
 # ================================================================
 majorFields = db.Table('majorFields', 
@@ -183,6 +192,7 @@ class Application(db.Model):
 #   Last Changed:   12/1/21
 #   Changed By:     Reagan Kelley
 #   Change Details: Added Time Commitmen, start & end dates
+#                   Added fields to posts.
 # ================================================================
 class Post(db.Model): 
     id = db.Column(db.Integer, primary_key=True)
@@ -201,11 +211,20 @@ class Post(db.Model):
         lazy = 'dynamic' 
     )
 
+    fields = db.relationship('Field', 
+        backref = db.backref('postFields', lazy='dynamic'), 
+        secondary = postFields, 
+        primaryjoin = (postFields.c.post_id == id),  
+        lazy = 'dynamic' 
+    )
+
     applicants = db.relationship('Application', back_populates = 'position_for')
 
     def get_applicants(self):
         return self.applicants
 
+    def get_fields(self):
+        return self.fields
 
     def get_majors(self):
         return self.majors
@@ -214,9 +233,9 @@ class Post(db.Model):
 # ================================================================
 #   Name:           Major Model
 #   Description:    Class Definition for Major (Tag)
-#   Last Changed:   11/12/21
+#   Last Changed:   12/1/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Added get name function
+#   Change Details: Created relationship with fields
 # ================================================================
 class Major(db.Model):
     id = db.Column(db.Integer, primary_key = True)
@@ -240,9 +259,9 @@ class Major(db.Model):
 # ================================================================
 #   Name:           Research Field Model
 #   Description:    Class Definition for Research Field (Tag)
-#   Last Changed:   11/16/21
-#   Changed By:     Tay Jing Ren
-#   Change Details: Skeleton Code
+#   Last Changed:   12/1/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Implented with majors
 # ================================================================
 class Field(db.Model):
      __tablename__ = 'field'

@@ -1,5 +1,5 @@
 from app import create_app, db
-from app.Model.models import Faculty, User, Student, Post, Major, Field, postMajors
+from app.Model.models import Faculty, User, Student, Post, Major, Field, postMajors, majorFields
 import datetime
 app = create_app()
 
@@ -115,7 +115,8 @@ if __name__ == "__main__":
 #   Description:    If in debug fills database with data
 #   Last Changed:   12/1/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Added time commitment to posts
+#   Change Details: Added time commitment and research fields to 
+#                   posts
 # ================================================================
 def fill_db():
 
@@ -161,11 +162,13 @@ def fill_db():
 
     # Post: Database Integrity
     # Posted By: Sakire
-    majors = Major.query.slice(0,2) # Gets first two majors in list (TODO: if you can find a better way of sorts majors please change)
+    _majors = Major.query.slice(0,2) # Gets first two majors in list (TODO: if you can find a better way of sorts majors please change)
+    fields = _majors.first().fields
     faculty_user = User.query.filter_by(username = 'sakire').first()
     newPost = Post(user_id = faculty_user.id, title= 'Database Integrity', 
             body = 'We are looking for 3-4 year undergrad students who enjoy working in the fields of networking and cybersecurity. We are teaming up with Amazon to make penetration software that will test the integrity of their AWS systems. You do not need to be an expert on databases nor security, but it would be very helpful.', 
-            majors = majors,
+            majors = _majors,
+            fields = fields,
             time_commitment = '25',
             start_date = datetime.datetime(2022, 1, 10),
             end_date = datetime.datetime(2022, 5, 21)
@@ -175,11 +178,13 @@ def fill_db():
 
     # Post: Checkers AI
     # Posted By: Andy
-    majors = Major.query.all()
+    _majors = Major.query.all()
+    fields = _majors[3].fields
     faculty_user = User.query.filter_by(username = 'andy').first()
     newPost = Post(user_id = faculty_user.id, title= 'Everyone Loves Checkers', 
             body = 'If you are interested in machine learning, do I have a lab position for you. We are teaming up with the International Association for Professional Checkers Players to create a machine learning AI that will test the skills of the best checker players across the world. Applicants who have taken intro to machine learning courses and further will have a competitive advantage in receiving a position for this lab.', 
-            majors = majors,
+            majors = _majors,
+            fields = fields,
             time_commitment = '10-20',
             start_date = datetime.datetime(2022, 6, 2),
             end_date = datetime.datetime(2022, 8, 28)

@@ -5,11 +5,11 @@
 #   Last Changed:   12/1/21
 #   Changed By:     Reagan Kelley
 #   Change Details: Added Writer's email to post, time commitment, 
-#                   and start to end date
+#                   and start to end date. Added research fields
 # ================================================================
 -->
 
-<table class = "posttable" style = "width:50%" valign="top">
+<table class = "posttable" style = "width:70%" valign="top">
     <tr> 
         <!-- Print Job Title -->
         <td colspan="3"><div class="posttitle"> {{post.title}} </div>
@@ -47,6 +47,10 @@
             <!-- Print Major Tags -->
             {% for major in post.get_majors().all() %}
                 <span class= "posttags"></div>{{ major.get_major_name() }} </span>
+            {% endfor %}
+            <br> <br>
+            {% for field in post.get_fields().all() %}
+            <span class= "fieldtags"></div>{{ field.get_name() }} </span>
             {% endfor %}
             <div> 
                 <!-- Prints Post Timestamp -->
