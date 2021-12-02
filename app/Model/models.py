@@ -22,11 +22,11 @@ def __repr__(self):
         return '<Post ID: {} , Major Name: {}>'.format(self.post_id,self.major_name)
 
 # ================================================================
-# Relationship: Every subfield can have multiple majors
+# Relationship: Every Research Field can have multiple majors
 # ================================================================
-subField = db.Table('subField', 
-     db.Column('major_id', db.Integer, db.ForeignKey('major.id')),
-     db.Column('field_id', db.Integer, db.ForeignKey('field.id')))
+majorFields = db.Table('majorFields', 
+     db.Column('field_id', db.Integer, db.ForeignKey('field.id')),
+     db.Column('major_id', db.Integer, db.ForeignKey('major.id')))
 def __repr__ (self):
      return '<Major Name: {}, Field Name: {}>'.format(self.major_name, self.field_name)
      
@@ -193,6 +193,7 @@ class Post(db.Model):
     start_date = db.Column(db.Date)
     end_date = db.Column(db.Date)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    
     majors = db.relationship('Major', 
         backref = db.backref('postMajors', lazy='dynamic'), 
         secondary = postMajors, 
@@ -220,8 +221,21 @@ class Post(db.Model):
 class Major(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(20))
+
+    # A major can have multiple research fields
+    fields = db.relationship('Field', secondary = majorFields, back_populates = 'majors')
     def get_major_name(self):
         return self.name
+    
+    def __repr__(self):
+         return "< Major: [{}] - with field(s): {}>".format(self.name, self.get_fields())
+
+    def get_fields(self):
+        field_list = []
+        for field in self.fields:
+            field_list.append(field.get_name())
+        return field_list
+
 
 # ================================================================
 #   Name:           Research Field Model
@@ -231,13 +245,24 @@ class Major(db.Model):
 #   Change Details: Skeleton Code
 # ================================================================
 class Field(db.Model):
+     __tablename__ = 'field'
      id = db.Column(db.Integer, primary_key = True)
      field = db.Column(db.String(50), primary_key = True)
-     major_name= db.Column(db.String(30))
-     major_id = db.Column(db.Integer, db.ForeignKey('major.id'))
-     majors = db.relationship('Major', backref = db.backref('subField', lazy = 'dynamic'), secondary = subField)
-     def get_research_field(self):
-         return self.field_name
+
+     # A field can have multiple majors
+     majors = db.relationship('Major', secondary = majorFields, back_populates = 'fields')
+     
+     def get_name(self):
+        return "{}".format(self.field)
+
+     def get_majors(self):
+        major_list = []
+        for major in self.majors:
+            major_list.append(major.get_major_name())
+        return major_list
+
+     def __repr__(self):
+        return "< Field: [{}] - of major(s): {}>".format(self.field, self.get_majors())
 
 
 

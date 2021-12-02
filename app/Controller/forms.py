@@ -17,9 +17,8 @@ def get_majorlabel(theMajor):
 def all_majors():
     return Major.query.all()
 
-def all_research_topics():
-    #return ResearchField.query.all() #TODO: Change based on ResarchField object in models.py, otherwise comment out for testing
-    pass
+def all_fields():
+   return Field.query.all()
 
 # ================================================================
 #   Name:           Post form
