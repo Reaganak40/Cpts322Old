@@ -9,63 +9,68 @@
 -->
 
 {% if profile.first_name %}
-<p><b>Name:</b> {{ profile.first_name }} {{ profile.last_name }}</p>
+<p style="margin-left: 10%; font-size: 25;"><i class = "fa fa-user"> Name: {{ profile.first_name }} {{ profile.last_name }} </i></p>
 {% else %}
-<p><b>Name:</b>
+<p style="margin-left: 10%; font-size: 25;"><i class = "fa fa-user"> Name: </i>
 <span style="color:red"> No Name </span> </p> 
 {% endif %}
 
+
 {% if profile.wsu_id %}
-<p><b>WSU ID:</b> {{ profile.wsu_id }}</p>
+<p style="margin-left: 10%; font-size: 25;"><i class = "fa fa-address-card"> ID: {{ profile.wsu_id }} </i></p>
 {% else %}
-<p><b>WSU ID:</b>
+<p style="margin-left: 10%; font-size: 25;"><i class = "fa fa-address-card"> ID: </i>
 <span style="color:red"> Not Provided </span> </p> 
 {% endif %}
 
-<p><b>Email:</b> {{ student.email }}</p>
+<p style="margin-left: 10%; font-size: 25;"><i class = "fa fa-envelope"> Email: {{ student.email }} </i></p>
 
 {% if profile.phone_no %}
-<p><b>Phone Number:</b> {{ profile.phone_no }}</p>
+<p style="margin-left: 10%; font-size: 25;"><i class = "fa fa-phone"> Phone Number: {{ profile.phone_no }} </i></p>
 {% else %}
-<p><b>Phone Number:</b>
+<p style="margin-left: 10%; font-size: 25;"><i class = "fa fa-phone"> Phone Number: </i>
 <span style="color:red"> Not Provided </span> </p> 
 {% endif %}
 
-<p><b>Major:</b> {{ profile.major }}</p>
+<p style="margin-left: 10%; font-size: 25;"><i class = "fa fa-mortar-board"> Major: {{profile.major}} </i> </p>
 
 {% if profile.gpa %}
-<p><b>GPA:</b> {{ profile.gpa }}</p>
+<p style="margin-left: 10%; font-size: 25;"><i class = "fa fa-percent"> GPA: {{ profile.gpa }} </i></p>
 {% else %}
-<p><b>GPA:</b>
+<p style="margin-left: 10%; font-size: 25;"><i class = "fa fa-percent"> GPA: </i>
 <span style="color:red"> Not Provided </span> </p> 
 {% endif %}
 
 {% if profile.expected_grad_date %}
-<p><b>Expected Graduation Date:</b> {{ profile.expected_grad_date }}</p>
+<p style="margin-left: 10%; font-size: 25;"><i class = "fa fa-calendar-o"> Expected Graduation Date: {{ profile.expected_grad_date }} </i></p>
 {% else %}
-<p><b>Expected Graduation Date:</b>
+<p style="margin-left: 10%; font-size: 25;"><i class = "fa fa-calendar-o"> Expected Graduation Date: </i>
 <span style="color:red"> Not Provided </span> </p> 
 {% endif %}
 
-<p><b>Interested Research Topics:</b> {{ profile.research_topics }}</p>
 
+<p style="margin-left: 10%; font-size: 25;"><i class = "fa fa-lightbulb-o"> Interested Research Topics: <br> <br>{{ profile.research_topics }} </i></p>
+
+<br>
 {% if profile.elect_courses %}
-<p><b>Technical Elective Courses:</b><br> {{ profile.elect_courses }}</p>
+<p style="margin-left: 10%; font-size: 25;"><i class = "fa fa-book"> Technical Elective Courses: <br> <br>{{ profile.elect_courses }} </i></p>
 {% else %}
-<p><b>Technical Elective Courses:</b>
+<p style="margin-left: 10%; font-size: 25;"><i class = "fa fa-book"> Technical Elective Courses: </i>
 <span style="color:red"> Not Provided </span> </p> 
 {% endif %}
 
+<br>
 {% if profile.languages %}
-<p><b>Programming Languages Experience:</b><br> {{ profile.languages }}</p>
+<p style="margin-left: 10%; font-size: 25;"><i class = "fa fa-code"> Programming Language Experience: <br> <br>{{ profile.languages }} </i></p>
 {% else %}
-<p><b>Programming Languages Experience:</b>
+<p style="margin-left: 10%; font-size: 25;"><i class = "fa fa-code"> Programming Language Experience: </i>
 <span style="color:red"> Not Provided </span> </p> 
 {% endif %}
 
+<br>
 {% if profile.prior_research %}
-<p><b>Prior Research Experience:</b><br> {{ profile.prior_research }}</p>
+<p style="margin-left: 10%; font-size: 25;"><i class = "fa fa-info"> Research Experience: <br> <br>{{ profile.prior_research }} </i> </p>
 {% else %}
-<p><b>Prior Research Experience:</b>
+<p style="margin-left: 10%; font-size: 25;"><i class = "fa fa-info"> Research Experience: </i>
 <span style="color:red"> Not Provided </span> </p> 
 {% endif %}

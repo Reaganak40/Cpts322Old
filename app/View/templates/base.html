@@ -14,9 +14,9 @@
 <html>
     <head>
        {% if title %}
-          <title>{{ title }} - Lab Opportunities </title>
+       <title> {{ title }} - Lab Opportunities </title>
        {% else %}
-          <title> Welcome to the Post Portal! </title>
+            <title> Welcome to the Post Portal! </title>
        {% endif %}
        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 
@@ -24,7 +24,10 @@
     </head>
 
     <body style = "background-color: white;">
-        <div class ="nav-container" style="background-color: white;">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        {% if current_user.is_anonymous == False %}
+        <div class="sidenav">  
         <table>
             
             <tr>
@@ -33,28 +36,31 @@
                 
 
                 {% else %}
-            
-                    <td><a href="{{ url_for('routes.index') }}" class = "button">Home</a></td> 
+                    
+                    <a href="{{ url_for('routes.index') }}""><p style = "font-size: 20; font-family:sans-serif;"> Home </p></i></a>
+                    
                     {% if current_user.get_user_type() == 'student' %}
-                        <td><a href = "{{ url_for('routes.student_profile') }}"> Profile </a></td>
+                    <a href="{{ url_for('routes.student_profile')}}"><p style = "font-size: 20; font-family:sans-serif;"> Profile</p></i></a>
+                    
                     {% else %}
-                        <td><a href="{{ url_for('routes.postposition') }}" class = "button"> New Post </a></td>
-                        <td><a href="{{ url_for('routes.applications') }}" class = "button"> Applications </a></td>
+                        <a href="{{ url_for('routes.postposition') }}"><p style = "font-size: 20; font-family:sans-serif;"> New Post</p></i></a>
+                        <a href="{{ url_for('routes.applications') }}"><p style = "font-size: 20; font-family:sans-serif;"> Applications</p></i></a>
 
                     {% endif %}
-                    
-                    <td><a href="{{ url_for('auth.logout') }}" class = "button"> Logout </a></td>
+                    <a href="{{ url_for('auth.logout') }}"><p style = "font-size: 20; font-family:sans-serif;"> Logout</p></i></a>
 
                 {% endif %}
             </tr>
+            
         </table>
         </div>
+        {% endif%}
         <div>
             {% with messages = get_flashed_messages() %}
             {% if messages %}
                 {% for message in messages %}
                 
-                <div class = "flash-container">{{ message }}</div>
+                <div class = "flash-container" style = "margin-left: 9%;">{{ message }}</div>
                 {% endfor %}
             {% endif %}
             {% endwith %}
