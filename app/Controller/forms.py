@@ -31,6 +31,7 @@ class PostForm(FlaskForm):
     title = StringField('Job Title', validators=[DataRequired()])
     body = TextAreaField("Job Description", [Length(min=0, max = 1500), DataRequired()])
     majors = QuerySelectMultipleField('Recommended Majors', query_factory= all_majors, get_label= lambda t: t.get_major_name(), widget=ListWidget(prefix_label=False), option_widget=CheckboxInput() )
+    fields = QuerySelectMultipleField('Recommended Fields', query_factory= all_fields, get_label= lambda t: t.get_name(), widget=ListWidget(prefix_label=False), option_widget=CheckboxInput() )
     time_commitment = StringField('Time Commitment (Hours Per Week)', [Length(min = 1, max = 10), DataRequired()])
     start_date = DateField('Start Date', [DataRequired()], format = '%m/%d/%Y')
     end_date = DateField('End Date', [DataRequired()], format = '%m/%d/%Y')
