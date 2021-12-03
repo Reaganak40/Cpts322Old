@@ -116,9 +116,15 @@ def delete_post(post_id):
         flash('You do not have permission to access this page.')
         return redirect(url_for('routes.index'))
 
+    applications = post.get_applicants()
+
+    for application in applications: # Remove connection in applications
+        db.session.delete(application)
+        # TODO: Add Phantom Applications
+
     db.session.delete(post)
     db.session.commit()
-    flash('Deleted Post [' + post.title + ']')
+    #flash('Deleted Post [' + post.title + ']')
     return redirect(url_for('routes.index'))
 
 
