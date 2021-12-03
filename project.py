@@ -94,7 +94,7 @@ def initDB(*args, **kwargs):
         print('\nResearch Fields:')
         for field in Field.query.all():
             print('\t', field)
-
+            
     if(app.debug):
         if(User.query.count() == 0): # Don't reinitialize if already initialzed (duh)
             print("Debug: Initializing with pre-existing data...")
