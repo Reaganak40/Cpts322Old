@@ -2,10 +2,9 @@
 # ================================================================
 #   Name:           post html
 #   Description:    UI for create route
-#   Last Changed:   12/1/21
+#   Last Changed:   12/3/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Added Writer's email to post, time commitment, 
-#                   and start to end date. Added research fields
+#   Change Details: Added manage post button
 # ================================================================
 -->
 
@@ -13,6 +12,14 @@
     <tr> 
         <!-- Print Job Title -->
         <td colspan="3"><div class="posttitle"> {{post.title}} </div>
+
+            <!-- If current user owns this post -->
+            {% if (current_user.id == post.writer.id) %}
+
+            <form action = "{{url_for('routes.updateposition', post_id = post.id)}}" method="get">
+            <input type="submit", value="Manage Post", class="button">
+            </form>
+            {% endif %}
         </td>
     </tr>
 

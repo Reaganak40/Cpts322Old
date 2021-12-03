@@ -1,26 +1,34 @@
 <!--    
 # ================================================================
-#   Name:           create html
-#   Description:    UI for create route
-#   Last Changed:   12/1/21
+#   Name:           Update Position html
+#   Description:    UI for manage existing post
+#   Last Changed:   12/3/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Added time commitment and start & end date
+#   Change Details: Initial Implementation
 # ================================================================
 -->
-
 
 {% extends "base.html" %}
 
 {% block content %}
-    <h1 style="margin-left: 15%;">Create New Position Post</h1>
+    <h1>Manage Post</h1>
 
     {% if form %}
+
+    <form action = "{{url_for('routes.delete_post', post_id = post.id)}}" method="post">
+        <input type="submit", value="Delete Post", class="unapply_button">
+     </form>
+
+     <form action = "{{url_for('routes.index')}}" method="post">
+        <input type="submit", value="Discard Changes", class="unapply_button">
+     </form>
+
     <form action="" method="post">
         {{ form.hidden_tag() }}
         
-        <div style="margin-left: 15%;">
+        <div>
             <!--Displays the form item for the post's `title`.--> 
-            <b>{{ form.title.label }} </b><br>
+            {{ form.title.label }}<br>
             {{ form.title(class="formtitle") }}<br><br>
 
 
@@ -30,7 +38,7 @@
             {% endfor %}
 
             <!--Displays the form item for the post's ` body`.-->   
-            <b>{{ form.body.label }}</b><br>
+            {{ form.body.label }}<br>
             {{ form.body(class="formbody") }}<br><br>
             
             <!-- Body Form Errors -->   
@@ -39,7 +47,7 @@
             {% endfor %}
 
             <!--Displays the form item for the post's ` time commitment`.-->   
-            <b>{{ form.time_commitment.label }}</b><br>
+            {{ form.time_commitment.label }}<br>
             {{ form.time_commitment(class="formtitle") }}<br><br>
             
             <!-- Time Commitment Form Errors -->   
@@ -48,7 +56,7 @@
             {% endfor %}
 
             <!--Displays the form item for the post's `start & end date`.-->   
-            <b>{{ form.start_date.label }} and {{ form.end_date.label }} (MM/DD/YYYY)</b><br>
+            {{ form.start_date.label }} and {{ form.end_date.label }} (MM/DD/YYYY)<br>
             {{ form.start_date(class="formtitle") }} to {{ form.end_date(class="formtitle") }}<br><br>
             
             <!-- Start Date Form Errors -->   
@@ -60,7 +68,7 @@
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
              
-        
+        </div>
             
             <!--Displays the form item for the post's ` tags`.-->  
             {{ form.majors.label}} 
@@ -74,7 +82,6 @@
 
             <!-- Submit Button -->   
             {{ form.submit(class="button") }}
-        </div>
     </form>
 
     {% endif %}
