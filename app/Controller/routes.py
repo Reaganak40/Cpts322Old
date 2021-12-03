@@ -62,7 +62,14 @@ def postposition():
 
     return render_template('create.html', title="New Post", form = pForm)
 
-
+# ================================================================
+#   Name:           updateposition Route
+#   Description:    The Page that allows a faculty to manage an existing
+#                   post
+#   Last Changed:   12/3/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Initial Implementation
+# ================================================================
 @bp_routes.route('/updateposition/<post_id>', methods=['GET', 'POST'])
 @login_required
 def updateposition(post_id):
@@ -102,6 +109,13 @@ def updateposition(post_id):
 
     return render_template('updateposition.html', title="Update Post", post = post, form = pForm)
     
+# ================================================================
+#   Name:           Delete Post
+#   Description:    Deletes an existing post
+#   Last Changed:   12/3/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Initial Implementation
+# ================================================================
 @bp_routes.route('/delete_post/<post_id>', methods=['POST'])
 @login_required
 def delete_post(post_id):
@@ -119,8 +133,7 @@ def delete_post(post_id):
     applications = post.get_applicants()
 
     for application in applications: # Remove connection in applications
-        db.session.delete(application)
-        # TODO: Add Phantom Applications
+        application.make_phantom()  # Retain post information
 
     db.session.delete(post)
     db.session.commit()
