@@ -12,8 +12,8 @@
 
 {% block content %}
   
-    <h1 style="margin-left: 10%;";>Welcome to Lab Opportunities!</h1>
-    <h2 style="margin-left: 10%;"> "A ship does not sail with yesterday's winds." </h2> 
+    <h1 style="margin-left: 15%;";>Welcome to Lab Opportunities!</h1>
+    <h2 style="margin-left: 15%;"> "A ship does not sail with yesterday's winds." </h2> 
     {% if current_user.get_user_type() == 'student' %}
     {% if current_user.can_apply() == False %}
     
@@ -26,10 +26,10 @@
     {% endif %}
 
     {% if current_user.get_user_type() == 'faculty' %}
-    <form action= "" method = "post" class = "formselect" style="margin-left: 10%;"> <div >Sort by: {{form.hidden_tag()}} {{form.checkbox.label}}  {{form.checkbox}} {{form.refresh}} </div> </form>
+    <form action= "" method = "post" class = "formselect" style="margin-left: 15%;"> <div >Sort by: {{form.hidden_tag()}} {{form.checkbox.label}}  {{form.checkbox}} {{form.refresh}} </div> </form>
 
     {% endif %}
-    <h3 style="margin-left: 10%;">Number of Posts: {{ post_count }} </h3>
+    <h3 style="margin-left: 15%;">Number of Posts: {{ post_count }} </h3>
     
     <!-- Make Lists of Posts -->
     <div class = "postlist">

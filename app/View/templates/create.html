@@ -12,13 +12,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1 style="margin-left: 10%;">Create New Position Post</h1>
+    <h1 style="margin-left: 15%;">Create New Position Post</h1>
 
     {% if form %}
     <form action="" method="post">
         {{ form.hidden_tag() }}
         
-        <div style="margin-left: 10%;">
+        <div style="margin-left: 15%;">
             <!--Displays the form item for the post's `title`.--> 
             <b>{{ form.title.label }} </b><br>
             {{ form.title(class="formtitle") }}<br><br>

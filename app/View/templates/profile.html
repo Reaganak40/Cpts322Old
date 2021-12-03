@@ -12,14 +12,14 @@
 
 {% block content %}
 <br>
-    <h1 style="margin-left:10%; font-family: sans-serif;">Student Profile</h1>
-    <h2 style="margin-left: 10%; font-family: sans-serif;">Username: {{ current_user.username }}</h2>
+    <h1 style="margin-left:15%; font-family: sans-serif;">Student Profile</h1>
+    <h2 style="margin-left: 15%; font-family: sans-serif;">Username: {{ current_user.username }}</h2>
     
     {% set student = current_user %}
 
     {% include '_profile.html' %}
 
     <br>
-    <a style = "margin-left: 10%; text-decoration:none;" class = "btn_update" href = "{{ url_for('routes.update_student_profile') }}"> Update Profile </a></p> 
+    <a style = "margin-left: 15%; text-decoration:none;" class = "btn_update" href = "{{ url_for('routes.update_student_profile') }}"> Update Profile </a></p> 
     <br>
 {% endblock %}

@@ -139,7 +139,7 @@ a:hover {
 .postbody {
     font-family: Verdana;
     padding : 15px;
-	font-size: 16px;
+	  font-size: 16px;
 
 }
 
@@ -147,21 +147,21 @@ a:hover {
   text-align: center;
   font-family: sans-serif;
   border-radius: 25px;
-  border :2px solid rgb(41, 39, 39);
+  border :3px solid rgb(41, 39, 39);
   background: crimson;
   padding: 5px;
   margin: 5px;
 }
 
 .posttags:hover{
-    opacity: 0.8;
+    opacity: 0.9;
 }
 
 .fieldtags {
   text-align: left;
   font-family: sans-serif;
   border-radius: 25px;
-  border :2px solid black;
+  border :3px solid black;
   background: #89CFF0;
   color: black;
   padding: 5px;
@@ -169,7 +169,7 @@ a:hover {
 }
 
 .fieldtags:hover{
-    opacity: 0.8;
+    opacity: 0.9;
 }
 
 .posttimestamp {
@@ -296,7 +296,7 @@ a:hover {
 
 .sidenav {
   height: 100%; /* Full-height: remove this if you want "auto" height */
-  width: 8%; /* Set the width of the sidebar */
+  width: 13%; /* Set the width of the sidebar */
   position: fixed; /* Fixed Sidebar (stay in place on scroll) */
   z-index: 1; /* Stay on top */
   top: 0; /* Stay at the top */
