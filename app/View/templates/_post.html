@@ -16,6 +16,7 @@
 
             <!-- If current user owns this post -->
             {% if (current_user.id == post.writer.id) %}
+                hello there
 
             <form action = "{{url_for('routes.updateposition', post_id = post.id)}}" method="post">
             <input type="submit", value="Delete Post", class="unapply_button">
