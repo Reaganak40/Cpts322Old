@@ -1,4 +1,3 @@
-from sqlalchemy.sql.sqltypes import DateTime
 from app import create_app, db
 from app.Model.models import Faculty, User, Student, Post, Major, Field, postMajors, majorFields
 import datetime
@@ -95,11 +94,6 @@ def initDB(*args, **kwargs):
         print('\nResearch Fields:')
         for field in Field.query.all():
             print('\t', field)
-
-    if(app.debug):
-        if(User.query.count() == 0): # Don't reinitialize if already initialzed (duh)
-            print("Debug: Initializing with pre-existing data...")
-            fill_db()
 
     if(app.debug):
         if(User.query.count() == 0): # Don't reinitialize if already initialzed (duh)
