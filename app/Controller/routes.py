@@ -50,7 +50,8 @@ def postposition():
         newPost = Post(user_id = current_user.id, 
                        title=pForm.title.data, 
                        body = pForm.body.data, 
-                       majors = pForm.majors.data, 
+                       majors = pForm.majors.data,
+                       fields = pForm.fields.data, 
                        time_commitment = pForm.time_commitment.data,
                        start_date = pForm.start_date.data,
                        end_date = pForm.end_date.data)
@@ -60,6 +61,64 @@ def postposition():
         return redirect(url_for('routes.index'))
 
     return render_template('create.html', title="New Post", form = pForm)
+
+
+@bp_routes.route('/updateposition/<post_id>', methods=['GET', 'POST'])
+@login_required
+def updateposition(post_id):
+    post = Post.query.filter_by(id = post_id).first()
+
+    if(post is None): #if post could not be found
+        flash('Could not find this post.')
+        return redirect(url_for('routes.index'))
+    
+    if (post.user_id != current_user.id): # if post does not belong to this user
+        flash('You do not have permission to access this page.')
+        return redirect(url_for('routes.index'))
+    
+    pForm = PostForm()
+
+    if request.method == 'GET': # Populate fields with existing data
+        pForm.title.data = post.title
+        pForm.body.data = post.body
+        pForm.time_commitment.data = post.time_commitment
+        pForm.start_date.data = post.start_date
+        pForm.end_date.data = post.end_date
+        pForm.majors.data = post.majors
+        pForm.fields.data = post.fields
+
+    if pForm.validate_on_submit():
+        post.user_id = current_user.id
+        post.title=pForm.title.data
+        post.body = pForm.body.data 
+        post.majors = pForm.majors.data
+        post.fields = pForm.fields.data 
+        post.time_commitment = pForm.time_commitment.data
+        post.start_date = pForm.start_date.data
+        post.end_date = pForm.end_date.data
+        db.session.commit()
+        flash('Post Edit Successful')
+        return redirect(url_for('routes.index'))
+
+    return render_template('updateposition.html', title="Update Post", post = post, form = pForm)
+    
+@bp_routes.route('/delete_post/<post_id>', methods=['GET, POST'])
+@login_required
+def delete_post(post_id):
+    post = Post.query.filter_by(id = post_id).first()
+    print('testing')
+
+    if(post is None): #if post could not be found
+        flash('Could not find this post.')
+        return redirect(url_for('routes.index'))
+    
+    if (post.user_id != current_user.id): # if post does not belong to this user
+        flash('You do not have permission to access this page.')
+        return redirect(url_for('routes.index'))
+
+    flash('Deleted Post [' + post.title + ']')
+    return redirect(url_for('routes.index'))
+
 
 # ================================================================
 #   Name:           Student Profile Update Route
@@ -76,7 +135,6 @@ def student_profile():
         return redirect(url_for('routes.index'))
 
     return render_template('profile.html', title="Student Profile", profile = current_user)
-
 
 
 # ================================================================

@@ -1,23 +1,20 @@
-<!--    
-# ================================================================
-#   Name:           create html
-#   Description:    UI for create route
-#   Last Changed:   12/1/21
-#   Changed By:     Reagan Kelley
-#   Change Details: Added time commitment and start & end date
-# ================================================================
--->
-
-
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Create New Position Post</h1>
+    <h1>Manage Post</h1>
 
     {% if form %}
     <form action="" method="post">
         {{ form.hidden_tag() }}
         
+
+        <form action = "{{url_for('routes.delete_post', post_id = post.id)}}" method="post">
+            <input type="submit", value="Delete Position", class="unapply_button">
+         </form>
+
+         <form action = "{{url_for('routes.index')}}" method="post">
+            <input type="submit", value="Discard Changes", class="unapply_button">
+         </form>
         <div>
             <!--Displays the form item for the post's `title`.--> 
             {{ form.title.label }}<br>
