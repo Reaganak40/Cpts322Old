@@ -4,17 +4,18 @@
     <h1>Manage Post</h1>
 
     {% if form %}
+
+    <form action = "{{url_for('routes.delete_post', post_id = post.id)}}" method="post">
+        <input type="submit", value="Delete Post", class="unapply_button">
+     </form>
+
+     <form action = "{{url_for('routes.index')}}" method="post">
+        <input type="submit", value="Discard Changes", class="unapply_button">
+     </form>
+
     <form action="" method="post">
         {{ form.hidden_tag() }}
         
-
-        <form action = "{{url_for('routes.delete_post', post_id = post.id)}}" method="post">
-            <input type="submit", value="Delete Position", class="unapply_button">
-         </form>
-
-         <form action = "{{url_for('routes.index')}}" method="post">
-            <input type="submit", value="Discard Changes", class="unapply_button">
-         </form>
         <div>
             <!--Displays the form item for the post's `title`.--> 
             {{ form.title.label }}<br>

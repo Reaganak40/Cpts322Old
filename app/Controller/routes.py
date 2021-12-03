@@ -102,7 +102,7 @@ def updateposition(post_id):
 
     return render_template('updateposition.html', title="Update Post", post = post, form = pForm)
     
-@bp_routes.route('/delete_post/<post_id>', methods=['GET, POST'])
+@bp_routes.route('/delete_post/<post_id>', methods=['POST'])
 @login_required
 def delete_post(post_id):
     post = Post.query.filter_by(id = post_id).first()
@@ -116,6 +116,8 @@ def delete_post(post_id):
         flash('You do not have permission to access this page.')
         return redirect(url_for('routes.index'))
 
+    db.session.delete(post)
+    db.session.commit()
     flash('Deleted Post [' + post.title + ']')
     return redirect(url_for('routes.index'))
 
