@@ -8,7 +8,7 @@
 # ================================================================
 -->
 
-<table class = "posttable" style = "width:70%" valign="top">
+<table class = "posttable" style = "width:100%; margin-left: 17%; " valign="top" >
     <tr> 
         <!-- Print Job Title -->
         <td colspan="3"><div class="posttitle"> {{post.title}} </div>
@@ -25,7 +25,7 @@
 
     <tr>
         <td colspan="3" style = "text-align:left" valign="bottom">  
-              <span> Posted by:  <span class = "useritem"> {{post.writer.username }} | {{post.writer.email}}</span></span>
+              <span style = "margin-left: 1%;"> Posted by:  <span class = "useritem"> {{post.writer.username }} | {{post.writer.email}}</span></span>
 
 
           </td>
@@ -34,12 +34,14 @@
 
     <tr>
         
-        <td width="80%" >
+        <td width="80%">
             <div>
               <!-- Print Job Description -->    
-              <div class="postbody">{{ post.body }}</div>
-              <div class ="postitle"> {{ post.time_commitment }} hours per week.</div>
-              <div class="posttimestamp"><b>From</b> {{ post.start_date }} <b>To</b> {{ post.end_date }} </div>
+              <div class="postbody" style="text-align: left">{{ post.body }}</div>
+              
+              <div class ="postitle" style="margin: 10px; "> <i class = "fa fa-clock-o"><b style="font:bold; font-family: sans-serif;"> Estimated time commitment: </i></b> {{ post.time_commitment }} hours per week.</div>
+              
+              <div class="posttimestamp" style = "margin: 5px;"> <i class = "fa fa-calendar"> <b style = "font:bold; font-family: sans-serif;"> Duration of hiring: </i></b> <b>From </b>{{ post.start_date }} <b>To</b> {{ post.end_date }} </div>
            </div>
         </td> 
 

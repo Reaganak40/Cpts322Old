@@ -12,15 +12,15 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Create New Position Post</h1>
+    <h1 style="margin-left: 15%;">Create New Position Post</h1>
 
     {% if form %}
     <form action="" method="post">
         {{ form.hidden_tag() }}
         
-        <div>
+        <div style="margin-left: 15%;">
             <!--Displays the form item for the post's `title`.--> 
-            {{ form.title.label }}<br>
+            <b>{{ form.title.label }} </b><br>
             {{ form.title(class="formtitle") }}<br><br>
 
 
@@ -30,7 +30,7 @@
             {% endfor %}
 
             <!--Displays the form item for the post's ` body`.-->   
-            {{ form.body.label }}<br>
+            <b>{{ form.body.label }}</b><br>
             {{ form.body(class="formbody") }}<br><br>
             
             <!-- Body Form Errors -->   
@@ -39,7 +39,7 @@
             {% endfor %}
 
             <!--Displays the form item for the post's ` time commitment`.-->   
-            {{ form.time_commitment.label }}<br>
+            <b>{{ form.time_commitment.label }}</b><br>
             {{ form.time_commitment(class="formtitle") }}<br><br>
             
             <!-- Time Commitment Form Errors -->   
@@ -48,7 +48,7 @@
             {% endfor %}
 
             <!--Displays the form item for the post's `start & end date`.-->   
-            {{ form.start_date.label }} and {{ form.end_date.label }} (MM/DD/YYYY)<br>
+            <b>{{ form.start_date.label }} and {{ form.end_date.label }} (MM/DD/YYYY)</b><br>
             {{ form.start_date(class="formtitle") }} to {{ form.end_date(class="formtitle") }}<br><br>
             
             <!-- Start Date Form Errors -->   
@@ -60,7 +60,7 @@
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
              
-        </div>
+        
             
             <!--Displays the form item for the post's ` tags`.-->  
             {{ form.majors.label}} 
@@ -74,6 +74,7 @@
 
             <!-- Submit Button -->   
             {{ form.submit(class="button") }}
+        </div>
     </form>
 
     {% endif %}

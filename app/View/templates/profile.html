@@ -11,14 +11,15 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Student Profile</h1>
-    <h2>Username: {{ current_user.username }}</h2>
+<br>
+    <h1 style="margin-left:15%; font-family: sans-serif;">Student Profile</h1>
+    <h2 style="margin-left: 15%; font-family: sans-serif;">Username: {{ current_user.username }}</h2>
     
     {% set student = current_user %}
 
     {% include '_profile.html' %}
 
-    
-   <a href = "{{ url_for('routes.update_student_profile') }}"> Update Profile </a></p> 
-
+    <br>
+    <a style = "margin-left: 15%; text-decoration:none;" class = "btn_update" href = "{{ url_for('routes.update_student_profile') }}"> Update Profile </a></p> 
+    <br>
 {% endblock %}

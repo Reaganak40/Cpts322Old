@@ -14,6 +14,9 @@ from datetime import datetime
 def get_majorlabel(theMajor):
     return theMajor.name
 
+def get_fieldlabel(theField):
+    return theField.name
+
 def all_majors():
     return Major.query.all()
 
@@ -104,7 +107,7 @@ class ProfileForm(FlaskForm):
     gpa = FloatField('GPA', validators = [NumberRange(min = 0.0, max = 5.0)])
     expected_grad_date = DateField('Expected Graduation Date (mm/dd/yyyy)', format = '%m/%d/%Y')
     elect_courses = TextAreaField("Technical Elective Courses (Include Grades)")
-    #research_topics = QuerySelectField('Select Resarch Topics') #TODO: Add tags from relationship
+   # research_topics = QuerySelectMultipleField('Select Resarch Topics', query_factory = all_research_topics, get_label = get_fieldlabel, allow_blank = False) #TODO: Add tags from relationship
     #research_topics = TextAreaField("Filler for research topics (Implement later)")
     languages = TextAreaField('Programming Languages Experience')
     prior_research = TextAreaField('Describe your Prior Research Experience (If Any)')
