@@ -4,7 +4,7 @@ from flask import Blueprint
 from flask import render_template, flash, redirect, url_for, request
 from config import Config
 
-from app import db
+from app import db, num_collector
 from app.Model.models import Application, Field, Post, Major, User, Student, Faculty, postMajors
 from app.Controller.forms import ApplicationForm, PostForm, ProfileForm, SortForm
 from flask_login import current_user, login_user, logout_user, login_required
@@ -35,9 +35,9 @@ def index():
 # ================================================================
 #   Name:           Post Position Route
 #   Description:    Post Position route for basic flask implementation
-#   Last Changed:   12/1/21
+#   Last Changed:   12/3/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Added time commitment
+#   Change Details: Added dynamic form feature for fields
 # ================================================================
 @bp_routes.route('/postposition', methods=['GET', 'POST'])
 @login_required
@@ -45,8 +45,43 @@ def postposition():
     if current_user.get_user_type() == 'student':
         flash('You do not have permission to access this page.')
         return redirect(url_for('routes.index'))
+    show_fields = False
+    num_collector.clear()
+    print('hitting it again')
+
     pForm = PostForm()
+
     if pForm.validate_on_submit():
+        print('CHECK: {}'.format(pForm.check.data))
+        if(pForm.check.data):
+            print('made it')
+            majors = pForm.majors.data
+        
+            num_collector.clear()
+            for major in majors:
+                num_collector.append(major.id)
+
+            temp_title = pForm.title.data
+            temp_body = pForm.body.data
+            temp_majors = pForm.majors.data
+            temp_time_commitment = pForm.time_commitment.data
+            temp_start_date = pForm.start_date.data
+            temp_end_date = pForm.end_date.data
+
+            pForm = PostForm()
+            pForm.title.data = temp_title
+            pForm.body.data = temp_body
+            pForm.majors.data = temp_majors
+            pForm.time_commitment.data = temp_time_commitment
+            pForm.start_date.data = temp_start_date
+            pForm.end_date.data = temp_end_date
+            print(pForm.fields.data)
+            if(len(num_collector) == 0):
+                show_fields = False
+            else:
+                show_fields = True
+            return render_template('create.html', title="New Post", form = pForm, show_fields = show_fields)
+
         newPost = Post(user_id = current_user.id, 
                        title=pForm.title.data, 
                        body = pForm.body.data, 
@@ -60,7 +95,11 @@ def postposition():
         flash('New Position Post "' + newPost.title + '" is on the Job Board!')
         return redirect(url_for('routes.index'))
 
-    return render_template('create.html', title="New Post", form = pForm)
+    if(len(num_collector) == 0):
+                show_fields = False
+    else:
+        show_fields = True
+    return render_template('create.html', title="New Post", form = pForm, show_fields = show_fields)
 
 # ================================================================
 #   Name:           updateposition Route
@@ -133,6 +172,7 @@ def delete_post(post_id):
     applications = post.get_applicants()
 
     for application in applications: # Remove connection in applications
+        application.phantom_name = post.title
         application.make_phantom()  # Retain post information
 
     db.session.delete(post)
@@ -272,16 +312,25 @@ def submit_application(postid):
 # ================================================================
 #   Name:           Applications Route
 #   Description:    Prints all applications for faculty postion posts
-#   Last Changed:   11/24/21
+#   Last Changed:   12/3/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Revised to compensate for new database model
+#   Change Details: Added student version of application route
 # ================================================================
 @bp_routes.route('/applications', methods=['GET', 'POST'])
 @login_required
 def applications():
-    myposts = current_user.get_user_posts()
-    print(myposts.count())
-    return render_template('applications.html', title="Applications", posts = myposts)
+    if(current_user.get_user_type() == 'faculty'):
+        posts = current_user.get_user_posts()
+    else: # current user is student
+        post_id_list = []
+        
+        # get all post id's for posts student has applied to
+        for application in current_user.applications:
+            post_id_list.append(application.post_id)
+        posts = db.session.query(Post).filter(Post.id.in_(n for n in post_id_list))
+
+    print(posts.count())
+    return render_template('applications.html', title="Applications", posts = posts)
 
 # ================================================================
 #   Name:           Review Route

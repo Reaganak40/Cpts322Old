@@ -22,6 +22,7 @@ def initDB(*args, **kwargs):
         major3 = Major(name = 'Electrical Engineering', id = 3)
         major4 = Major(name = 'Mechanical Engineering', id = 4)
 
+        fieldNA = Field(field = 'Empty Field', id = -1)
         # Research Fields
         field1 = Field(field = 'Machine Learning', id = 1)
         field2 = Field(field = 'Networking', id = 2)
@@ -85,6 +86,8 @@ def initDB(*args, **kwargs):
         db.session.add(field10)
         db.session.add(field11)
 
+        db.session.add(fieldNA)
+        
         db.session.commit()
 
         print("Majors")

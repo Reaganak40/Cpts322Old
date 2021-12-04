@@ -285,6 +285,12 @@ class Field(db.Model):
      
      def get_name(self):
         return "{}".format(self.field)
+    
+     def is_for_major(self, major):
+        if major in self.majors:
+            return True
+        return False
+
 
      def get_majors(self):
         major_list = []
