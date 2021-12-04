@@ -3,15 +3,24 @@
 #   Name:           student application html
 #   Description:    A row of data holding all info for a 
 #                   specific student application
-#   Last Changed:   11/16/21
+#   Last Changed:   12/3/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Initial Implementation
+#   Change Details: Added student view
 # ================================================================
 -->
 
 <table class = "coursetable">
     <thead>
     <tr valign = "middle">
+
+        {% if phantom_application == True %}
+        <td width = "20%"> {{application.phantom_name}} </td>
+        <td width = "20%"> {{profile.first_name}} {{profile.last_name}} </td>
+        <td width = "20%"> {{profile.email }} </td>
+        <td width = "15%"> {{ profile.major }}</td>
+        <td width = "10%"> {{ profile.gpa }} </td>
+        <td width = "15%">   <p style="color:red"> Position No Longer Available </p>  </td>
+        {% else %}
         <td width = "20%"> {{position_name}} </td>
         <td width = "20%"> {{profile.first_name}} {{profile.last_name}} </td>
         <td width = "20%"> {{student.email }} </td>
@@ -19,6 +28,7 @@
         <td width = "10%"> {{ profile.gpa }} </td>
         <td width = "15%">  
 
+            {% if current_user.get_user_type() == 'faculty' %}
             {% if applicant.get_status() == 'Pending' %}
             <form action = "{{url_for('routes.review', postid = post.id, userid = student.id)}}" method="post">
                 <input type="submit", value="Review", class="review_button">
@@ -37,8 +47,25 @@
              <p style="color: green"> Hired </p>
 
             {% endif %}
+            {% else %}
+            {% if applicant.get_status() == 'Pending' %}
+                <p style="color:darkgoldenrod"> Pending... </p>
+
+
+             {% elif applicant.get_status() == 'Reject' %}
+
+              <p style="color:red"> Rejected </p>
+
+             {% elif applicant.get_status() == 'Interview' %}
+
+             <p style="color:lightsalmon"> Approved for Interview </p>
+
+            {% endif %}
+
+            {% endif %}
 
         </td>
+         {% endif %}
 
     </tr>
     </thead>

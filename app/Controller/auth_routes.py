@@ -76,7 +76,7 @@ def login():
         login_user(user, remember = form_login.remember_me.data)
         print(current_user)
 
-        if current_user.get_user_type() == 'Student': ## user is a student
+        if current_user.get_user_type() == 'student': ## user is a student
             return redirect(url_for('routes.index')) #Change depending on if student account or faculty account
         return redirect(url_for('routes.index'))
     return render_template('login.html', title='Sign In', form = form_login)

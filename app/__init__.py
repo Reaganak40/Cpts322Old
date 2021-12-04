@@ -9,7 +9,7 @@ login.login_view = 'auth.login'
 
 from flask_moment import Moment
 moment = Moment()
-
+num_collector = []  # For run-time field assortment
 # ================================================================
 #   Name:           Create App
 #   Description:    Congifures and runs program

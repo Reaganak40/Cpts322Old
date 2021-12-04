@@ -4,8 +4,8 @@ from flask import Blueprint
 from flask import render_template, flash, redirect, url_for, request
 from config import Config
 
-from app import db
-from app.Model.models import Application, Post, Major, User, Student, Faculty, postMajors
+from app import db, num_collector
+from app.Model.models import Application, Field, Post, Major, User, Student, Faculty, postMajors
 from app.Controller.forms import ApplicationForm, PostForm, ProfileForm, SortForm
 from flask_login import current_user, login_user, logout_user, login_required
 
@@ -26,7 +26,7 @@ bp_routes.template_folder = Config.TEMPLATE_FOLDER #'..\\View\\templates'
 def index():
     posts = Post.query.order_by(Post.timestamp.desc())
     sform = SortForm()
-    print(current_user)
+    #print(current_user)
     if sform.validate_on_submit():
         if (sform.checkbox.data == False):
             posts = current_user.get_user_posts()
@@ -35,9 +35,10 @@ def index():
 # ================================================================
 #   Name:           Post Position Route
 #   Description:    Post Position route for basic flask implementation
-#   Last Changed:   11/11/21
+#   Last Changed:   12/3/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Adjustments to compensate for new database model 
+#   Change Details: Added dynamic form feature for fields
+#                   Fixed bug
 # ================================================================
 @bp_routes.route('/postposition', methods=['GET', 'POST'])
 @login_required
@@ -45,15 +46,139 @@ def postposition():
     if current_user.get_user_type() == 'student':
         flash('You do not have permission to access this page.')
         return redirect(url_for('routes.index'))
+    show_fields = False
     pForm = PostForm()
+
+
     if pForm.validate_on_submit():
-        newPost = Post(user_id = current_user.id, title=pForm.title.data, body = pForm.body.data, majors = pForm.majors.data)
+
+        if(pForm.check.data):
+  
+            majors = pForm.majors.data
+        
+            num_collector.clear()
+            for major in majors:
+                num_collector.append(major.id)
+
+            temp_title = pForm.title.data
+            temp_body = pForm.body.data
+            temp_majors = pForm.majors.data
+            temp_time_commitment = pForm.time_commitment.data
+            temp_start_date = pForm.start_date.data
+            temp_end_date = pForm.end_date.data
+
+            pForm = PostForm()
+            pForm.title.data = temp_title
+            pForm.body.data = temp_body
+            pForm.majors.data = temp_majors
+            pForm.time_commitment.data = temp_time_commitment
+            pForm.start_date.data = temp_start_date
+            pForm.end_date.data = temp_end_date
+            print(pForm.fields.data)
+            if(len(num_collector) == 0):
+                show_fields = False
+            else:
+                show_fields = True
+            return render_template('create.html', title="New Post", form = pForm, show_fields = show_fields)
+
+        newPost = Post(user_id = current_user.id, 
+                       title=pForm.title.data, 
+                       body = pForm.body.data, 
+                       majors = pForm.majors.data,
+                       fields = pForm.fields.data, 
+                       time_commitment = pForm.time_commitment.data,
+                       start_date = pForm.start_date.data,
+                       end_date = pForm.end_date.data)
         db.session.add(newPost)
         db.session.commit()
         flash('New Position Post "' + newPost.title + '" is on the Job Board!')
         return redirect(url_for('routes.index'))
 
-    return render_template('create.html', title="New Post", form = pForm)
+    if(len(num_collector) == 0):
+                show_fields = False
+    else:
+        show_fields = True
+    return render_template('create.html', title="New Post", form = pForm, show_fields = show_fields)
+
+# ================================================================
+#   Name:           updateposition Route
+#   Description:    The Page that allows a faculty to manage an existing
+#                   post
+#   Last Changed:   12/3/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Initial Implementation
+# ================================================================
+@bp_routes.route('/updateposition/<post_id>', methods=['GET', 'POST'])
+@login_required
+def updateposition(post_id):
+    post = Post.query.filter_by(id = post_id).first()
+
+    if(post is None): #if post could not be found
+        flash('Could not find this post.')
+        return redirect(url_for('routes.index'))
+    
+    if (post.user_id != current_user.id): # if post does not belong to this user
+        flash('You do not have permission to access this page.')
+        return redirect(url_for('routes.index'))
+    
+    pForm = PostForm()
+
+    if request.method == 'GET': # Populate fields with existing data
+        pForm.title.data = post.title
+        pForm.body.data = post.body
+        pForm.time_commitment.data = post.time_commitment
+        pForm.start_date.data = post.start_date
+        pForm.end_date.data = post.end_date
+        pForm.majors.data = post.majors
+        pForm.fields.data = post.fields
+
+    if pForm.validate_on_submit():
+        post.user_id = current_user.id
+        post.title=pForm.title.data
+        post.body = pForm.body.data 
+        post.majors = pForm.majors.data
+        post.fields = pForm.fields.data 
+        post.time_commitment = pForm.time_commitment.data
+        post.start_date = pForm.start_date.data
+        post.end_date = pForm.end_date.data
+        db.session.commit()
+        flash('Post Edit Successful')
+        return redirect(url_for('routes.index'))
+
+    return render_template('updateposition.html', title="Update Post", post = post, form = pForm)
+    
+# ================================================================
+#   Name:           Delete Post
+#   Description:    Deletes an existing post
+#   Last Changed:   12/3/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Initial Implementation
+# ================================================================
+@bp_routes.route('/delete_post/<post_id>', methods=['POST'])
+@login_required
+def delete_post(post_id):
+    post = Post.query.filter_by(id = post_id).first()
+    print('testing')
+
+    if(post is None): #if post could not be found
+        flash('Could not find this post.')
+        return redirect(url_for('routes.index'))
+    
+    if (post.user_id != current_user.id): # if post does not belong to this user
+        flash('You do not have permission to access this page.')
+        return redirect(url_for('routes.index'))
+
+    applications = post.get_applicants()
+
+    for application in applications: # Remove connection in applications
+        application.phantom_name = post.title
+        application.make_phantom()  # Retain post information
+
+    db.session.delete(post)
+    db.session.commit()
+    #flash('Deleted Post [' + post.title + ']')
+    return redirect(url_for('routes.index'))
+
 
 # ================================================================
 #   Name:           Student Profile Update Route
@@ -70,7 +195,6 @@ def student_profile():
         return redirect(url_for('routes.index'))
 
     return render_template('profile.html', title="Student Profile", profile = current_user)
-
 
 
 # ================================================================
@@ -101,6 +225,7 @@ def update_student_profile():
         proForm.prior_research.data = current_user.prior_research
 
     if proForm.validate_on_submit():
+        
         major_name = Major.query.filter_by(id = (proForm.major.data).id).first()
 
         # update current user with form info
@@ -112,7 +237,7 @@ def update_student_profile():
         current_user.gpa = proForm.gpa.data
         current_user.expected_grad_date = proForm.expected_grad_date.data
         current_user.elect_courses = proForm.elect_courses.data
-        current_user.research_topics = 'To be Implemented'
+        ##current_user.research_topics = research_tags.get_research_field()
         current_user.languages = proForm.languages.data
         current_user.prior_research = proForm.prior_research.data
 
@@ -182,16 +307,25 @@ def submit_application(postid):
 # ================================================================
 #   Name:           Applications Route
 #   Description:    Prints all applications for faculty postion posts
-#   Last Changed:   11/24/21
+#   Last Changed:   12/3/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Revised to compensate for new database model
+#   Change Details: Added student version of application route
 # ================================================================
 @bp_routes.route('/applications', methods=['GET', 'POST'])
 @login_required
 def applications():
-    myposts = current_user.get_user_posts()
-    print(myposts.count())
-    return render_template('applications.html', title="Applications", posts = myposts)
+    if(current_user.get_user_type() == 'faculty'):
+        posts = current_user.get_user_posts()
+    else: # current user is student
+        post_id_list = []
+        
+        # get all post id's for posts student has applied to
+        for application in current_user.applications:
+            post_id_list.append(application.post_id)
+        posts = db.session.query(Post).filter(Post.id.in_(n for n in post_id_list))
+
+    print(posts.count())
+    return render_template('applications.html', title="Applications", posts = posts)
 
 # ================================================================
 #   Name:           Review Route
