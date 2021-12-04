@@ -27,7 +27,7 @@ def all_fields():
    return Field.query.all()
 
 def get_chosen_fields():
-
+    print(num_collector)
     if len(num_collector) == 0:
         return Field.query.filter_by(id = -1)
     majors = db.session.query(Major).filter(Major.id.in_(n for n in num_collector)).all()
@@ -142,9 +142,8 @@ class ProfileForm(FlaskForm):
     last_name = StringField('Last Name')
     wsu_id = StringField('WSU ID', validators=[Length(min = 8, max = 9)])
     phone_no = StringField('Phone Number', validators=[Length(max = 10)])
-    #major = SelectField('Major', choices = [(0, 'CptS - Computer Science'), (1, 'EE - Electrical Engineering'), (2, 'CptSE - Computer Engineering'), (3, 'SE - Software Engineering'), (4, 'DA - Data Analytics')])
     major = QuerySelectField('Major', query_factory = all_majors, get_label = get_majorlabel, allow_blank = False)
-    #major = TextAreaField("Filler for Major (Implement later)") ## TODO: Implement student major 
+    fields = QuerySelectMultipleField('Recommended Fields', query_factory= get_chosen_fields, get_label= lambda t: t.get_name(), widget=ListWidget(prefix_label=False), option_widget=CheckboxInput() )
     gpa = FloatField('GPA', validators = [NumberRange(min = 0.0, max = 5.0)])
     expected_grad_date = DateField('Expected Graduation Date (mm/dd/yyyy)', format = '%m/%d/%Y')
     elect_courses = TextAreaField("Technical Elective Courses (Include Grades)")

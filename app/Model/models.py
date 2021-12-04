@@ -113,6 +113,7 @@ class Student(User):
     last_name = db.Column(db.String(100))
     phone_no = db.Column(db.String(10))
     major = db.Column(db.String(20), db.ForeignKey('major.id'))
+    fields = db.relationship('field')
     gpa = db.Column(db.Float(precision = 1))
     expected_grad_date = db.Column(db.Date)
     elect_courses = db.Column(db.String(1500))

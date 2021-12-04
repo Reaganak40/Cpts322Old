@@ -212,7 +212,12 @@ def update_student_profile():
         return redirect(url_for('routes.index'))
     proForm = ProfileForm()
    
-
+    num_collector.clear()
+    majors = Major.query.all()
+    for major in majors:
+        if major.id != -1:
+            num_collector.append(major.id)
+    
     if request.method == 'GET': # Populate fields with existing data
         proForm.first_name.data = current_user.first_name
         proForm.last_name.data = current_user.last_name
@@ -238,6 +243,7 @@ def update_student_profile():
         current_user.last_name = proForm.last_name.data
         current_user.phone_no = proForm.phone_no.data
         current_user.major = major_name.get_major_name()
+        current_user.fields = proForm.fields.data
         current_user.gpa = proForm.gpa.data
         current_user.expected_grad_date = proForm.expected_grad_date.data
         current_user.elect_courses = proForm.elect_courses.data
