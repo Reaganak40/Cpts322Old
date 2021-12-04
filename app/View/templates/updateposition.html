@@ -11,22 +11,23 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Manage Post</h1>
+    <h1 style = "margin-left: 15%;">Manage Post</h1>
 
     {% if form %}
 
     <form action = "{{url_for('routes.delete_post', post_id = post.id)}}" method="post">
-        <input type="submit", value="Delete Post", class="unapply_button">
+        <input type="submit", value="Delete Post", class="updatepos_button">
      </form>
 
      <form action = "{{url_for('routes.index')}}" method="post">
-        <input type="submit", value="Discard Changes", class="unapply_button">
+        <input type="submit", value="Discard Changes", class="updatepos_button">
      </form>
 
+     <br> <br> 
     <form action="" method="post">
         {{ form.hidden_tag() }}
         
-        <div>
+        <div style="margin-left: 15%;">
             <!--Displays the form item for the post's `title`.--> 
             {{ form.title.label }}<br>
             {{ form.title(class="formtitle") }}<br><br>
@@ -68,7 +69,7 @@
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
              
-        </div>
+        
             
             <!--Displays the form item for the post's ` tags`.-->  
             {{ form.majors.label}} 
@@ -76,12 +77,13 @@
             <br><br>
             {{ form.fields.label}} 
             {{ form.fields(class="formtags") }}    
-            <br><br><br><br>
-            <br><br><br><br><br><br>
-
-
+            <br><br><br><br><br><br><br><br><br><br><br><br>
+            
+        
+        </div>
             <!-- Submit Button -->   
-            {{ form.submit(class="button") }}
+            {{ form.submit(class="updatepos_button") }}
+        
     </form>
 
     {% endif %}

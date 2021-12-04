@@ -11,11 +11,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1 style = "margin-left: 10%;">Update Profile</h1>
+    <h1 style = "margin-left: 15%;">Update Profile</h1>
 
     {% if update %}
 
-    <form action="" method="post" style = "margin-left: 15%;">
+    <form action="" method="post" style="margin-left: 15%;">
+        
         {{ update.hidden_tag() }}
 
         <!-- First Name -->
@@ -76,10 +77,12 @@
         <!-- Prior Research -->
         {{ update.prior_research.label }} <br>
         {{ update.prior_research(class = "formbody") }} <br>
+        <br><br>
+    
+        
 
-        <br>
-        {{ update.save(class = "apply_button") }}
-
+        {{ update.save(class = "updatepro_button") }}
+        
     </form>
 
     {% endif %}

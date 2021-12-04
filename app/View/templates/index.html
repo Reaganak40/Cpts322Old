@@ -17,9 +17,9 @@
     {% if current_user.get_user_type() == 'student' %}
     {% if current_user.can_apply() == False %}
     
-    <h3><span style="color:red"> ** Your Profile Information needs to be updated! ** <br><br> Go to
+    <h3><span style="color:red; margin-left: 15%;"> ** Your Profile Information needs to be updated! ** <br><br> 
     
-        <a href = "{{ url_for('routes.student_profile') }}"> Profile</a> to update. </span> 
+        <span style = "color:red; margin-left: 15%; "> Go to </span><a style = "text-decoration: none; "href = "{{ url_for('routes.student_profile') }}"> Profile</a> to update. </span> 
     </h3>
 
     {% endif %}
@@ -35,8 +35,8 @@
     <div class = "postlist">
     {% for post in posts %}
        
-       <div class = "post-box">{% include '_post.html' %}</div> 
-
+       <div class = "post-box" >{% include '_post.html' %}</div > 
+       
     {% endfor %}
     </div>
   
