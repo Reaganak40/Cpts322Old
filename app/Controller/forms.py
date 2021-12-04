@@ -111,7 +111,6 @@ class PostForm(FlaskForm):
         if self.check.data:
             return True
         if self.submit.data:
-            print(self.fields.data)
             return True
     
     def validate_end_date(self, end_date):

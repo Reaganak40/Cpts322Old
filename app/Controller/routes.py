@@ -46,10 +46,11 @@ def postposition():
         flash('You do not have permission to access this page.')
         return redirect(url_for('routes.index'))
     show_fields = False
-    num_collector.clear()
     print('hitting it again')
 
     pForm = PostForm()
+    print(pForm.majors.data)
+    print(pForm.fields.data)
 
     if pForm.validate_on_submit():
         print('CHECK: {}'.format(pForm.check.data))
@@ -67,11 +68,13 @@ def postposition():
             temp_time_commitment = pForm.time_commitment.data
             temp_start_date = pForm.start_date.data
             temp_end_date = pForm.end_date.data
+            temp_fields = pForm.fields.data
 
             pForm = PostForm()
             pForm.title.data = temp_title
             pForm.body.data = temp_body
             pForm.majors.data = temp_majors
+            pForm.fields.data = pForm.fields.data
             pForm.time_commitment.data = temp_time_commitment
             pForm.start_date.data = temp_start_date
             pForm.end_date.data = temp_end_date
