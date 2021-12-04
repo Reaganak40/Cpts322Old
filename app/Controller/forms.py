@@ -140,7 +140,7 @@ class SortForm(FlaskForm):
 class ProfileForm(FlaskForm):
     first_name = StringField('First Name')
     last_name = StringField('Last Name')
-    wsu_id = StringField('WSU ID', validators=[Length(min = 8, max = 9)])
+    wsu_id = StringField('WSU ID', validators=[DataRequired(), Length(min = 8, max = 9)])
     phone_no = StringField('Phone Number', validators=[Length(max = 10)])
     major = QuerySelectField('Major', query_factory = all_majors, get_label = get_majorlabel, allow_blank = False)
     fields = QuerySelectMultipleField('Recommended Fields', query_factory= get_chosen_fields, get_label= lambda t: t.get_name(), widget=ListWidget(prefix_label=False), option_widget=CheckboxInput() )
@@ -158,6 +158,12 @@ class ProfileForm(FlaskForm):
         for student_email in user_emails:
             if(student_email.id != current_user):
                 raise ValidationError('The email is already associated with another account! Please use a different email address.')
+    
+    def validate_wsu_id(self, wsu_id):
+        print(wsu_id.data)
+        user = User.query.filter_by(wsu_id = wsu_id.data).first()
+        if user is None:
+            raise ValidationError('This ID is used by another account. Please enter your real WSU ID.')
 
 # ================================================================
 #   Name:           Application form
