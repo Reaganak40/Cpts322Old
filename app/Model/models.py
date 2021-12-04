@@ -120,8 +120,8 @@ class Student(User):
     languages = db.Column(db.String(700))
     prior_research = db.Column(db.String(1500))
 
-    applications = db.relationship('Application', back_populates = 'student_applied')
 
+    applications = db.relationship('Application', back_populates = 'student_applied')
     __mapper_args__ = {
         'polymorphic_identity':'student',
     }
@@ -159,13 +159,15 @@ class Faculty(User):
 # ================================================================
 #   Name:           Application Model
 #   Description:    Class Definition for Application
-#   Last Changed:   11/16/21
+#   Last Changed:   12/3/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Initial Implementation
+#   Change Details: Added phantom application implementation
+#                   Fixed primary restraint bug
 # ================================================================
 class Application(db.Model):
-    applicant_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key = True)
-    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), primary_key = True)
+    id = db.Column(db.Integer, primary_key = True)
+    applicant_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
 
     student_applied = db.relationship('User')
     position_for = db.relationship('Post')
@@ -174,8 +176,18 @@ class Application(db.Model):
     personal_statement = db.Column(db.String(1500))
     faculty_ref = db.Column(db.String(60))
 
+    phantom_name = db.Column(db.String(150), default = "")
+
+
     def __repr__(self):
         return '<Application for {} - by {};>'.format(self.post_id,self.applicant_id)
+
+    def make_phantom(self):
+        self.status = 'No Longer Available'
+        self.post_id = -1
+
+    def get_phantom(self):
+        return [self.phantom_name, self.status]
 
     def get_applicant(self):
         return User.query.filter_by(id = self.applicant_id).first()
