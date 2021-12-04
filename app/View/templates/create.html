@@ -66,16 +66,42 @@
             {{ form.majors.label}} 
             {{ form.majors(class="formtags") }}
             <br><br>
+
             {{ form.fields.label}} 
-            {{ form.fields(class="formtags") }}    
-            <br><br><br><br>
-            <br><br><br><br><br><br>
+            {% if show_fields == True %}
+                {{ form.fields(class="formtags") }}    
+                <br><br><br><br>
+                <br><br><br><br><br><br>
+            {% else %}
+                <h5> Add majors to add fields. </h5>
+            {% endif %}
 
 
             <!-- Submit Button -->   
             {{ form.submit(class="button") }}
+
+            <!-- KEEP THIS HIDDEN ------------------------- -->
+            <style>
+                h3.a {
+                    visibility: hidden;
+                }
+            </style>
+            <h3 class="a">{{ form.check(class="button") }}</h3>
+            <!-- ------------------------------------------- -->
+
         </div>
     </form>
+
+    <!-- This lovely script updates the form if more majors are added :) -->
+    <script>
+        let major_select = document.getElementById('majors');
+        let button = document.getElementById('check')
+
+        major_select.onchange = function() {
+            button.click()
+
+        };
+    </script>
 
     {% endif %}
 

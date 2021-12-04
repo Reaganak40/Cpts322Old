@@ -2,13 +2,11 @@
 # ================================================================
 #   Name:           base html
 #   Description:    UI for site header
-#   Last Changed:   11/24/21
+#   Last Changed:   12/3/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Revised to compensate for new database model
+#   Change Details: Added My applcications for student
 # ================================================================
 -->
-
-
 
 
 <html>
@@ -41,6 +39,8 @@
                     
                     {% if current_user.get_user_type() == 'student' %}
                     <a href="{{ url_for('routes.student_profile')}}"><p style = "font-size: 20; font-family:sans-serif;"> Profile</p></i></a>
+                    <a href="{{ url_for('routes.applications') }}"><p style = "font-size: 20; font-family:sans-serif;"> My Applications</p></i></a>
+
                     
                     {% else %}
                         <a href="{{ url_for('routes.postposition') }}"><p style = "font-size: 20; font-family:sans-serif;"> New Post</p></i></a>

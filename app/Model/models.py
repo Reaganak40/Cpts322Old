@@ -48,6 +48,7 @@ def __repr__ (self):
 # ================================================================
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key = True)
+    wsu_id = db.Column(db.String, unique = True)
     username = db.Column(db.String(64), unique = True, index = True)
     email = db.Column(db.String(120), unique = True, index = True)
     password_hash = db.Column(db.String(128))
@@ -108,7 +109,6 @@ class Student(User):
     id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
 
     # Student Attributes
-    wsu_id = db.Column(db.Integer, unique = True)
     first_name = db.Column(db.String(64))
     last_name = db.Column(db.String(100))
     phone_no = db.Column(db.String(10))
@@ -127,7 +127,7 @@ class Student(User):
     }
 
     def __repr__(self):
-        return '<Username: {} - {}; Type: {}; Class-Object Code: 0>'.format(self.id,self.username, self.get_user_type())
+        return '<Username: {} - {}; Type: {}; Class-Object Code: 0>'.format(self.id,self.wsu_id, self.get_user_type())
     
     def can_apply(self): # Students should only be able to apply to position posts if their info is submitted
         if(self.wsu_id is None):
@@ -285,6 +285,12 @@ class Field(db.Model):
      
      def get_name(self):
         return "{}".format(self.field)
+    
+     def is_for_major(self, major):
+        if major in self.majors:
+            return True
+        return False
+
 
      def get_majors(self):
         major_list = []

@@ -33,12 +33,14 @@
     
     <form action = "{{url_for('routes.update', postid = application.post_id, userid = application.applicant_id, change = 'Interview')}}" method="post">
         <input type="submit", value="Approve for Interview", class="apply_button">
-     </form>
+    </form>
 
-     <form action = "{{url_for('routes.update', postid = application.post_id, userid = application.applicant_id, change = 'Reject')}}" method="post">
+    <form action = "{{url_for('routes.update', postid = application.post_id, userid = application.applicant_id, change = 'Hired')}}" method="post">
+      <input type="submit", value="Hire Applicant", class="apply_button">
+    </form>
+
+    <form action = "{{url_for('routes.update', postid = application.post_id, userid = application.applicant_id, change = 'Reject')}}" method="post">
         <input type="submit", value="Reject Applicant", class="unapply_button">
-     </form>
-
-
+    </form>
 
 {% endblock %}

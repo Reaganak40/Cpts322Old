@@ -22,6 +22,7 @@ def initDB(*args, **kwargs):
         major3 = Major(name = 'Electrical Engineering', id = 3)
         major4 = Major(name = 'Mechanical Engineering', id = 4)
 
+        fieldNA = Field(field = 'Empty Field', id = -1)
         # Research Fields
         field1 = Field(field = 'Machine Learning', id = 1)
         field2 = Field(field = 'Networking', id = 2)
@@ -85,6 +86,8 @@ def initDB(*args, **kwargs):
         db.session.add(field10)
         db.session.add(field11)
 
+        db.session.add(fieldNA)
+        
         db.session.commit()
 
         print("Majors")
@@ -123,7 +126,7 @@ def fill_db():
     # User: Reagan
     # Type: student
     # Password: abc
-    new_user = Student(username = 'reagan', email = 'reaganak@gmail.com', user_type = 'student')
+    new_user = Student(username = 'reagan', wsu_id = "111111111", email = 'reaganak@gmail.com', user_type = 'student')
     new_user.set_password('abc')
     db.session.add(new_user)
     print("Debug: Added New Student: [reagan]")
@@ -131,7 +134,7 @@ def fill_db():
     # User: denise
     # Type: Student
     # Password: abc
-    new_user = Student(username = 'denise', email = 'denisetanumihardja@wsu.edu', user_type = 'student')
+    new_user = Student(username = 'denise', wsu_id = "222222222", email = 'denisetanumihardja@wsu.edu', user_type = 'student')
     new_user.set_password('abc')
     db.session.add(new_user)
     print("Debug: Added New Student: [denise]")
@@ -139,7 +142,7 @@ def fill_db():
     # User: tay
     # Type: Student
     # Password: abc
-    new_user = Student(username = 'tay', email = 'jrtay123456@wsu.edu', user_type = 'student')
+    new_user = Student(username = 'tay', wsu_id = "333333333", email = 'jrtay123456@wsu.edu', user_type = 'student')
     new_user.set_password('abc')
     db.session.add(new_user)
     print("Debug: Added New Student: [tay]")
@@ -147,7 +150,7 @@ def fill_db():
     # User: sakire
     # Type: Faculty
     # Password: abc
-    new_user = Faculty(username = 'sakire', email = 'sakire@wsu.edu', user_type = 'faculty')
+    new_user = Faculty(username = 'sakire', wsu_id = "444444444", email = 'sakire@wsu.edu', user_type = 'faculty')
     new_user.set_password('abc')
     db.session.add(new_user)
     print("Debug: Added New Faculty: [sakire]")
@@ -155,7 +158,7 @@ def fill_db():
     # User: Andy
     # Type: Faculty
     # Password: abc
-    new_user = Faculty(username = 'andy', email = 'aofallon@wsu.edu', user_type = 'faculty')
+    new_user = Faculty(username = 'andy', wsu_id = "555555555", email = 'aofallon@wsu.edu', user_type = 'faculty')
     new_user.set_password('abc')
     db.session.add(new_user)
     print("Debug: Added New Faculty: [andy]")

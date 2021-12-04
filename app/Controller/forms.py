@@ -1,7 +1,9 @@
+from inspect import _empty
 from typing import Text
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField
-from wtforms.fields.core import BooleanField, DateField, FloatField
+from sqlalchemy.orm import defaultload
+from wtforms import StringField, SubmitField, SelectField, HiddenField
+from wtforms.fields.core import BooleanField, DateField, FloatField, IntegerField, UnboundField
 from wtforms.fields.simple import TextAreaField
 from wtforms.validators import  DataRequired, Email, Length, NumberRange, Length, ValidationError
 from wtforms.widgets.core import Select
@@ -10,6 +12,7 @@ from wtforms_sqlalchemy.fields import QuerySelectMultipleField, QuerySelectField
 from app.Model.models import Post, Major, User, Field
 from flask_login import current_user
 from datetime import datetime
+from app import num_collector, db
 
 def get_majorlabel(theMajor):
     return theMajor.name
@@ -23,23 +26,54 @@ def all_majors():
 def all_fields():
    return Field.query.all()
 
+def get_chosen_fields():
+
+    if len(num_collector) == 0:
+        return Field.query.filter_by(id = -1)
+    majors = db.session.query(Major).filter(Major.id.in_(n for n in num_collector)).all()
+    
+    field_id_list = []
+    fields = Field.query.all()
+
+    for field in fields: # look at every field
+        majors_for_field = field.majors # get the majors for that field
+        for major in majors_for_field:
+            if major.id in num_collector:   # if a selected major is assigned to this field add it to the list
+                field_id_list.append(field.id)
+                break
+    return db.session.query(Field).filter(Field.id.in_(n for n in field_id_list)).all()
+    
 # ================================================================
 #   Name:           Post form
 #   Description:    Added sortform for filter posts on faculty view
-#   Last Changed:   12/1/21
+#   Last Changed:   12/3/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Added time commitment, start & end date
+#   Change Details: Added dynamic feature for fields
+#                   TODO: Fix submit bug, add validators back to variables
 # ================================================================
 class PostForm(FlaskForm):
-    title = StringField('Job Title', validators=[DataRequired()])
-    body = TextAreaField("Job Description", [Length(min=0, max = 1500), DataRequired()])
-    majors = QuerySelectMultipleField('Recommended Majors', query_factory= all_majors, get_label= lambda t: t.get_major_name(), widget=ListWidget(prefix_label=False), option_widget=CheckboxInput() )
-    fields = QuerySelectMultipleField('Recommended Fields', query_factory= all_fields, get_label= lambda t: t.get_name(), widget=ListWidget(prefix_label=False), option_widget=CheckboxInput() )
-    time_commitment = StringField('Time Commitment (Hours Per Week)', [Length(min = 1, max = 10), DataRequired()])
-    start_date = DateField('Start Date', [DataRequired()], format = '%m/%d/%Y')
-    end_date = DateField('End Date', [DataRequired()], format = '%m/%d/%Y')
-    submit = SubmitField('Post')
 
+    title = StringField('Job Title')
+    body = TextAreaField("Job Description", [Length(min=0, max = 1500)])
+    majors = QuerySelectMultipleField('Recommended Majors', query_factory= all_majors, get_label= lambda t: t.get_major_name(), widget=ListWidget(prefix_label=False), option_widget=CheckboxInput() )
+    fields = QuerySelectMultipleField('Recommended Fields', query_factory= get_chosen_fields, get_label= lambda t: t.get_name(), widget=ListWidget(prefix_label=False), option_widget=CheckboxInput() )
+    time_commitment = StringField('Time Commitment (Hours Per Week)', [Length(min = 1, max = 10)])
+    start_date = DateField('Start Date', format = '%m/%d/%Y')
+    end_date = DateField('End Date', format = '%m/%d/%Y')
+    check = SubmitField('hi')
+    submit = SubmitField('Post')
+    
+    # title = StringField('Job Title')
+    # body = TextAreaField("Job Description")
+    # majors = QuerySelectMultipleField('Recommended Majors', query_factory= all_majors, get_label= lambda t: t.get_major_name(), widget=ListWidget(prefix_label=False), option_widget=CheckboxInput() )
+    # fields = QuerySelectMultipleField('Recommended Fields', query_factory= all_fields, get_label= lambda t: t.get_name(), widget=ListWidget(prefix_label=False), option_widget=CheckboxInput() )
+    # time_commitment = StringField('Time Commitment (Hours Per Week)')
+    # start_date = DateField('Start Date')
+    # end_date = DateField('End Date')
+    # submit = SubmitField('Post')
+    # check = SubmitField('hi')
+
+        
     # time_commitment should contain an integer. 
     # NOTE: We make time_commitment a string to allow inputs like 30-40 hours.
     def validate_time_commitment(self, time_commitment):
@@ -72,6 +106,13 @@ class PostForm(FlaskForm):
             time_commitment.data += (' - ')
             time_commitment.data += (digits[1])
 
+    def validate(self, extra_validators=None):
+        if self.check.data:
+            return True
+        if self.submit.data:
+            print(self.fields.data)
+            return True
+    
     def validate_end_date(self, end_date):
         # start date must be before end date
         if (self.start_date.data > end_date.data):
@@ -99,7 +140,7 @@ class SortForm(FlaskForm):
 class ProfileForm(FlaskForm):
     first_name = StringField('First Name')
     last_name = StringField('Last Name')
-    wsu_id = StringField('WSU ID', validators=[Length(min = 8, max = 9)])
+    wsu_id = StringField('WSU ID', validators=[DataRequired(), Length(min = 8, max = 9)])
     phone_no = StringField('Phone Number', validators=[Length(max = 10)])
     #major = SelectField('Major', choices = [(0, 'CptS - Computer Science'), (1, 'EE - Electrical Engineering'), (2, 'CptSE - Computer Engineering'), (3, 'SE - Software Engineering'), (4, 'DA - Data Analytics')])
     major = QuerySelectField('Major', query_factory = all_majors, get_label = get_majorlabel, allow_blank = False)
@@ -118,6 +159,12 @@ class ProfileForm(FlaskForm):
         for student_email in user_emails:
             if(student_email.id != current_user):
                 raise ValidationError('The email is already associated with another account! Please use a different email address.')
+    
+    def validate_wsu_id(self, wsu_id):
+        print(wsu_id.data)
+        user = User.query.filter_by(wsu_id = wsu_id.data).first()
+        if user is None:
+            raise ValidationError('This ID is used by another account. Please enter your real WSU ID.')
 
 # ================================================================
 #   Name:           Application form
