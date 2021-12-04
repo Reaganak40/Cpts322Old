@@ -39,8 +39,15 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
-        flash('You are registered!')
-        return redirect(url_for('routes.index')) #redirect new registed user
+        if(rForm.type.data == '0'): # New user is a student
+            login = LoginForm(username = new_user.username, password = new_user.password_hash)
+
+            if login.validate_on_submit():
+                user = User.query.filter_by(username = login.username.data).first()
+                login_user(user)
+                flash('You are registered! Please fill in your profile information.')
+                return redirect(url_for('routes.update_student_profile')) #redirect new registed use
+
     return render_template('register.html', form = rForm)
 
 # ================================================================
