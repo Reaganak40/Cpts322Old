@@ -26,10 +26,9 @@ def all_majors():
 def all_fields():
    return Field.query.all()
 
-# This function uses the num_collector to get a list of majors, which is then used to get a list of fields
 def get_chosen_fields():
 
-    if len(num_collector) == 0: # return empty field
+    if len(num_collector) == 0:
         return Field.query.filter_by(id = -1)
     majors = db.session.query(Major).filter(Major.id.in_(n for n in num_collector)).all()
     
@@ -111,6 +110,7 @@ class PostForm(FlaskForm):
         if self.check.data:
             return True
         if self.submit.data:
+            print(self.fields.data)
             return True
     
     def validate_end_date(self, end_date):

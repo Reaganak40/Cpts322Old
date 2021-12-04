@@ -68,13 +68,11 @@ def postposition():
             temp_time_commitment = pForm.time_commitment.data
             temp_start_date = pForm.start_date.data
             temp_end_date = pForm.end_date.data
-            temp_fields = pForm.fields.data
 
             pForm = PostForm()
             pForm.title.data = temp_title
             pForm.body.data = temp_body
             pForm.majors.data = temp_majors
-            pForm.fields.data = pForm.fields.data
             pForm.time_commitment.data = temp_time_commitment
             pForm.start_date.data = temp_start_date
             pForm.end_date.data = temp_end_date
@@ -104,6 +102,17 @@ def postposition():
         show_fields = True
     return render_template('create.html', title="New Post", form = pForm, show_fields = show_fields)
 
+def submit(): 
+    if request.method == "POST":
+        if request.form.get("submit_a"):
+            print('a')
+            # do something
+        elif request.form.get("submit_b"):
+            # do something else
+            print('b')
+    elif request.method == "GET":
+        pass
+        # do something
 # ================================================================
 #   Name:           updateposition Route
 #   Description:    The Page that allows a faculty to manage an existing
