@@ -4,7 +4,7 @@ from flask import Blueprint
 from flask import render_template, flash, redirect, url_for, request
 from config import Config
 
-from app import db
+from app import db, num_collector
 from app.Model.models import Application, Field, Post, Major, User, Student, Faculty, postMajors
 from app.Controller.forms import ApplicationForm, PostForm, ProfileForm, SortForm
 from flask_login import current_user, login_user, logout_user, login_required
@@ -45,8 +45,36 @@ def postposition():
     if current_user.get_user_type() == 'student':
         flash('You do not have permission to access this page.')
         return redirect(url_for('routes.index'))
+    
+    num_collector.clear()
     pForm = PostForm()
     if pForm.validate_on_submit():
+
+        if(pForm.check.data):
+            majors = pForm.majors.data
+        
+            num_collector.clear()
+            for major in majors:
+                num_collector.append(major.id)
+
+            temp_title = pForm.title.data
+            temp_body = pForm.body.data
+            temp_majors = pForm.majors.data
+            temp_time_commitment = pForm.time_commitment.data
+            temp_start_date = pForm.start_date.data
+            temp_end_date = pForm.end_date.data
+
+            pForm = PostForm()
+            pForm.title.data = temp_title
+            pForm.body.data = temp_body
+            pForm.majors.data = temp_majors
+            pForm.time_commitment.data = temp_time_commitment
+            pForm.start_date.data = temp_start_date
+            pForm.end_date.data = temp_end_date
+
+            return render_template('create.html', title="New Post", form = pForm)
+
+
         newPost = Post(user_id = current_user.id, 
                        title=pForm.title.data, 
                        body = pForm.body.data, 
@@ -62,6 +90,17 @@ def postposition():
 
     return render_template('create.html', title="New Post", form = pForm)
 
+def submit(): 
+    if request.method == "POST":
+        if request.form.get("submit_a"):
+            print('a')
+            # do something
+        elif request.form.get("submit_b"):
+            # do something else
+            print('b')
+    elif request.method == "GET":
+        pass
+        # do something
 # ================================================================
 #   Name:           updateposition Route
 #   Description:    The Page that allows a faculty to manage an existing

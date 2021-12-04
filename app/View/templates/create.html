@@ -66,16 +66,34 @@
             {{ form.majors.label}} 
             {{ form.majors(class="formtags") }}
             <br><br>
+
             {{ form.fields.label}} 
             {{ form.fields(class="formtags") }}    
             <br><br><br><br>
             <br><br><br><br><br><br>
 
-
             <!-- Submit Button -->   
             {{ form.submit(class="button") }}
+
+            <style>
+                h3.a {
+                    visibility: hidden;
+                }
+            </style>
+            <h3 class="a">{{ form.check(class="button") }}</h3>
+
         </div>
     </form>
+
+    <script>
+        let major_select = document.getElementById('majors');
+        let button = document.getElementById('check')
+
+        major_select.onchange = function() {
+            button.click()
+
+        };
+    </script>
 
     {% endif %}
 
