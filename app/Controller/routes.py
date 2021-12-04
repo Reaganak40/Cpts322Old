@@ -45,12 +45,16 @@ def postposition():
     if current_user.get_user_type() == 'student':
         flash('You do not have permission to access this page.')
         return redirect(url_for('routes.index'))
-    
+    show_fields = False
     num_collector.clear()
-    pForm = PostForm()
-    if pForm.validate_on_submit():
+    print('hitting it again')
 
+    pForm = PostForm()
+
+    if pForm.validate_on_submit():
+        print('CHECK: {}'.format(pForm.check.data))
         if(pForm.check.data):
+            print('made it')
             majors = pForm.majors.data
         
             num_collector.clear()
@@ -71,9 +75,12 @@ def postposition():
             pForm.time_commitment.data = temp_time_commitment
             pForm.start_date.data = temp_start_date
             pForm.end_date.data = temp_end_date
-
-            return render_template('create.html', title="New Post", form = pForm)
-
+            print(pForm.fields.data)
+            if(len(num_collector) == 0):
+                show_fields = False
+            else:
+                show_fields = True
+            return render_template('create.html', title="New Post", form = pForm, show_fields = show_fields)
 
         newPost = Post(user_id = current_user.id, 
                        title=pForm.title.data, 
@@ -88,7 +95,11 @@ def postposition():
         flash('New Position Post "' + newPost.title + '" is on the Job Board!')
         return redirect(url_for('routes.index'))
 
-    return render_template('create.html', title="New Post", form = pForm)
+    if(len(num_collector) == 0):
+                show_fields = False
+    else:
+        show_fields = True
+    return render_template('create.html', title="New Post", form = pForm, show_fields = show_fields)
 
 def submit(): 
     if request.method == "POST":

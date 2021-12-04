@@ -27,16 +27,11 @@ def all_fields():
    return Field.query.all()
 
 def get_chosen_fields():
-    print('')
-    print("length: {}".format( len(num_collector)))
-    print(num_collector)
 
     if len(num_collector) == 0:
         return Field.query.filter_by(id = -1)
     majors = db.session.query(Major).filter(Major.id.in_(n for n in num_collector)).all()
-    print(majors)
-    print('')
-
+    
     field_id_list = []
     fields = Field.query.all()
 
@@ -66,8 +61,8 @@ class PostForm(FlaskForm):
     time_commitment = StringField('Time Commitment (Hours Per Week)', [Length(min = 1, max = 10)])
     start_date = DateField('Start Date', format = '%m/%d/%Y')
     end_date = DateField('End Date', format = '%m/%d/%Y')
-    submit = SubmitField('Post')
     check = SubmitField('hi')
+    submit = SubmitField('Post')
     
     # title = StringField('Job Title')
     # body = TextAreaField("Job Description")
@@ -114,6 +109,9 @@ class PostForm(FlaskForm):
 
     def validate(self, extra_validators=None):
         if self.check.data:
+            return True
+        if self.submit.data:
+            print(self.fields.data)
             return True
     
     def validate_end_date(self, end_date):
