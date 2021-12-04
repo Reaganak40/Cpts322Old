@@ -38,6 +38,7 @@ def index():
 #   Last Changed:   12/3/21
 #   Changed By:     Reagan Kelley
 #   Change Details: Added dynamic form feature for fields
+#                   Fixed bug
 # ================================================================
 @bp_routes.route('/postposition', methods=['GET', 'POST'])
 @login_required
@@ -46,16 +47,13 @@ def postposition():
         flash('You do not have permission to access this page.')
         return redirect(url_for('routes.index'))
     show_fields = False
-    print('hitting it again')
-
     pForm = PostForm()
-    print(pForm.majors.data)
-    print(pForm.fields.data)
+
 
     if pForm.validate_on_submit():
-        print('CHECK: {}'.format(pForm.check.data))
+
         if(pForm.check.data):
-            print('made it')
+  
             majors = pForm.majors.data
         
             num_collector.clear()
@@ -102,17 +100,6 @@ def postposition():
         show_fields = True
     return render_template('create.html', title="New Post", form = pForm, show_fields = show_fields)
 
-def submit(): 
-    if request.method == "POST":
-        if request.form.get("submit_a"):
-            print('a')
-            # do something
-        elif request.form.get("submit_b"):
-            # do something else
-            print('b')
-    elif request.method == "GET":
-        pass
-        # do something
 # ================================================================
 #   Name:           updateposition Route
 #   Description:    The Page that allows a faculty to manage an existing
