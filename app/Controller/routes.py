@@ -24,6 +24,7 @@ bp_routes.template_folder = Config.TEMPLATE_FOLDER #'..\\View\\templates'
 @bp_routes.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
+    num_collector.clear() # reset num_collector for later pages
     posts = Post.query.order_by(Post.timestamp.desc())
     sform = SortForm()
     #print(current_user)
@@ -320,6 +321,7 @@ def submit_application(postid):
 @bp_routes.route('/applications', methods=['GET', 'POST'])
 @login_required
 def applications():
+    num_collector.clear() # reset num_collector for later pages
     if(current_user.get_user_type() == 'faculty'):
         posts = current_user.get_user_posts()
     else: # current user is student
