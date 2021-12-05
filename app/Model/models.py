@@ -38,6 +38,15 @@ majorFields = db.Table('majorFields',
      db.Column('major_id', db.Integer, db.ForeignKey('major.id')))
 def __repr__ (self):
      return '<Major Name: {}, Field Name: {}>'.format(self.major_name, self.field_name)
+
+# ================================================================
+# Relationship: Every student can have multiple fields
+# ================================================================
+studentFields = db.Table('studentFields', 
+     db.Column('field_id', db.Integer, db.ForeignKey('field.id')),
+     db.Column('student_id', db.Integer, db.ForeignKey('student.id')))
+def __repr__ (self):
+     return '<Student Name: {}, Field Name: {}>'.format(self.username, self.field_name)
      
 # ================================================================
 #   Name:           User Model
@@ -97,11 +106,11 @@ class User(UserMixin, db.Model):
         return application.status
 
 # ================================================================
-#   Name:           User Model
+#   Name:           Student Model
 #   Description:    Class Definition for Student (Child of User)
-#   Last Changed:   11/24/21
+#   Last Changed:   12/5/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Revised User database model
+#   Change Details: Added fields
 # ================================================================
 class Student(User):
 
@@ -113,14 +122,12 @@ class Student(User):
     last_name = db.Column(db.String(100))
     phone_no = db.Column(db.String(10))
     major = db.Column(db.String(20), db.ForeignKey('major.id'))
-    #fields = db.relationship('field')
     gpa = db.Column(db.Float(precision = 1))
     expected_grad_date = db.Column(db.Date)
     elect_courses = db.Column(db.String(1500))
-    research_topics = db.Column(db.String(20)) ## TODO: Need to implement research topics
+    fields = db.relationship('Field', secondary = studentFields, back_populates = 'students')
     languages = db.Column(db.String(700))
     prior_research = db.Column(db.String(1500))
-
 
     applications = db.relationship('Application', back_populates = 'student_applied')
     __mapper_args__ = {
@@ -272,9 +279,9 @@ class Major(db.Model):
 # ================================================================
 #   Name:           Research Field Model
 #   Description:    Class Definition for Research Field (Tag)
-#   Last Changed:   12/1/21
+#   Last Changed:   12/5/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Implented with majors
+#   Change Details: Implented with student
 # ================================================================
 class Field(db.Model):
      __tablename__ = 'field'
@@ -283,6 +290,8 @@ class Field(db.Model):
 
      # A field can have multiple majors
      majors = db.relationship('Major', secondary = majorFields, back_populates = 'fields')
+     students = db.relationship('Student', secondary = studentFields, back_populates = 'fields')
+
      
      def get_name(self):
         return "{}".format(self.field)

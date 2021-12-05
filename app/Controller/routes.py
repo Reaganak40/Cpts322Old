@@ -208,9 +208,9 @@ def student_profile():
 # ================================================================
 #   Name:           Student Profile Update Route
 #   Description:    Updates the student profile with inputed information
-#   Last Changed:   11/24/21
+#   Last Changed:   12/5/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Revised to compensate for new database model
+#   Change Details: Added fields
 # ================================================================
 @bp_routes.route('/student_profile_update', methods=['GET', 'POST'])
 @login_required
@@ -236,6 +236,10 @@ def update_student_profile():
         proForm.elect_courses.data = current_user.elect_courses
         proForm.languages.data = current_user.languages
         proForm.prior_research.data = current_user.prior_research
+
+        proForm.major.data = current_user.major
+        proForm.fields.data = current_user.fields
+
 
     if proForm.validate_on_submit():
         
