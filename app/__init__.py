@@ -22,6 +22,7 @@ def create_app(config_class=Config):
     app.config.from_object(config_class)
     app.static_folder = config_class.STATIC_FOLDER 
     app.template_folder = config_class.TEMPLATE_FOLDER
+    num_collector.clear()
 
     db.init_app(app)
     login.init_app(app)

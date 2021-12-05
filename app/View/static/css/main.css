@@ -168,6 +168,7 @@ a:hover {
   color:black;
 }
 
+
 .posttags:hover{
     opacity: 0.9;
 }
@@ -201,13 +202,20 @@ a:hover {
 }
 
 .apply_button {
-  border-radius: 30px;
-  font-weight: normal;
-  margin-left: 85%;
-  width : 15%;
-	font-size: 20;
-	padding : 5px;
   color: white;
+  text-align: center;
+  font-weight: normal;
+  font-size: 15;
+  padding: 10px;
+  cursor: pointer;
+  width: 13%;
+  position:absolute;
+  right: 20%;
+  border-radius: 30px;
+  margin-top: 0%;
+  margin-bottom: 0%;
+  display: inline;
+
 	border: 1px solid gray;
 	background-color: rgb(189, 5, 42);
   
@@ -219,14 +227,23 @@ a:hover {
 }
 
 .unapply_button {
-	width:200px;
-	font-size: 18px;
-	margin: 10px 0px 0px 0px;
-	padding : 5px;
-  left:85%;
+  color: white;
+  text-align: center;
+  font-weight: normal;
+  font-size: 15;
+  padding: 10px;
+  cursor: pointer;
+  width: 13%;
+  position:absolute;
+  right: 20%;
+  border-radius: 30px;
+  margin-top: 0%;
+  margin-bottom: 0%;
+  display: inline;
+  
 	border: 1px solid gray;
 	background-color: rgb(238, 192,192);
-  float:right;
+
 }
 
 .unapply_button:hover{
