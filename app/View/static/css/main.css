@@ -233,22 +233,22 @@ a:hover {
   font-size: 15;
   padding: 10px;
   cursor: pointer;
-  width: 13%;
+  width: 12%;
   position:absolute;
-  right: 20%;
+  right: 23%;
   border-radius: 30px;
   margin-top: 0%;
   margin-bottom: 0%;
   display: inline;
   
 	border: 1px solid gray;
-	background-color: rgb(238, 192,192);
+	background-color: rgb(240, 64, 99);
 
 }
 
 .unapply_button:hover{
-	background-color: red;
-	color: white;
+	background-color: white;
+	color: rgb(189, 5, 42);
 }
 
 .coursetable tr:hover{
@@ -297,33 +297,6 @@ a:hover {
 	color: white;
 }
 
-.rejected_re-review_button {
-  width:100px;
-	font-size: 18px;
-	margin: 10px 0px 0px 0px;
-	padding : 5px;
-	border: 1px solid gray;
-	background-color: rgb(238, 192, 192);
-}
-
-.rejected_re-review_button:hover {
-  background-color: red;
-	color: white;
-}
-
-.interview_re-review_button {
-  width:100px;
-	font-size: 18px;
-	margin: 10px 0px 0px 0px;
-	padding : 5px;
-	border: 1px solid gray;
-	background-color: lightsalmon;
-}
-
-.interview_re-review_button:hover {
-  background-color: rgb(240, 117, 69);
-	color: white;
-}
 
 .login{
   width: 30%;
@@ -596,14 +569,14 @@ a:hover {
   border-radius: 30px;
   cursor: pointer;
   font-weight: normal;
-  width : 15%;
+  width : 18%;
 	font-size: 15;
 	padding : 5px;
   color: black;
 	border: 1px solid gray;
-	background-color: #FF7F50;
+	background-color: 	#e2d415;
   margin-left: 15%;
-  
+  font-weight:bold;
 }
 
 .interview_button:hover{
@@ -620,9 +593,9 @@ a:hover {
 	padding : 5px;
   color: black;
 	border: 1px solid gray;
-	background-color: #90ee90;
+	background-color: #79d379;
   margin-left: 15%;
-  
+  font-weight: bold;
 }
 
 .hired_button:hover{
@@ -636,16 +609,53 @@ a:hover {
   cursor: pointer;
   font-weight: normal;
   width : 15%;
-	font-size: 15;
+	font-size: 14;
 	padding : 5px;
   color: white;
 	border: 1px solid gray;
-	background-color: rgb(189, 5, 42);
+	background-color: rgb(255, 0, 51);
   margin-left: 15%;
-  
+  font-weight: bold;
 }
 
 .reject_button:hover{
+  background-color: white;
+  color: black;
+}
+
+.review_interview_button {
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: normal;
+  width : 80%;
+	font-size: 14;
+	padding : 5px;
+  color: black;
+	border: 1px solid gray;
+	background-color: #FF7F7F ;
+  font-weight: bold;
+  
+}
+
+.review_interview_button:hover{
+  background-color: white;
+  color: black;
+}
+
+.rejected_review_button{
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: normal;
+  width : 80%;
+	font-size: 14;
+	padding : 5px;
+  color: black;
+	border: 1px solid gray;
+	background-color: #FF7F7F ;
+  font-weight: bold;
+}
+
+.rejected_review_button:hover{
   background-color: white;
   color: black;
 }
