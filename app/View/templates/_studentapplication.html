@@ -3,8 +3,8 @@
 #   Name:           student application html
 #   Description:    A row of data holding all info for a 
 #                   specific student application
-#   Last Changed:   12/3/21
-#   Changed By:     Reagan Kelley
+#   Last Changed:   12/5/21
+#   Changed By:     Denise Tanumihardja
 #   Change Details: Added student view
 # ================================================================
 -->
@@ -43,11 +43,17 @@
 
              {% elif applicant.get_status() == 'Reject' %}
 
-              <b style="color:red"> Rejected </b>
+              <p style="color:red"> Rejected </p><br>
+              <form action = "{{url_for('routes.review', postid = post.id, userid = student.id)}}" method="post">
+                <input type="submit", value="Re-review", class="rejected_re-review_button">
+             </form>
 
              {% elif applicant.get_status() == 'Interview' %}
 
-             <b style="color:lightsalmon"> Approved for Interview </b>
+             <p style="color:rgb(240, 117, 69)"> Approved for Interview </p><br>
+             <form action = "{{url_for('routes.review', postid = post.id, userid = student.id)}}" method="post">
+                <input type="submit", value="Re-review", class="interview_re-review_button">
+             </form>
 
              {% elif applicant.get_status() == 'Hired' %}
               
