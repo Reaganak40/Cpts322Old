@@ -122,7 +122,7 @@ a:hover {
     background-color: white;
     padding: 5px;
     width: 90%;
-    
+
 }
 
 .posttable { 
@@ -208,9 +208,9 @@ a:hover {
   font-size: 15;
   padding: 10px;
   cursor: pointer;
-  width: 13%;
+  width: 12%;
   position:absolute;
-  right: 20%;
+  right: 23%;
   border-radius: 30px;
   margin-top: 0%;
   margin-bottom: 0%;
@@ -461,7 +461,7 @@ a:hover {
   cursor: pointer;
   width: 13%;
   position:absolute;
-  right: 20%;
+  right: 23%;
   border-radius: 30px;
   margin-top: 0%;
   margin-bottom: 0%;
@@ -563,4 +563,62 @@ a:hover {
 .post_button:hover{
   background-color: white;
   color: rgb(189, 5, 42);
+}
+
+.interview_button {
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: normal;
+  width : 15%;
+	font-size: 15;
+	padding : 5px;
+  color: black;
+	border: 1px solid gray;
+	background-color: #FF7F50;
+  margin-left: 15%;
+  
+}
+
+.interview_button:hover{
+  background-color: white;
+  color: black;
+}
+
+.hired_button {
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: normal;
+  width : 15%;
+	font-size: 15;
+	padding : 5px;
+  color: black;
+	border: 1px solid gray;
+	background-color: #90ee90;
+  margin-left: 15%;
+  
+}
+
+.hired_button:hover{
+  background-color: white;
+  color: black;
+}
+
+
+.reject_button {
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: normal;
+  width : 15%;
+	font-size: 15;
+	padding : 5px;
+  color: white;
+	border: 1px solid gray;
+	background-color: rgb(189, 5, 42);
+  margin-left: 15%;
+  
+}
+
+.reject_button:hover{
+  background-color: white;
+  color: black;
 }

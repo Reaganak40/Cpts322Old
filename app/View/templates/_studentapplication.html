@@ -67,6 +67,10 @@
 
              <b style="color:lightsalmon"> Approved for Interview </b>
 
+             {% elif applicant.get_status() == 'Hired' %}
+              
+             <b style="color: green"> Hired </b>
+
             {% endif %}
 
             {% endif %}

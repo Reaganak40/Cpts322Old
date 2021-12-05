@@ -33,7 +33,7 @@
     <h3 style="margin-left: 14%;">Total number of Posts: {{ post_count }} </h3>
     
     <!-- Make Lists of Posts -->
-    <table style = "width:100%; margin-left: 17%; " valign="top" >
+    <table style = "width:100%; margin-left: 13%; " valign="top" >
     <div class = "postlist">
     {% for post in posts %}
        <tr>
@@ -60,9 +60,11 @@
                         <input type="submit", value="Withdraw Application", class="unapply_button">
                     </form>
 
+                    <br><br><br><br><br><br>
                     {% elif current_user.get_status(post) ==  'Reject' %}
-
-                    <p style="color:red"> Rejected </p>
+                    
+                    <p style="color:red; position: absolute; left:15%"> Rejected </p>
+                    
     
                     {% elif current_user.get_status(post) == 'Interview' %}
     
