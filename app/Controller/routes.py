@@ -24,11 +24,12 @@ bp_routes.template_folder = Config.TEMPLATE_FOLDER #'..\\View\\templates'
 @bp_routes.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
+    num_collector.clear() # reset num_collector for later pages
     posts = Post.query.order_by(Post.timestamp.desc())
     sform = SortForm()
     #print(current_user)
     if sform.validate_on_submit():
-        if (sform.checkbox.data == False):
+        if (sform.checkbox.data == True):
             posts = current_user.get_user_posts()
     return render_template('index.html', title="Lab Opportunities", posts=posts.all(), post_count = posts.count(), form= sform)
 
@@ -104,14 +105,18 @@ def postposition():
 #   Name:           updateposition Route
 #   Description:    The Page that allows a faculty to manage an existing
 #                   post
-#   Last Changed:   12/3/21
+#   Last Changed:   12/5/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Initial Implementation
+#   Change Details: Restricted route
 # ================================================================
 @bp_routes.route('/updateposition/<post_id>', methods=['GET', 'POST'])
 @login_required
 def updateposition(post_id):
     post = Post.query.filter_by(id = post_id).first()
+
+    if(post.user_id != current_user.id):
+        flash('You do not have permission to access this page.')
+        return redirect(url_for('routes.index'))
 
     if(post is None): #if post could not be found
         flash('Could not find this post.')
@@ -150,15 +155,18 @@ def updateposition(post_id):
 # ================================================================
 #   Name:           Delete Post
 #   Description:    Deletes an existing post
-#   Last Changed:   12/3/21
+#   Last Changed:   12/5/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Initial Implementation
+#   Change Details: Restrited route
 # ================================================================
 @bp_routes.route('/delete_post/<post_id>', methods=['POST'])
 @login_required
 def delete_post(post_id):
     post = Post.query.filter_by(id = post_id).first()
-    print('testing')
+    
+    if(post.user_id != current_user.id):
+        flash('You do not have permission to access this page.')
+        return redirect(url_for('routes.index'))
 
     if(post is None): #if post could not be found
         flash('Could not find this post.')
@@ -212,7 +220,12 @@ def update_student_profile():
         return redirect(url_for('routes.index'))
     proForm = ProfileForm()
    
-
+    num_collector.clear()
+    majors = Major.query.all()
+    for major in majors:
+        if major.id != -1:
+            num_collector.append(major.id)
+    
     if request.method == 'GET': # Populate fields with existing data
         proForm.first_name.data = current_user.first_name
         proForm.last_name.data = current_user.last_name
@@ -234,6 +247,7 @@ def update_student_profile():
         current_user.last_name = proForm.last_name.data
         current_user.phone_no = proForm.phone_no.data
         current_user.major = major_name.get_major_name()
+        current_user.fields = proForm.fields.data
         current_user.gpa = proForm.gpa.data
         current_user.expected_grad_date = proForm.expected_grad_date.data
         current_user.elect_courses = proForm.elect_courses.data
@@ -250,13 +264,18 @@ def update_student_profile():
 # ================================================================
 #   Name:           Apply Route
 #   Description:    Backend route to apply to position post
-#   Last Changed:   11/16/21
+#   Last Changed:   12/5/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Initial Implementation
+#   Change Details: Restricted route
 # ================================================================
 @bp_routes.route('/apply/<postid>/<brief>/<ref>', methods = ['GET', 'POST'])
 @login_required
 def apply(postid, brief, ref):
+
+    if(current_user.get_user_type() == 'faculty'):
+        flash('You do not have permission to access this page.')
+        return redirect(url_for('routes.index'))
+
     thepost = Post.query.filter_by(id = postid).first()
     if thepost is None:
         flash('Class with id "{}" not found.'.format(postid))
@@ -269,13 +288,18 @@ def apply(postid, brief, ref):
 # ================================================================
 #   Name:           Unapply Route
 #   Description:    Backend route to unapply to position post
-#   Last Changed:   11/16/21
+#   Last Changed:   12/5/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Initial Implementation
+#   Change Details: Restricted route
 # ================================================================
 @bp_routes.route('/unapply/<postid>', methods = ['POST'])
 @login_required
 def unapply(postid):
+
+    if(current_user.get_user_type() == 'faculty'):
+        flash('You do not have permission to access this page.')
+        return redirect(url_for('routes.index'))
+
     thepost = Post.query.filter_by(id = postid).first()
     if thepost is None:
         flash('Class with id "{}" not found.'.format(postid))
@@ -289,13 +313,17 @@ def unapply(postid):
 #   Name:           Submit Application Route
 #   Description:    Form Page students are directed to when they 
 #                   want to apply to a postion post.
-#   Last Changed:   11/24/21
+#   Last Changed:   12/5/21
 #   Changed By:     Reagan Kelley
 #   Change Details: Revised to compensate for new database model
 # ================================================================
 @bp_routes.route('/submit_application/<postid>', methods = ['GET', 'POST'])
 @login_required
 def submit_application(postid):
+    if(current_user.get_user_type() == 'faculty'):
+        flash('You do not have permission to access this page.')
+        return redirect(url_for('routes.index'))
+    
     thepost = Post.query.filter_by(id = postid).first()
     aForm = ApplicationForm()
 
@@ -307,37 +335,45 @@ def submit_application(postid):
 # ================================================================
 #   Name:           Applications Route
 #   Description:    Prints all applications for faculty postion posts
-#   Last Changed:   12/3/21
+#   Last Changed:   12/5/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Added student version of application route
+#   Change Details: Restricted routes
 # ================================================================
 @bp_routes.route('/applications', methods=['GET', 'POST'])
 @login_required
 def applications():
+    num_collector.clear() # reset num_collector for later pages
     if(current_user.get_user_type() == 'faculty'):
         posts = current_user.get_user_posts()
+        page_title = "Applications"
     else: # current user is student
         post_id_list = []
-        
+        page_title = "My Applications"
         # get all post id's for posts student has applied to
         for application in current_user.applications:
             post_id_list.append(application.post_id)
         posts = db.session.query(Post).filter(Post.id.in_(n for n in post_id_list))
 
     print(posts.count())
-    return render_template('applications.html', title="Applications", posts = posts)
+    return render_template('applications.html', title=page_title, posts = posts)
 
 # ================================================================
 #   Name:           Review Route
 #   Description:    Displays application of desired student who 
 #                   applied to the faculty's position post.
-#   Last Changed:   11/16/21
+#   Last Changed:   12/5/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Initial Implementation
+#   Change Details: Restricted route
 # ================================================================
 @bp_routes.route('/review/<postid>/<userid>', methods = ['GET', 'POST'])
 @login_required
 def review(postid, userid):
+
+    thepost = Post.query.filter_by(id = postid).first()
+    if(thepost.writer.id != current_user.id):
+        flash('You do not have permission to access this page.')
+        return redirect(url_for('routes.index'))
+
     application = Application.query.filter_by(applicant_id = userid, post_id = postid).first()
     return render_template('review.html', title="Review Application", application = application)
 
@@ -352,7 +388,11 @@ def review(postid, userid):
 @bp_routes.route('/update/<postid>/<userid>/<change>', methods = ['GET', 'POST'])
 @login_required
 def update(postid, userid, change):
-    
+    thepost = Post.query.filter_by(id = postid).first()
+    if(thepost.writer.id != current_user.id):
+        flash('You do not have permission to access this page.')
+        return redirect(url_for('routes.index'))
+
     application = Application.query.filter_by(applicant_id = userid, post_id = postid).first()
 
     if change == 'Interview':

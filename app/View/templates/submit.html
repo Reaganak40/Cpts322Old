@@ -11,27 +11,27 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1> Send New Application: {{ post.title }}</h1>
+    <h1 style="margin-left: 15%;"> Send New Application: {{ post.title }}</h1>
 
-    <h3> Position Overview</h3>
-    <div class="postbody">{{ post.body }}</div>
+    <h3 style ="margin-left: 15%;"> Position Overview</h3>
+    <div class="postbody" style="margin-left: 15%;">{{ post.body }}</div>
 
-    <h3> Your Info (This will be included in your application) </h3>
+    <h3 style = "margin-left: 15%;"> Your Info (This will be included in your application) </h3>
 
     {% set student = current_user %}
 
     {% include '_profile.html' %}
 
 
-    <h3> Please fill out the additional information. </h3>
+    <h3 style="margin-left: 15%;"> Please fill out the additional information. </h3>
 
     {% if form %}
 
-    <form action="" method="post">
+    <form action="" method="post" style="margin-left:15%;">
         {{ form.hidden_tag() }}
 
         <!-- Personal Statement -->
-        {{ form.personal_statement.label }} <br>
+        <b>{{ form.personal_statement.label }}</b><br>
         {{ form.personal_statement(class = "formbody") }} <br>
 
         {% for error in form.personal_statement.errors %}
@@ -41,7 +41,7 @@
         <br>
 
         <!-- Faculty Reference -->
-        {{ form.faculty_ref_name.label }} <br>
+        <b>{{ form.faculty_ref_name.label }}</b> <br>
         {{ form.faculty_ref_name(class = "formtitle") }} <br>
 
         {% for error in form.faculty_ref_name.errors %}
@@ -49,7 +49,7 @@
         {% endfor %}
 
         <br>
-        {{ form.submit(class = "Send Application") }}
+        {{ form.submit(class = "submit_button") }}
 
     </form>
 
