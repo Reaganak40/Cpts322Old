@@ -36,11 +36,17 @@
 
              {% elif applicant.get_status() == 'Reject' %}
 
-              <p style="color:red"> Rejected </p>
+              <p style="color:red"> Rejected </p><br>
+              <form action = "{{url_for('routes.review', postid = post.id, userid = student.id)}}" method="post">
+                <input type="submit", value="Re-review", class="rejected_re-review_button">
+             </form>
 
              {% elif applicant.get_status() == 'Interview' %}
 
-             <p style="color:lightsalmon"> Approved for Interview </p>
+             <p style="color:rgb(240, 117, 69)"> Approved for Interview </p><br>
+             <form action = "{{url_for('routes.review', postid = post.id, userid = student.id)}}" method="post">
+                <input type="submit", value="Re-review", class="interview_re-review_button">
+             </form>
 
              {% elif applicant.get_status() == 'Hired' %}
               

@@ -239,6 +239,33 @@ a:hover {
 	color: white;
 }
 
+.rejected_re-review_button {
+  width:100px;
+	font-size: 18px;
+	margin: 10px 0px 0px 0px;
+	padding : 5px;
+	border: 1px solid gray;
+	background-color: rgb(238, 192, 192);
+}
+
+.rejected_re-review_button:hover {
+  background-color: red;
+	color: white;
+}
+
+.interview_re-review_button {
+  width:100px;
+	font-size: 18px;
+	margin: 10px 0px 0px 0px;
+	padding : 5px;
+	border: 1px solid gray;
+	background-color: lightsalmon;
+}
+
+.interview_re-review_button:hover {
+  background-color: rgb(240, 117, 69);
+	color: white;
+}
 
 .login{
   width: 30%;
