@@ -28,7 +28,7 @@ def index():
     sform = SortForm()
     #print(current_user)
     if sform.validate_on_submit():
-        if (sform.checkbox.data == False):
+        if (sform.checkbox.data == True):
             posts = current_user.get_user_posts()
     return render_template('index.html', title="Lab Opportunities", posts=posts.all(), post_count = posts.count(), form= sform)
 

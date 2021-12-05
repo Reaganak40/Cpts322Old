@@ -9,24 +9,31 @@
 # ================================================================
 -->
 
-<table class = "coursetable">
+
+<table class = "coursetable" style="margin-left: 15%;">
     <thead>
-    <tr valign = "middle">
+       <tr valign = "middle">
 
         {% if phantom_application == True %}
+        
         <td width = "20%"> {{application.phantom_name}} </td>
         <td width = "20%"> {{profile.first_name}} {{profile.last_name}} </td>
         <td width = "20%"> {{profile.email }} </td>
         <td width = "15%"> {{ profile.major }}</td>
         <td width = "10%"> {{ profile.gpa }} </td>
         <td width = "15%">   <p style="color:red"> Position No Longer Available </p>  </td>
+        
         {% else %}
-        <td width = "20%"> {{position_name}} </td>
+        
+        
+        
+        <td width = "20%" > {{position_name}} </td>
         <td width = "20%"> {{profile.first_name}} {{profile.last_name}} </td>
         <td width = "20%"> {{student.email }} </td>
         <td width = "15%"> {{ profile.major }}</td>
         <td width = "10%"> {{ profile.gpa }} </td>
         <td width = "15%">  
+        
 
             {% if current_user.get_user_type() == 'faculty' %}
             {% if applicant.get_status() == 'Pending' %}
@@ -36,29 +43,29 @@
 
              {% elif applicant.get_status() == 'Reject' %}
 
-              <p style="color:red"> Rejected </p>
+              <b style="color:red"> Rejected </b>
 
              {% elif applicant.get_status() == 'Interview' %}
 
-             <p style="color:lightsalmon"> Approved for Interview </p>
+             <b style="color:lightsalmon"> Approved for Interview </b>
 
              {% elif applicant.get_status() == 'Hired' %}
               
-             <p style="color: green"> Hired </p>
+             <b style="color: green"> Hired </b>
 
             {% endif %}
             {% else %}
             {% if applicant.get_status() == 'Pending' %}
-                <p style="color:darkgoldenrod"> Pending... </p>
+                <b style="color:darkgoldenrod"> Pending... </b>
 
 
              {% elif applicant.get_status() == 'Reject' %}
 
-              <p style="color:red"> Rejected </p>
+              <b style="color:red"> Rejected </b>
 
              {% elif applicant.get_status() == 'Interview' %}
 
-             <p style="color:lightsalmon"> Approved for Interview </p>
+             <b style="color:lightsalmon"> Approved for Interview </b>
 
             {% endif %}
 
@@ -67,6 +74,6 @@
         </td>
          {% endif %}
 
-    </tr>
+       </tr>
     </thead>
 </table>
