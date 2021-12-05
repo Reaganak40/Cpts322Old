@@ -2,9 +2,9 @@
 # ================================================================
 #   Name:           MAIN CSS
 #   Description:    File contains all styling for app
-#   Last Changed:   11/11/21
-#   Changed By:     Tay Jing Ren
-#   Change Details: Added Post Form Styling
+#   Last Changed:   12/05/21
+#   Changed By:     Denise Tanumihardja
+#   Change Details: Added couple of review button stylings
 #=================================================================
 */
 
@@ -239,6 +239,33 @@ a:hover {
 	color: white;
 }
 
+.rejected_re-review_button {
+  width:100px;
+	font-size: 18px;
+	margin: 10px 0px 0px 0px;
+	padding : 5px;
+	border: 1px solid gray;
+	background-color: rgb(238, 192, 192);
+}
+
+.rejected_re-review_button:hover {
+  background-color: red;
+	color: white;
+}
+
+.interview_re-review_button {
+  width:100px;
+	font-size: 18px;
+	margin: 10px 0px 0px 0px;
+	padding : 5px;
+	border: 1px solid gray;
+	background-color: lightsalmon;
+}
+
+.interview_re-review_button:hover {
+  background-color: rgb(240, 117, 69);
+	color: white;
+}
 
 .login{
   width: 30%;
