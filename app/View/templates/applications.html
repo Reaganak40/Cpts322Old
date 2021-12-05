@@ -12,22 +12,22 @@
 
 {% block content %}
 
-
 <table class = "coursetable" style = "margin-left: 15%;">
     <thead>
-    <tr  valign = "bottom">
+      <tr  valign = "bottom">
         <br>
-        <td width = "20%"> <b>Position</b></td>
-        <td width = "20%"> <b>Applicant</b></td>
-        <td width = "20%"> <b>Email</b></td>
-        <td width = "15%"> <b>Major</b> </td>
-        <td width = "10%"> <b>GPA</b> </td>
-        <td width = "15%"> <b>Status</b> </td>
+        <th width = "20%"> <b>Position</b></th>
+        <th width = "20%"> <b>Applicant</b></th>
+        <th width = "20%"> <b>Email</b></th>
+        <th width = "15%"> <b>Major</b> </th>
+        <th width = "10%"> <b>GPA</b> </th>
+        <th width = "15%"> <b>Status</b> </th>
 
-
-    </tr>
+      </tr>
     </thead>
-</table>
+    
+
+
 {% for post in posts %}
     {% for applicant in post.get_applicants() %}
         {% set student = applicant.get_applicant() %}
@@ -37,16 +37,19 @@
         {% include '_studentapplication.html' %}
     {% endfor %}
 {% endfor %}
+
 <!-- Now start listing phantom applications -->
 {% if current_user.get_user_type() == 'student' %}
     {% for application in current_user.applications %}
         {% if application.post_id == None %}
-            {% set phantom_application = True %}
+            {% set phantom_application = True %} 
             {% set profile = current_user %}
             {% include '_studentapplication.html' %}
         {% endif %}
     {% endfor %}
 {% endif %}
 
+
+</table>
 
 {% endblock %}

@@ -73,23 +73,23 @@ a:hover {
 
 
 .formtitle {
-	padding : 2px;
-	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	padding : 4px;
+	font-family: sans-serif;
   margin-top: 3px;
     margin-bottom: 5px;
-    font-size: 13;
+    font-size: 15;
 	width: 600px;
     height: 25px;
-    border-radius: 15px;
-    box-shadow: 5px 5px 5px teal;
+    border-radius: 10px;
+    box-shadow: 4px 4px 4px teal;
     margin-bottom: 1%;
     
     
 }
 
 .formbody {
-	padding : 2px;
-	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	padding : 5px;
+	font-family: sans-serif;
     font-size: 12;
 	width: 600px;
     height: 125px;
@@ -100,12 +100,15 @@ a:hover {
 }
 
 .formtags {
-	padding : 20px;
-	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-	width: 300px;
-  height: 25px;
-  margin-bottom: 1%;
+  padding-left: 1%;
+	font-family: sans-serif;
+	width: 20%;
+  height: 5%;
+  cursor: pointer;
+  user-select: none;
 }
+
+
 
 .postlist {
     display: flex;
@@ -236,10 +239,30 @@ a:hover {
 }
 
 .coursetable {
-	text-align: left;
-	border: 1px black solid;
-	width : 80%;
-	font-size : 18px
+	font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 80%;
+}
+
+.coursetable td, .coursetable th {
+  border: 1px solid black;
+  padding: 8px;
+}
+
+.coursetable tr:nth-child(odd){background-color: #f5ebeb;}
+
+.coursetable tr:hover {background-color: #ddd;}
+
+.coursetable th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: center;
+  background-color: rgb(189, 5, 42) ;
+  color: white;
+}
+
+.coursetable tr{
+  text-align: center;
 }
 
 .review_button {
@@ -248,11 +271,12 @@ a:hover {
 	margin: 10px 0px 0px 0px;
 	padding : 5px;
 	border: 1px solid gray;
-	background-color: rgb(192, 238,192);
+  border-radius: 15px;
+	background-color: #E5F6DF;
 }
 
 .review_button:hover{
-	background-color: green;
+	background-color: rgb(150, 56, 56);
 	color: white;
 }
 
@@ -484,6 +508,42 @@ a:hover {
 }
 
 .submit_button:hover{
+  background-color: white;
+  color: rgb(189, 5, 42);
+}
+
+.refresh_button {
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: normal;
+  width : 40%;
+	font-size: 15;
+	padding : 5px;
+  color: white;
+	border: 1px solid gray;
+	background-color: rgb(189, 5, 42);
+  
+}
+
+.refresh_button:hover{
+  background-color: white;
+  color: rgb(189, 5, 42);
+}
+
+.post_button {
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: normal;
+  width : 20%;
+	font-size: 15;
+	padding : 5px;
+  color: white;
+	border: 1px solid gray;
+	background-color: rgb(189, 5, 42);
+  
+}
+
+.post_button:hover{
   background-color: white;
   color: rgb(189, 5, 42);
 }
