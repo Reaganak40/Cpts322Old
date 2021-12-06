@@ -121,7 +121,7 @@ class Student(User):
     first_name = db.Column(db.String(64))
     last_name = db.Column(db.String(100))
     phone_no = db.Column(db.String(10))
-    major = db.Column(db.String(20), db.ForeignKey('major.id'))
+    major = db.Column(db.Integer, db.ForeignKey('major.id'))
     gpa = db.Column(db.Float(precision = 1))
     expected_grad_date = db.Column(db.Date)
     elect_courses = db.Column(db.String(1500))

@@ -13,6 +13,65 @@ from flask_login import current_user, login_user, logout_user, login_required
 bp_routes = Blueprint('routes', __name__)
 bp_routes.template_folder = Config.TEMPLATE_FOLDER #'..\\View\\templates'
 
+
+# ================================================================
+#   Name:           get_recommended_posts
+#   Description:    Sorts posts for student to show those that
+#                   best match their profile first.
+#   Last Changed:   12/5/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Initial Implementation
+# ================================================================
+def get_recommended_posts():
+    if (current_user.get_user_type() == 'faculty'):
+        return Post.query.order_by(Post.timestamp.desc()).all()
+    
+    # IF STUDENT: Implement Matchmaking algorthm
+    posts = Post.query.order_by(Post.timestamp.desc()).all()
+    posts_with_major = []
+    posts_with_fields = []
+    posts_with_both = []
+    matched_posts = []
+
+    if(current_user.major is not None): # get all posts that match with student major
+        student_major_id = Major.query.filter_by(name = current_user.major).first().id
+        for post in posts:
+            if(post.majors is not None):
+                for major in post.majors:
+                    if major.id == student_major_id:
+                        posts_with_major.append(post)
+    
+    if(current_user.fields is not None): # get all posts that match with student's field list
+        for field in current_user.fields:
+            for post in posts:
+                if (post.fields is not None):
+                    for post_field in post.fields:
+                        if field.id == post_field.id:
+                            posts_with_fields.append(post)
+        
+    if len(posts_with_major) > 0: # get all posts that have student's major and desired fields
+        for post in posts_with_major:
+            if post in posts_with_fields:
+                posts_with_both.append(post)
+
+    for post in posts_with_both: # add posts with both first
+        matched_posts.append(post)
+    
+    for post in posts_with_major: # add posts with major
+        if (post in matched_posts) == False:
+            matched_posts.append(post)
+
+    for post in posts_with_fields: # add posts with fields
+        if (post in matched_posts) == False:
+            matched_posts.append(post)
+
+    for post in posts: # add rest and put on bottom
+        if (post in matched_posts) == False:
+            matched_posts.append(post)
+
+    return matched_posts
+
+
 # ================================================================
 #   Name:           Index Route
 #   Description:    index route for basic flask implementation
@@ -25,13 +84,13 @@ bp_routes.template_folder = Config.TEMPLATE_FOLDER #'..\\View\\templates'
 @login_required
 def index():
     num_collector.clear() # reset num_collector for later pages
-    posts = Post.query.order_by(Post.timestamp.desc())
+    posts = get_recommended_posts()
     sform = SortForm()
     #print(current_user)
     if sform.validate_on_submit():
         if (sform.checkbox.data == True):
-            posts = current_user.get_user_posts()
-    return render_template('index.html', title="Lab Opportunities", posts=posts.all(), post_count = posts.count(), form= sform)
+            posts = current_user.get_user_posts().all()
+    return render_template('index.html', title="Lab Opportunities", posts=posts, post_count = len(posts), form= sform)
 
 # ================================================================
 #   Name:           Post Position Route
