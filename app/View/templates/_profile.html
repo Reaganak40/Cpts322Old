@@ -32,7 +32,7 @@
 <span style="color:red"> Not Provided </span> </p> 
 {% endif %}
 
-<p style="margin-left: 15%; font-size: 25;"><i class = "fa fa-mortar-board"> Major: {{profile.major}} </i> </p>
+<p style="margin-left: 15%; font-size: 25;"><i class = "fa fa-mortar-board"> Major: {{profile.get_major()}} </i> </p>
 
 {% if profile.gpa %}
 <p style="margin-left: 15%; font-size: 25;"><i class = "fa fa-percent"> GPA: {{ profile.gpa }} </i></p>
