@@ -10,6 +10,7 @@ from app.Controller.forms import ApplicationForm, PostForm, ProfileForm, SortFor
 from flask_login import current_user, login_user, logout_user, login_required
 
 
+
 bp_routes = Blueprint('routes', __name__)
 bp_routes.template_folder = Config.TEMPLATE_FOLDER #'..\\View\\templates'
 
@@ -18,9 +19,9 @@ bp_routes.template_folder = Config.TEMPLATE_FOLDER #'..\\View\\templates'
 #   Name:           get_recommended_posts
 #   Description:    Sorts posts for student to show those that
 #                   best match their profile first.
-#   Last Changed:   12/5/21
+#   Last Changed:   12/6/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Initial Implementation
+#   Change Details: Revised to compensate for student major error
 # ================================================================
 def get_recommended_posts():
     if (current_user.get_user_type() == 'faculty'):
@@ -34,7 +35,7 @@ def get_recommended_posts():
     matched_posts = []
 
     if(current_user.major is not None): # get all posts that match with student major
-        student_major_id = Major.query.filter_by(name = current_user.major).first().id
+        student_major_id = Major.query.filter_by(id = current_user.major).first().id
         for post in posts:
             if(post.majors is not None):
                 for major in post.majors:
@@ -266,10 +267,10 @@ def student_profile():
 
 # ================================================================
 #   Name:           Student Profile Update Route
-#   Description:    Updates the student profile with inputed information
-#   Last Changed:   12/5/21
+#   Description:    Updates the student profile with input information
+#   Last Changed:   12/6/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Added fields
+#   Change Details: Revised to compensate for student major error
 # ================================================================
 @bp_routes.route('/student_profile_update', methods=['GET', 'POST'])
 @login_required
@@ -296,7 +297,7 @@ def update_student_profile():
         proForm.languages.data = current_user.languages
         proForm.prior_research.data = current_user.prior_research
 
-        proForm.major.data = current_user.major
+        proForm.major.data = Major.query.filter_by(id = current_user.major).first()
         proForm.fields.data = current_user.fields
 
 
@@ -309,7 +310,7 @@ def update_student_profile():
         current_user.first_name = proForm.first_name.data
         current_user.last_name = proForm.last_name.data
         current_user.phone_no = proForm.phone_no.data
-        current_user.major = major_name.get_major_name()
+        current_user.major = major_name.id
         current_user.fields = proForm.fields.data
         current_user.gpa = proForm.gpa.data
         current_user.expected_grad_date = proForm.expected_grad_date.data
