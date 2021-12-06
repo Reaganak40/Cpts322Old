@@ -295,6 +295,9 @@ class Field(db.Model):
      
      def get_name(self):
         return "{}".format(self.field)
+
+     def get_num_tags(self):
+        return len(self.get_name)
     
      def is_for_major(self, major):
         if major in self.majors:
