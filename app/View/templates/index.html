@@ -28,16 +28,17 @@
     {% if current_user.get_user_type() == 'faculty' %}
     <form action= "" method = "post" class = "formselect" style="margin-left: 14%; "> <div style="width: auto; margin-bottom: 3%;">Sort by: {{form.hidden_tag()}} Display your posts only {{form.checkbox}}</div> 
     {{form.refresh (class = "refresh_button")}} </form>
+    <br>
 
     {% endif %}
     <h3 style="margin-left: 14%;">Total number of Posts: {{ post_count }} </h3>
     
     <!-- Make Lists of Posts -->
-    <table style = "width:100%; margin-left: 13%; " valign="top" >
+    <table style = "width:85%; margin-left: 13%; " valign="top" >
     <div class = "postlist">
     {% for post in posts %}
        <tr>
-        <th style="width:80%">
+        <th style="width:100%">
             <div class = "post-box" >{% include '_post.html' %}</div > 
         </th>
         <th style= "vertical-align: bottom; text-align:left">

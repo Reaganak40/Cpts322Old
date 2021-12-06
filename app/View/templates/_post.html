@@ -8,7 +8,7 @@
 # ================================================================
 -->
 
-<table class = "posttable" style = "width:100%;" valign="top" >
+<table class = "posttable" style = "width:90%;" valign="top" >
     <tr> 
         <!-- Print Job Title -->
         <td colspan="3"><div class="posttitle"> {{post.title}} </div>
@@ -44,12 +44,13 @@
             <br>
             <!-- Print Major Tags --> <a style = "margin-left: 0.75%" class = "fa fa-mortar-board"></a>
             {% for major in post.get_majors().all() %}
-                <b class= "posttags"></div>{{ major.get_major_name() }} </b>
+                <b class= "posttags"></div>{{ major.get_major_name() }} </b> 
             {% endfor %}
-            <br> <br> <br> <a style = "margin-left: 1%" class ="fa fa-lightbulb-o"></a>
+            <br> <br> <a style = "margin-left: 1%" class ="fa fa-lightbulb-o"></a>
             {% for field in post.get_fields().all() %}
-            <b class= "fieldtags"></div>{{ field.get_name() }}</b>
+                <b class= "fieldtags"></div>{{ field.get_name() }}</b> 
             {% endfor %}
+            
             
             <br> <br>
             <div class ="postitle" style="margin: 10px; "> <i class = "fa fa-clock-o"><b style="font:bold; font-size: 17; font-family: sans-serif;"> Estimated time commitment: </i></b> {{ post.time_commitment }} hours per week.</div>
