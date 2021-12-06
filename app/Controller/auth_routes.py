@@ -31,9 +31,9 @@ def register():
     if rForm.validate_on_submit():
 
         if(rForm.type.data == '0'): # New user is a student
-            new_user = Student(username = rForm.username.data, email = rForm.email.data, wsu_id = rForm.wsu_id.data, user_type = 'student')
+            new_user = Student(username = rForm.username.data.lower(), email = rForm.email.data, wsu_id = rForm.wsu_id.data, user_type = 'student')
         else: # New User is a faculty
-            new_user = Faculty(username = rForm.username.data, email = rForm.email.data, wsu_id = rForm.wsu_id.data, user_type = 'faculty')
+            new_user = Faculty(username = rForm.username.data.lower(), email = rForm.email.data, wsu_id = rForm.wsu_id.data, user_type = 'faculty')
 
         new_user.set_password(rForm.password.data)
         db.session.add(new_user)
@@ -73,7 +73,7 @@ def login():
     if form_login.validate_on_submit():
 
         ##initially check if user exists
-        user = User.query.filter_by(username = form_login.username.data).first()
+        user = User.query.filter_by(username = form_login.username.data.lower()).first()
 
         if (user is None) or user.check_password(form_login.password.data) is False:
                 flash('Invalid username or password.')
