@@ -11,8 +11,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-    
-    <h3> Applicant's General Information </h3>
+    <br>
+    <h3 style="margin-left: 15%;"> Applicant's General Information </h3>
     {% set student = application.get_applicant() %}
     {% set profile = student %}
 
@@ -29,18 +29,19 @@
     <br>
     <br>
 
-    <h3> What would you like to do with this application? </h3>
-    
-    <form action = "{{url_for('routes.update', postid = application.post_id, userid = application.applicant_id, change = 'Interview')}}" method="post">
-        <input type="submit", value="Approve for Interview", class="apply_button">
-    </form>
-
+    <h3 style = "margin-left: 15%;"> What would you like to do with this application? </h3> <br>
     <form action = "{{url_for('routes.update', postid = application.post_id, userid = application.applicant_id, change = 'Hired')}}" method="post">
-      <input type="submit", value="Hire Applicant", class="apply_button">
+        <input type="submit", value="Hire Applicant", class="hired_button">
     </form>
-
+    <br>
+    <form action = "{{url_for('routes.update', postid = application.post_id, userid = application.applicant_id, change = 'Interview')}}" method="post">
+        <input type="submit", value="Approve for Interview", class="interview_button">
+    </form>
+    <br>
     <form action = "{{url_for('routes.update', postid = application.post_id, userid = application.applicant_id, change = 'Reject')}}" method="post">
-        <input type="submit", value="Reject Applicant", class="unapply_button">
+        <input type="submit", value="Reject Applicant", class="reject_button">
     </form>
+    
+   
 
 {% endblock %}
