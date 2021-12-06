@@ -34,7 +34,8 @@
                 
 
                 {% else %}
-                    
+                    <p style = "font-size: 20; font-family:sans-serif; font-weight:bold; text-align:center; color:white""> Welcome, {{ current_user.username }} </p></i>
+                    <hr color = "white" width = "150">
                     <a href="{{ url_for('routes.index') }}""><p style = "font-size: 20; font-family:sans-serif;"> Home </p></i></a>
                     
                     {% if current_user.get_user_type() == 'student' %}
@@ -54,7 +55,7 @@
             
         </table>
         </div>
-        {% endif%}
+        {% endif %}
         <div>
             {% with messages = get_flashed_messages() %}
             {% if messages %}
