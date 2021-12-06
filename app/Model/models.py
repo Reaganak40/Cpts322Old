@@ -134,6 +134,9 @@ class Student(User):
         'polymorphic_identity':'student',
     }
 
+    def get_major(self):
+        return Major.query.filter_by(id = self.major).first().name
+
     def __repr__(self):
         return '<Username: {} - {}; Type: {}; Class-Object Code: 0>'.format(self.id,self.wsu_id, self.get_user_type())
     

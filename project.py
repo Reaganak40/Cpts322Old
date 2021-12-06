@@ -114,55 +114,116 @@ if __name__ == "__main__":
     app.run(debug=True)
 
 # ================================================================
+#   Name:           create_user1
+#   Description:    Creates a user of type student or Faculty
+#   Last Changed:   12/6/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Initial Implementation
+# ================================================================
+def create_user1(user_type, username, email, password, wsu_id):
+    if (user_type == 'Faculty'):
+        new_user = Faculty(username = username, wsu_id = wsu_id, email = email, user_type = 'faculty')
+    elif (user_type == 'Student'):
+        new_user = Student(username = username, wsu_id = wsu_id, email = email, user_type = 'student')
+    else:
+        print('create_user: improper user type')
+        return None
+
+    new_user.set_password(password)
+    db.session.add(new_user)
+    return new_user
+
+# ================================================================
+#   Name:           create_user2
+#   Description:    Creates a user of type student
+#   Last Changed:   12/6/21
+#   Changed By:     Reagan Kelley
+#   Change Details: Initial Implementation
+# ================================================================
+def create_user2(user_type, username, email, password, wsu_id, first_name, last_name, phone_no, major_name, fields, gpa, graduation_date, courses, languages, prior_research):
+    if (user_type == 'Faculty'):
+        print('create_user: improper definition of faculty')
+        return None
+    elif (user_type == 'Student'):
+        new_user = Student(username = username, wsu_id = wsu_id, email = email, user_type = 'student')
+    else:
+        print('create_user: improper user type')
+        return None
+
+    new_user.set_password(password)
+
+    new_user.first_name = first_name
+    new_user.last_name = last_name
+    new_user.phone_no = phone_no
+
+    # Get major
+    print(Major.query.filter_by(name = major_name).first())
+    new_user.major = Major.query.filter_by(name = major_name).first().id
+
+    # Get_fields
+    field_list = []
+    for field_name in fields:
+        field = Field.query.filter_by(field = field_name).first()
+        if field is not None:
+            field_list.append(field)
+    new_user.fields = field_list
+
+    new_user.gpa = gpa
+    new_user.expected_grad_date = graduation_date
+    new_user.elect_courses = courses
+    new_user.languages = languages
+    new_user.prior_research = prior_research
+    
+    return new_user
+
+# ================================================================
 #   Name:           Fill Database
 #   Description:    If in debug fills database with data
-#   Last Changed:   12/1/21
+#   Last Changed:   12/6/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Added time commitment and research fields to 
-#                   posts
+#   Change Details: Updated db creation with more efficient 
+#                   create functions
 # ================================================================
 def fill_db():
 
-    # User: Reagan
-    # Type: student
-    # Password: abc
-    new_user = Student(username = 'reagan', wsu_id = "111111111", email = 'reaganak@gmail.com', user_type = 'student')
-    new_user.set_password('abc')
-    db.session.add(new_user)
-    print("Debug: Added New Student: [reagan]")
-
-    # User: denise
-    # Type: Student
-    # Password: abc
-    new_user = Student(username = 'denise', wsu_id = "222222222", email = 'denisetanumihardja@wsu.edu', user_type = 'student')
-    new_user.set_password('abc')
-    db.session.add(new_user)
-    print("Debug: Added New Student: [denise]")
-
-    # User: tay
-    # Type: Student
-    # Password: abc
-    new_user = Student(username = 'tay', wsu_id = "333333333", email = 'jrtay123456@wsu.edu', user_type = 'student')
-    new_user.set_password('abc')
-    db.session.add(new_user)
-    print("Debug: Added New Student: [tay]")
-
-    # User: sakire
-    # Type: Faculty
-    # Password: abc
-    new_user = Faculty(username = 'sakire', wsu_id = "444444444", email = 'sakire@wsu.edu', user_type = 'faculty')
-    new_user.set_password('abc')
-    db.session.add(new_user)
-    print("Debug: Added New Faculty: [sakire]")
-
-    # User: Andy
-    # Type: Faculty
-    # Password: abc
-    new_user = Faculty(username = 'andy', wsu_id = "555555555", email = 'aofallon@wsu.edu', user_type = 'faculty')
-    new_user.set_password('abc')
+    # User: andy | Faculty
+    new_user = create_user1('Faculty', 'andy', 'aofallon@wsy.edu', 'abc', '444444444')
     db.session.add(new_user)
     print("Debug: Added New Faculty: [andy]")
 
+    # User: sakire | Faculty
+    new_user = create_user1('Faculty', 'sakire', 'sakire@wsy.edu', 'abc', '55555555')
+    db.session.add(new_user)
+    print("Debug: Added New Faculty: [sakire]")
+
+    # User: reagan | Student
+    new_user = create_user2('Student', 'reagan', 'reagan.kelley@wsu.edu', 'abc', '11663871', 'Reagan', 'Kelley', '2094804983', 
+                            'Computer Science', ['Machine Learning', 'Robotics', 'Circuit Design', 'Unix-Linux Systems'], 
+                            2.67, datetime.datetime(2023, 5, 20), 'cs360 - A, cs322 - A, cs223 - A', 'C/C++, Javascript, Haskell, Java', 'None')
+    db.session.add(new_user)
+    print("Debug: Added New Student: [reagan]")
+
+    # User: bobby | Student
+    new_user = create_user2('Student', 'bobby', 'bobby@wsu.edu', 'abc', '232323231', 'Bob', 'Marley', '1123456785', 
+                            'Electrical Engineering', ['Machine Learning', 'Robotics', 'Circuit Design'], 
+                            3.67, datetime.datetime(2026, 5, 20), 'Bio102 - C, cs322 - A, cs223 - D', 'C/C++, Javascript, HTML', 'None')
+    db.session.add(new_user)
+    print("Debug: Added New Student: [bobby]")
+
+    # User: denise | Student
+    new_user = create_user2('Student', 'denise', 'denise@wsu.edu', 'abc', '673579425', 'Denise', 'Tanumihardja', '3609871121', 
+                            'Computer Engineering', ['Machine Learning', 'Robotics', 'Circuit Design'], 
+                            2.67, datetime.datetime(2023, 5, 20), 'cs360 - C, cs322 - A, cs223 - D', 'C/C++, Haskell, HTML', 'None')
+    db.session.add(new_user)
+    print("Debug: Added New Student: [denise]")
+    
+     # User: tay | Student
+    new_user = create_user2('Student', 'tay', 'tay@wsu.edu', 'abc', '783625424', 'jing ren', 'tay', '5672341234', 
+                            'Computer Engineering', ['Machine Learning', 'Robotics', 'Circuit Design'], 
+                            2.67, datetime.datetime(2022, 5, 20), 'cs360 - C, cs322 - A, cs355 - F', 'C/C++, Haskell, HTML', 'None')
+    db.session.add(new_user)
+    print("Debug: Added New Student: [tay]")
+    
     # Post: Database Integrity
     # Posted By: Sakire
     _majors = Major.query.slice(0,2) # Gets first two majors in list (TODO: if you can find a better way of sorts majors please change)
@@ -195,20 +256,6 @@ def fill_db():
     db.session.add(newPost)
     print("Debug: Added New Post: [Everyone Loves Checkers]")
 
-    # Edit Profile Info: Reagan
-    student_user = User.query.filter_by(username = 'reagan').first()
-    student_user.wsu_id = 11663871
-    student_user.first_name = 'Reagan'
-    student_user.last_name = 'Kelley'
-    student_user.phone_no = '2094804983'
-    student_user.major = Major.query.filter_by(id = 0).first() # TODO: Does not work
-    student_user.gpa = 3.96
-    student_user.expected_grad_date = datetime.datetime(2023, 5, 20)
-    student_user.elect_courses = 'cs360 - A\ncs355 - A\ncs122 - A'
-    student_user.research_topics = 'To be Implemented'
-    student_user.languages = 'C/C++, Python, Java, Haskell'
-    student_user.prior_research = 'None'
-    print("Debug: Updated Profile Info: [reagan]")
 
     # Commit changes to database
     db.session.commit()
