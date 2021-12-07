@@ -1,5 +1,6 @@
 from __future__ import print_function
 import sys
+import random
 from flask import Blueprint
 from flask import render_template, flash, redirect, url_for, request
 from config import Config
@@ -13,6 +14,45 @@ from flask_login import current_user, login_user, logout_user, login_required
 
 bp_routes = Blueprint('routes', __name__)
 bp_routes.template_folder = Config.TEMPLATE_FOLDER #'..\\View\\templates'
+
+
+
+
+# ================================================================
+#   Name:           rand_quotes
+#   Description:    Generates a random quote.
+#   Last Changed:   12/6/21
+#   Changed By:     Denise Tanumihardja
+#   Change Details: First implementation
+# ================================================================
+
+def rand_quotes():
+    quotes = {
+        "0": "'A ship does not sail with yesterday's winds.' -Louis L'Amour",
+        "1": "'You can never cross the ocean until you have the courage to lose sight of the shore.' -Christopher Columbus",
+        "2": "'Do not wait to strike till the iron is hot. Make it hot by striking.' -William Butler Yeats",
+        "3": "'I’d rather attempt to do something great and fail, than to attempt nothing and succeed.' -Robert H. Schuller",
+        "4": "'You don’t have to be great to start, but you have to start to be great.' -Zig Ziglar",
+        "5": "'Research is what I’m doing when I don’t know what I’m doing.' -Wernher von Braun",
+        "6": "'The secret of getting ahead is getting started.' -Mark Twain",
+        "7": "'All our dreams can come true… if we have the courage to pursue them.' -Walt Disney",
+        "8": "'In fact, the world needs more nerds.' -Ben Bernanke",
+        "9": "'If we knew what we were doing, it would not be called research, would it?' -Albert Einstein",
+        "10": "'Research means that you don’t know, but are willing to find out' -Charles F. Kettering",
+        "11": "'Research is formalized curiosity. It is poking and prying with a purpose.' -Zora Neale Hurston",
+        "12": "'No research without action, no action without research' -Kurt Lewin",
+        "13": "'I have not failed. I've just found 10,000 ways that won't work.' -Thomas A. Edison",
+        "14": "'Let's go invent tomorrow instead of worrying about what happened yesterday.' -Steve Jobs",
+        "15": "'Any sufficiently advanced technology is indistinguishable from magic.' -Arthur C. Clarke",
+        "16": "'A man may die, nations may rise and fall, but an idea lives on.' -John F. Kennedy",
+        "17": "'Only put off until tomorrow what you are willing to die having left undone.' -Pablo Picasso",
+        "18": "'Without some goal and some efforts to reach it, no man can live.' -Fyodor Dostoyevsky",
+        "19": "'A goal is a dream with a deadline.' -Napoleon Hill",
+        "20": "'Remember to celebrate milestones as you prepare for the road ahead.' -Nelson Mandela",
+    }
+
+    return quotes[str(random.randrange(20))]
+
 
 
 # ================================================================
@@ -85,13 +125,14 @@ def get_recommended_posts():
 @login_required
 def index():
     num_collector.clear() # reset num_collector for later pages
+
     posts = get_recommended_posts()
     sform = SortForm()
     #print(current_user)
     if sform.validate_on_submit():
         if (sform.checkbox.data == True):
             posts = current_user.get_user_posts().all()
-    return render_template('index.html', title="Lab Opportunities", posts=posts, post_count = len(posts), form= sform)
+    return render_template('index.html', title="Lab Opportunities", posts=posts, post_count = len(posts), form= sform, quote = rand_quotes())
 
 # ================================================================
 #   Name:           Post Position Route
