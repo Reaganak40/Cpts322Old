@@ -12,33 +12,88 @@
 
 {% block content %}
   
-    <h1 style="margin-left: 15%;";>Welcome to Lab Opportunities!</h1>
-    <h2 style="margin-left: 15%;"> "A ship does not sail with yesterday's winds." </h2> 
+    <h1 style="margin-left: 14%;";>Welcome to Lab Opportunities!</h1>
+    <h2 style="margin-left: 14%;"> {{ quote }} </h2> 
     {% if current_user.get_user_type() == 'student' %}
     {% if current_user.can_apply() == False %}
     
-    <h3><span style="color:red"> ** Your Profile Information needs to be updated! ** <br><br> Go to
+    <h3><span style="color:red; margin-left: 15%;"> ** Your Profile Information needs to be updated! ** <br><br> 
     
-        <a href = "{{ url_for('routes.student_profile') }}"> Profile</a> to update. </span> 
+        <span style = "color:red; margin-left: 15%; "> Go to </span><a style = "text-decoration: none; "href = "{{ url_for('routes.student_profile') }}"> Profile</a> to update. </span> 
     </h3>
 
     {% endif %}
     {% endif %}
 
     {% if current_user.get_user_type() == 'faculty' %}
-    <form action= "" method = "post" class = "formselect" style="margin-left: 15%;"> <div >Sort by: {{form.hidden_tag()}} {{form.checkbox.label}}  {{form.checkbox}} {{form.refresh}} </div> </form>
+    <form action= "" method = "post" class = "formselect" style="margin-left: 14%; "> <div style="width: auto; margin-bottom: 3%;">Sort by: {{form.hidden_tag()}} Display your posts only {{form.checkbox}}</div> 
+    {{form.refresh (class = "refresh_button")}} </form>
+    <br>
 
     {% endif %}
-    <h3 style="margin-left: 15%;">Number of Posts: {{ post_count }} </h3>
+    <h3 style="margin-left: 14%;">Total number of Posts: {{ post_count }} </h3>
     
     <!-- Make Lists of Posts -->
+    <table style = "width:85%; margin-left: 13%; " valign="top" >
     <div class = "postlist">
     {% for post in posts %}
-       
-       <div class = "post-box">{% include '_post.html' %}</div> 
+       <tr>
+        <th style="width:100%">
+            <div class = "post-box" >{% include '_post.html' %}</div > 
+        </th>
+        <th style= "vertical-align: bottom; text-align:left">
+            {% if (current_user.id == post.writer.id) %}
+                    <form action = "{{url_for('routes.updateposition', post_id = post.id)}}" method="get">
+                    <input type ="submit", value="Manage Post", class="manage_button">
+                    </form>
+                    {% endif %}
+                    
+                    
+                    {% if current_user.get_user_type() == 'student' %}
+                    {% if current_user.has_applied(post) == false %}
+                    <form action = "{{url_for('routes.submit_application', postid = post.id)}}" method="post">
+                        <input type="submit", value="Send Application", class="apply_button">
+                    </form>
+                    
+                    
+                    {% elif current_user.get_status(post) == 'Pending' %}
+                    
+                    <form action = "{{url_for('routes.unapply', postid = post.id)}}" method="post">
+                        <input type="submit", value="Withdraw Application", class="unapply_button">
+                    </form>
 
+                    
+                    {% elif current_user.get_status(post) ==  'Reject' %}
+                    
+                    <p style="color:rgb(255, 0, 51); position: absolute; left:15%"> Rejected </p>
+                    
+    
+                    {% elif current_user.get_status(post) == 'Interview' %}
+    
+                    <p style="color:#e2d415; position: absolute; left:15%"> Approved for Interview </p>
+
+                    {% elif current_user.get_status(post) == 'Hired' %}
+
+                    <p style="color:#79d379; position: absolute; left:15%"> Hired </p>
+
+                 {% endif %}
+
+                 {% endif %}
+
+            <!-- KEEP THIS HIDDEN ------------------------- -->
+            <style>
+                h3.a {
+                    visibility: hidden;
+                }
+            </style>
+            <h3 class="a">hello <br> hello </h3>
+            <!-- ------------------------------------------- -->
+
+        </th>
+       </tr>
     {% endfor %}
     </div>
+    </table>
   
     
 {% endblock %}

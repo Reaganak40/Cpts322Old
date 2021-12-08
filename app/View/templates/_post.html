@@ -2,39 +2,35 @@
 # ================================================================
 #   Name:           post html
 #   Description:    UI for create route
-#   Last Changed:   12/1/21
+#   Last Changed:   12/3/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Added Writer's email to post, time commitment, 
-#                   and start to end date. Added research fields
+#   Change Details: Added manage post button
 # ================================================================
 -->
 
-<table class = "posttable" style = "width:100%; margin-left: 17%; " valign="top" >
+<table class = "posttable" style = "width:90%;" valign="top" >
     <tr> 
         <!-- Print Job Title -->
         <td colspan="3"><div class="posttitle"> {{post.title}} </div>
+
+            <div class="posttimestamp"><b>Posted at: </b> {{ moment(post.timestamp).format('LLLL') }}
+                
+            
+            
+            </div>
+            
+            
         </td>
     </tr>
-
-    <tr>
-        <td colspan="3" style = "text-align:left" valign="bottom">  
-              <span style = "margin-left: 1%;"> Posted by:  <span class = "useritem"> {{post.writer.username }} | {{post.writer.email}}</span></span>
-
-
-          </td>
-    </tr>
-
 
     <tr>
         
         <td width="80%">
             <div>
+              <br>
               <!-- Print Job Description -->    
-              <div class="postbody" style="text-align: left">{{ post.body }}</div>
+              <div class="postbody" style="text-align: left;">{{ post.body }}</div>
               
-              <div class ="postitle" style="margin: 10px; "> <i class = "fa fa-clock-o"><b style="font:bold; font-family: sans-serif;"> Estimated time commitment: </i></b> {{ post.time_commitment }} hours per week.</div>
-              
-              <div class="posttimestamp" style = "margin: 5px;"> <i class = "fa fa-calendar"> <b style = "font:bold; font-family: sans-serif;"> Duration of hiring: </i></b> <b>From </b>{{ post.start_date }} <b>To</b> {{ post.end_date }} </div>
            </div>
         </td> 
 
@@ -43,51 +39,37 @@
         </td>
     </tr>
     
-    <tr> 
+    <tr > 
         <td colspan="3" style = "text-align:left" valign="bottom">  
             <br>
-            <!-- Print Major Tags -->
+            <!-- Print Major Tags --> <a style = "margin-left: 0.75%" class = "fa fa-mortar-board"></a>
             {% for major in post.get_majors().all() %}
-                <span class= "posttags"></div>{{ major.get_major_name() }} </span>
+                <b class= "posttags"></div>{{ major.get_major_name() }} </b> 
             {% endfor %}
-            <br> <br>
+            <br> <br> <a style = "margin-left: 1%" class ="fa fa-lightbulb-o"></a>
             {% for field in post.get_fields().all() %}
-            <span class= "fieldtags"></div>{{ field.get_name() }} </span>
+                <b class= "fieldtags"></div>{{ field.get_name() }}</b> 
             {% endfor %}
+            
+            
+            <br> <br>
+            <div class ="postitle" style="margin: 10px; "> <i class = "fa fa-clock-o"><b style="font:bold; font-size: 17; font-family: sans-serif;"> Estimated time commitment: </i></b> {{ post.time_commitment }} hours per week.</div>
+              
+            <div class="posttimestamp" style = "margin: 5px;"> <i class = "fa fa-calendar"> <b style = "font:bold; font-size:17; font-family: sans-serif;"> Duration of hiring: </i></b> <b>From </b> {{ post.start_date }} <b>To</b> {{ post.end_date }} </div>
             <div> 
-                <!-- Prints Post Timestamp -->
+                
+                
+                 
+                <div style = "margin-left: 1%; margin-bottom: 0%; "> <br><b>Posted by:</b> <br> <br> Username: <span class = "useritem">{{post.writer.username }}</span> <br> Email: {{post.writer.email}} 
+                </div>
                 <br>
-                <div class="posttimestamp"><b>Posted at: </b> {{ moment(post.timestamp).format('LLLL') }} </div>
-
-                {% if current_user.get_user_type() == 'student' %}
-                {% if current_user.has_applied(post) == false %}
-                <form action = "{{url_for('routes.submit_application', postid = post.id)}}" method="post">
-                    <input type="submit", value="Send Application", class="apply_button">
-                 </form>
-
-                 {% elif current_user.get_status(post) == 'Pending' %}
-
-                 <form action = "{{url_for('routes.unapply', postid = post.id)}}" method="post">
-                    <input type="submit", value="Withdraw Application", class="unapply_button">
-                 </form>
-
-                 {% elif current_user.get_status(post) ==  'Reject' %}
-
-                 <p style="color:red"> Rejected </p>
-   
-                {% elif current_user.get_status(post) == 'Interview' %}
-   
-                <p style="color:lightsalmon"> Approved for Interview </p>
-
-                 {% endif %}
-
-                 {% endif %}
-
+                <br><br>
+                
                  </div>
              </div> 
 
         </td>
-    </tr>
+    </tr >
 
 
 

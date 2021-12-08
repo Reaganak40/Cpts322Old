@@ -31,16 +31,29 @@ def register():
     if rForm.validate_on_submit():
 
         if(rForm.type.data == '0'): # New user is a student
-            new_user = Student(username = rForm.username.data, email = rForm.email.data, user_type = 'student')
+            new_user = Student(username = rForm.username.data.lower(), email = rForm.email.data, wsu_id = rForm.wsu_id.data, user_type = 'student')
         else: # New User is a faculty
-            new_user = Faculty(username = rForm.username.data, email = rForm.email.data, user_type = 'faculty')
+            new_user = Faculty(username = rForm.username.data.lower(), email = rForm.email.data, wsu_id = rForm.wsu_id.data, user_type = 'faculty')
 
         new_user.set_password(rForm.password.data)
         db.session.add(new_user)
         db.session.commit()
 
-        flash('You are registered!')
-        return redirect(url_for('routes.index')) #redirect new registed user
+        login = LoginForm(username = new_user.username, password = new_user.password_hash)
+
+        if(rForm.type.data == '0'): # New user is a student
+            if login.validate_on_submit():
+                user = User.query.filter_by(username = login.username.data).first()
+                login_user(user)
+                flash('You are registered! Please fill in your profile information.')
+                return redirect(url_for('routes.update_student_profile')) #redirect new registed use
+        else: # New user is faculty
+            if login.validate_on_submit():
+                user = User.query.filter_by(username = login.username.data).first()
+                login_user(user)
+                flash('You are registered!')
+                return redirect(url_for('routes.index'))
+
     return render_template('register.html', form = rForm)
 
 # ================================================================
@@ -60,7 +73,7 @@ def login():
     if form_login.validate_on_submit():
 
         ##initially check if user exists
-        user = User.query.filter_by(username = form_login.username.data).first()
+        user = User.query.filter_by(username = form_login.username.data.lower()).first()
 
         if (user is None) or user.check_password(form_login.password.data) is False:
                 flash('Invalid username or password.')
@@ -69,7 +82,7 @@ def login():
         login_user(user, remember = form_login.remember_me.data)
         print(current_user)
 
-        if current_user.get_user_type() == 'Student': ## user is a student
+        if current_user.get_user_type() == 'student': ## user is a student
             return redirect(url_for('routes.index')) #Change depending on if student account or faculty account
         return redirect(url_for('routes.index'))
     return render_template('login.html', title='Sign In', form = form_login)

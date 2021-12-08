@@ -38,6 +38,15 @@ majorFields = db.Table('majorFields',
      db.Column('major_id', db.Integer, db.ForeignKey('major.id')))
 def __repr__ (self):
      return '<Major Name: {}, Field Name: {}>'.format(self.major_name, self.field_name)
+
+# ================================================================
+# Relationship: Every student can have multiple fields
+# ================================================================
+studentFields = db.Table('studentFields', 
+     db.Column('field_id', db.Integer, db.ForeignKey('field.id')),
+     db.Column('student_id', db.Integer, db.ForeignKey('student.id')))
+def __repr__ (self):
+     return '<Student Name: {}, Field Name: {}>'.format(self.username, self.field_name)
      
 # ================================================================
 #   Name:           User Model
@@ -48,6 +57,7 @@ def __repr__ (self):
 # ================================================================
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key = True)
+    wsu_id = db.Column(db.String, unique = True)
     username = db.Column(db.String(64), unique = True, index = True)
     email = db.Column(db.String(120), unique = True, index = True)
     password_hash = db.Column(db.String(128))
@@ -96,11 +106,11 @@ class User(UserMixin, db.Model):
         return application.status
 
 # ================================================================
-#   Name:           User Model
+#   Name:           Student Model
 #   Description:    Class Definition for Student (Child of User)
-#   Last Changed:   11/24/21
+#   Last Changed:   12/5/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Revised User database model
+#   Change Details: Added fields
 # ================================================================
 class Student(User):
 
@@ -108,26 +118,27 @@ class Student(User):
     id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
 
     # Student Attributes
-    wsu_id = db.Column(db.Integer, unique = True)
     first_name = db.Column(db.String(64))
     last_name = db.Column(db.String(100))
     phone_no = db.Column(db.String(10))
-    major = db.Column(db.String(20), db.ForeignKey('major.id'))
+    major = db.Column(db.Integer, db.ForeignKey('major.id'))
     gpa = db.Column(db.Float(precision = 1))
     expected_grad_date = db.Column(db.Date)
     elect_courses = db.Column(db.String(1500))
-    research_topics = db.Column(db.String(20)) ## TODO: Need to implement research topics
+    fields = db.relationship('Field', secondary = studentFields, back_populates = 'students')
     languages = db.Column(db.String(700))
     prior_research = db.Column(db.String(1500))
 
     applications = db.relationship('Application', back_populates = 'student_applied')
-
     __mapper_args__ = {
         'polymorphic_identity':'student',
     }
 
+    def get_major(self):
+        return Major.query.filter_by(id = self.major).first().name
+
     def __repr__(self):
-        return '<Username: {} - {}; Type: {}; Class-Object Code: 0>'.format(self.id,self.username, self.get_user_type())
+        return '<Username: {} - {}; Type: {}; Class-Object Code: 0>'.format(self.id,self.wsu_id, self.get_user_type())
     
     def can_apply(self): # Students should only be able to apply to position posts if their info is submitted
         if(self.wsu_id is None):
@@ -159,13 +170,15 @@ class Faculty(User):
 # ================================================================
 #   Name:           Application Model
 #   Description:    Class Definition for Application
-#   Last Changed:   11/16/21
+#   Last Changed:   12/3/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Initial Implementation
+#   Change Details: Added phantom application implementation
+#                   Fixed primary restraint bug
 # ================================================================
 class Application(db.Model):
-    applicant_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key = True)
-    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), primary_key = True)
+    id = db.Column(db.Integer, primary_key = True)
+    applicant_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
 
     student_applied = db.relationship('User')
     position_for = db.relationship('Post')
@@ -174,8 +187,18 @@ class Application(db.Model):
     personal_statement = db.Column(db.String(1500))
     faculty_ref = db.Column(db.String(60))
 
+    phantom_name = db.Column(db.String(150), default = "")
+
+
     def __repr__(self):
         return '<Application for {} - by {};>'.format(self.post_id,self.applicant_id)
+
+    def make_phantom(self):
+        self.status = 'No Longer Available'
+        self.post_id = -1
+
+    def get_phantom(self):
+        return [self.phantom_name, self.status]
 
     def get_applicant(self):
         return User.query.filter_by(id = self.applicant_id).first()
@@ -259,9 +282,9 @@ class Major(db.Model):
 # ================================================================
 #   Name:           Research Field Model
 #   Description:    Class Definition for Research Field (Tag)
-#   Last Changed:   12/1/21
+#   Last Changed:   12/5/21
 #   Changed By:     Reagan Kelley
-#   Change Details: Implented with majors
+#   Change Details: Implented with student
 # ================================================================
 class Field(db.Model):
      __tablename__ = 'field'
@@ -270,9 +293,20 @@ class Field(db.Model):
 
      # A field can have multiple majors
      majors = db.relationship('Major', secondary = majorFields, back_populates = 'fields')
+     students = db.relationship('Student', secondary = studentFields, back_populates = 'fields')
+
      
      def get_name(self):
         return "{}".format(self.field)
+
+     def get_num_tags(self):
+        return len(self.get_name)
+    
+     def is_for_major(self, major):
+        if major in self.majors:
+            return True
+        return False
+
 
      def get_majors(self):
         major_list = []
