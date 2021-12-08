@@ -176,11 +176,40 @@ class TestModels(unittest.TestCase):
         db.session.delete(p1)
         db.session.commit()
 
-        self.assertEqual(0, Post.query.count())                          #    testing: verify post has been deleted
-        self.assertEqual(1, Application.query.count())                   #    testing: verify application was never deleted
+        self.assertEqual(0, Post.query.count())                                   #    testing: verify post has been deleted
+        self.assertEqual(1, Application.query.count())                            #    testing: verify application was never deleted
         self.assertEqual([p1.title, 'No Longer Available'], a2.get_phantom())     #    testing: application is now in phantom mode
 
 
+# TEST: MAJORS
+
+    def test_majors_1(self):
+        major1 = Major(name = 'Computer Science', id = 1)
+        major2 = Major(name = 'Computer Engineering', id = 2)
+        major3 = Major(name = 'Electrical Engineering', id = 3)
+        major4 = Major(name = 'Mechanical Engineering', id = 4)
+
+        db.session.add(major1) # Add Majors
+        db.session.add(major2)
+        db.session.add(major3)
+        db.session.add(major4) 
+
+        self.assertEqual(4, Major.query.count())                             #    testing: verify 4 majors have been made
+        self.assertEqual('Computer Science', major1.get_major_name())        #    testing: major1 is correct
+        self.assertEqual('Electrical Engineering', major3.get_major_name())  #    testing: major3 is correct
+
+    def test_majors_2(self):
+        init_majors_and_fields() # populate database with majors connected to fields (and vice versa)
+
+        major2 = Major.query.all()[1] # 3rd major created
+
+        self.assertEqual('Computer Engineering', major2.get_major_name())  #    testing: major2 is correct
+
+        major_fields = major2.get_fields() # init_majors_and_fields() assigns 6 fields to Computer Engineering
+        
+        self.assertEqual(6, len(major_fields))  # testing: major2's fields were properly assigned
+
+# TEST: FIELDS
 
 
 
