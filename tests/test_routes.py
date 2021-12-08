@@ -64,9 +64,13 @@ def test_login_page(test_client): # Tests the login page
     assert response.status_code == 200
     assert b"Login" in response.data
 
-def test_logout_page(test_client): # Tests the logout page
+def test_logout_page(test_client, init_database): # Tests the logout page
+    response = test_client.get('/login')
+    assert response.status_code == 200
+    assert b"Login" in response.data
+    
     response = test_client.get('/logout')
-    assert response.status_code == 302
+    assert response.status_code == 200
 
 def test_invalidlogin(test_client,init_database): # Tests for invalid login
     response = test_client.post('/register', data = dict(username = 'andy', wsu_id = '234345456', email = 'andy.majoris@wsu.edu', 
