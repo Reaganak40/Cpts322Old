@@ -173,7 +173,7 @@ class ProfileForm(FlaskForm):
 #   Change Details: Initial Implementation of Application Form
 # ================================================================
 class ApplicationForm(FlaskForm):
-    personal_statement = TextAreaField("Brief Statement - Why do you want this position?", validators=[DataRequired(), Length(min=0, max = 1500)])
+    personal_statement = TextAreaField("Brief Statement - Why do you want this position?", validators=[DataRequired(), Length(min=0, max = 5000)])
     faculty_ref_name = StringField("Provide One Faculty reference and their contact information", validators=[DataRequired(), Length(min=0, max = 60)])
     submit = SubmitField('Send Application')
 
