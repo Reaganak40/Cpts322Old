@@ -37,7 +37,6 @@
             <div class="input-container">
                 <i class="fa fa-user icon"></i>
                 <input class="input-field" type="text" placeholder="Username" name="username">
-                
               </div>
             
               <br>
@@ -47,7 +46,11 @@
               <div class="input-container">
                 <i class="fa fa-key icon"></i>
                 <input class="input-field" type="password" placeholder="Password" name="password">
-                
+              </div><br>
+              <div class = "input-container">
+                {% for error in form.password.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
               </div>
             
               <br>
