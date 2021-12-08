@@ -67,6 +67,30 @@ def test_register(test_client, init_database):
     assert b"Sign In" in response.data   
     assert b"Please log in to access this page." in response.data
 
+def test_register2(test_client, init_database):
+
+    ## Testing for all individual empty fields (username, id, email, password, and repeat password)
+    
+    response1 = test_client.post('/register', data = dict(username = '', wsu_id = '333333333', email = 'reagan.kelley@wsu.edu', user_type = 'Student', password = "abc", password2 = "abc"), follow_redirects = True)
+    assert response1.status_code == 200
+    assert b"Please fill out this field" in response1.data
+
+    response2 = test_client.post('/register', data = dict(username = 'reagan', wsu_id = '', email = 'reagan.kelley@wsu.edu', user_type = 'Student', password = "abc", password2 = "abc"), follow_redirects = True)
+    assert response2.status_code == 200
+    assert b"Please fill out this field" in response2.data
+
+    response3 = test_client.post('/register', data = dict(username = 'reagan', wsu_id = '333333333', email = '', user_type = 'Student', password = "abc", password2 = "abc"), follow_redirects = True)
+    assert response3.status_code == 200
+    assert b"Please fill out this field" in response3.data
+
+    response4 = test_client.post('/register', data = dict(username = 'reagan', wsu_id = '333333333', email = 'reagan.kelley@wsu.edu', user_type = 'Student', password = "", password2 = "abc"), follow_redirects = True)
+    assert response4.status_code == 200
+    assert b"Please fill out this field" in response4.data
+
+    response5 = test_client.post('/register', data = dict(username = 'reagan', wsu_id = '333333333', email = 'reagan.kelley@wsu.edu', user_type = 'Student', password = "abc", password2 = ""), follow_redirects = True)
+    assert response5.status_code == 200
+    assert b"Please fill out this field" in response5.data
+
 def test_invalidlogin(test_client,init_database):
     response1 = test_client.post('/login', data = dict(username='denise', password = '321'), follow_redirects = True)
     assert response1.status_code == 200
