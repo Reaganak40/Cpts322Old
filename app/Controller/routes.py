@@ -450,7 +450,9 @@ def applications():
         post_id_list = []
         page_title = "My Applications"
         # get all post id's for posts student has applied to
+
         for application in current_user.applications:
+            print(application)
             post_id_list.append(application.post_id)
         posts = db.session.query(Post).filter(Post.id.in_(n for n in post_id_list))
 

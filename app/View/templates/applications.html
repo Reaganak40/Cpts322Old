@@ -30,11 +30,21 @@
 
 {% for post in posts %}
     {% for applicant in post.get_applicants() %}
-        {% set student = applicant.get_applicant() %}
-        {% set profile = student %}
-        {% set position_name = applicant.get_position() %}
-        {% set phantom_application = False %}
-        {% include '_studentapplication.html' %}
+        {% if current_user.get_user_type() == 'student' %}
+            {% if applicant.applicant_id == current_user.id %}
+                {% set student = applicant.get_applicant() %}
+                {% set profile = student %}
+                {% set position_name = applicant.get_position() %}
+                {% set phantom_application = False %}
+                {% include '_studentapplication.html' %}
+            {% endif %}
+        {% else %}
+            {% set student = applicant.get_applicant() %}
+            {% set profile = student %}
+            {% set position_name = applicant.get_position() %}
+            {% set phantom_application = False %}
+            {% include '_studentapplication.html' %}
+        {% endif %}
     {% endfor %}
 {% endfor %}
 

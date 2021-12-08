@@ -236,8 +236,8 @@ def fill_db():
 
     # User: reagan | Student
     new_user = create_user2('Student', 'reagan', 'reagan.kelley@wsu.edu', 'abc', '11663871', 'Reagan', 'Kelley', '2094804983', 
-                            'Computer Science', ['Machine Learning', 'Robotics', 'Circuit Design', 'Unix-Linux Systems'], 
-                            4.97, datetime.datetime(2023, 5, 20), 'cs360 - A, cs322 - A, cs223 - A', 'C/C++, Javascript, Haskell, Java', 'None')
+                            'Computer Science', ['Quantum Computing', 'Machine Learning', 'Robotics', 'Circuit Design', 'Unix-Linux Systems'], 
+                            4.97, datetime.datetime(2023, 5, 20), 'cs360 - A, cs322 - A, cs223 - A', 'C/C++, Javascript, Haskell, Java', 'Worked with Apple.')
     db.session.add(new_user)
     print("Debug: Added New Student: [reagan]")
 
@@ -278,6 +278,17 @@ def fill_db():
     db.session.add(newPost)
     print("Debug: Added New Post: [Database Integrity]")
 
+     # Post:
+    faculty_user = User.query.filter_by(username = 'sakire').first()
+    newPost = create_post(faculty_user, 'Next Generation Robot!', 
+                             "Building a new kind of robot...",
+                            ['Electrical Engineering'],
+                            ['Mobile Devices', 'Logic Circuits', 'Electronics'], '5-12', 
+                            datetime.datetime(2021, 6, 2),
+                            datetime.datetime(2022, 8, 28)
+                            )
+
+
     _majors = Major.query.all()
     fields = _majors[2].fields
     faculty_user = User.query.filter_by(username = 'sakire').first()
@@ -286,13 +297,13 @@ def fill_db():
     db.session.add(newPost)
     print("Debug: Added New Post: [Robots are cool!]")
 
-    _majors = Major.query.slice(2, 3)
-    fields = _majors.first().fields
-    faculty_user = User.query.filter_by(username = 'sakire').first()
-    newPost = Post(user_id = faculty_user.id, title = 'Next Generation Robots', body = 'Post Description.', majors = _majors, fields = fields, 
-                   time_commitment = '12-29', start_date = datetime.datetime(2021, 10, 28), end_date = datetime.datetime(2021, 10, 29))
+    _majors = Major.query.all()
+    fields = _majors[2].fields
+    faculty_user = User.query.filter_by(username = 'andy').first()
+    newPost = Post(user_id = faculty_user.id, title = 'Test Post 4', body = 'Post description.', majors = _majors, fields = fields,
+                   time_commitment = '20-30', start_date = datetime.datetime(2020, 5, 28), end_date = datetime.datetime(2020, 10, 20))
     db.session.add(newPost)
-    print("Debug: Added New Post: [Next Generation Robots]")
+    print("Debug: Added New Post: [Test Post 4]")
 
     # Post: Checkers AI
     # Posted By: Andy
@@ -307,7 +318,9 @@ def fill_db():
             start_date = datetime.datetime(2022, 6, 2),
             end_date = datetime.datetime(2022, 8, 28)
             )
+    db.session.add(newPost)
     print("Debug: Added New Post: [Everyone Loves Checkers]")
+    
 
     _majors = Major.query.slice(2, 4)
     fields = _majors.first().fields
@@ -317,17 +330,8 @@ def fill_db():
     db.session.add(newPost)
     print("Debug: Added New Post: [Computer to Machine Designs]")
 
-    _majors = Major.query.all()
-    fields = _majors[2].fields
-    faculty_user = User.query.filter_by(username = 'andy').first()
-    newPost = Post(user_id = faculty_user.id, title = 'Test Post 4', body = 'Post description.', majors = _majors, fields = fields,
-                   time_commitment = '20-30', start_date = datetime.datetime(2020, 5, 28), end_date = datetime.datetime(2020, 10, 20))
-    db.session.add(newPost)
-    print("Debug: Added New Post: [Test Post 4]")
 
 
-    db.session.add(newPost)
-    print("Debug: Added New Post: [Everyone Loves Checkers]")
 
     # Post:
     faculty_user = User.query.filter_by(username = 'kc').first()
