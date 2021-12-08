@@ -16,79 +16,7 @@ def initDB(*args, **kwargs):
 
     # Creates Majors and Research Fields
     if Major.query.count() == 0:
-        # Majors
-        major1 = Major(name = 'Computer Science', id = 1)
-        major2 = Major(name = 'Computer Engineering', id = 2)
-        major3 = Major(name = 'Electrical Engineering', id = 3)
-        major4 = Major(name = 'Mechanical Engineering', id = 4)
-
-        fieldNA = Field(field = 'Empty Field', id = -1)
-        # Research Fields
-        field1 = Field(field = 'Machine Learning', id = 1)
-        field2 = Field(field = 'Networking', id = 2)
-        field3 = Field(field = 'Data Science', id = 3)
-        field4 = Field(field = 'Logic Circuits', id = 4)
-        field5 = Field(field = 'Unix-Linux Systems', id = 5)
-        field6 = Field(field = 'Quantum Computing', id = 6)
-        field7 = Field(field = 'Circuit Design', id = 7)
-        field8 = Field(field = 'Robotics', id = 8)
-        field9 = Field(field = 'Electronics', id = 9)
-        field10 = Field(field = 'Cyber Security', id = 10)
-        field11 = Field(field = 'Mobile Devices', id = 11)
-
-        # Build relationship between majors and fields
-        # Computer Science
-        major1.fields.append(field1)
-        major1.fields.append(field2)
-        major1.fields.append(field3)
-        major1.fields.append(field5)
-        major1.fields.append(field6)
-        major1.fields.append(field10)
-
-        # Computer Engineering
-        major2.fields.append(field1)
-        major2.fields.append(field2)
-        major2.fields.append(field4)
-        major2.fields.append(field6)
-        major2.fields.append(field8)
-        major2.fields.append(field11)
-
-        # Electrical Engineering
-        major3.fields.append(field4)
-        major3.fields.append(field6)
-        major3.fields.append(field7)
-        major3.fields.append(field8)
-        major3.fields.append(field9)
-        major3.fields.append(field11)
-
-        # Mechanical Engineering
-        major4.fields.append(field4)
-        major4.fields.append(field7)
-        major4.fields.append(field8)
-        major4.fields.append(field9)
-        major4.fields.append(field11)
-
-
-        db.session.add(major1) # Add Majors
-        db.session.add(major2)
-        db.session.add(major3)
-        db.session.add(major4) 
-
-        db.session.add(field1) # Add Fields
-        db.session.add(field2)
-        db.session.add(field3)
-        db.session.add(field4)
-        db.session.add(field5)
-        db.session.add(field6)
-        db.session.add(field7)
-        db.session.add(field8)
-        db.session.add(field9)
-        db.session.add(field10)
-        db.session.add(field11)
-
-        db.session.add(fieldNA)
-        
-        db.session.commit()
+        init_majors_and_fields()
 
         print("Majors")
         for major in Major.query.all():
@@ -108,6 +36,81 @@ def initDB(*args, **kwargs):
     #     for f in field_name:
     #         db.session.add(Field(majors = f['majors'], field = f['field']))
     #     db.session.commit()
+
+def init_majors_and_fields():
+    # Majors
+    major1 = Major(name = 'Computer Science', id = 1)
+    major2 = Major(name = 'Computer Engineering', id = 2)
+    major3 = Major(name = 'Electrical Engineering', id = 3)
+    major4 = Major(name = 'Mechanical Engineering', id = 4)
+
+    fieldNA = Field(field = 'Empty Field', id = -1)
+    # Research Fields
+    field1 = Field(field = 'Machine Learning', id = 1)
+    field2 = Field(field = 'Networking', id = 2)
+    field3 = Field(field = 'Data Science', id = 3)
+    field4 = Field(field = 'Logic Circuits', id = 4)
+    field5 = Field(field = 'Unix-Linux Systems', id = 5)
+    field6 = Field(field = 'Quantum Computing', id = 6)
+    field7 = Field(field = 'Circuit Design', id = 7)
+    field8 = Field(field = 'Robotics', id = 8)
+    field9 = Field(field = 'Electronics', id = 9)
+    field10 = Field(field = 'Cyber Security', id = 10)
+    field11 = Field(field = 'Mobile Devices', id = 11)
+
+    # Build relationship between majors and fields
+    # Computer Science
+    major1.fields.append(field1)
+    major1.fields.append(field2)
+    major1.fields.append(field3)
+    major1.fields.append(field5)
+    major1.fields.append(field6)
+    major1.fields.append(field10)
+
+    # Computer Engineering
+    major2.fields.append(field1)
+    major2.fields.append(field2)
+    major2.fields.append(field4)
+    major2.fields.append(field6)
+    major2.fields.append(field8)
+    major2.fields.append(field11)
+
+    # Electrical Engineering
+    major3.fields.append(field4)
+    major3.fields.append(field6)
+    major3.fields.append(field7)
+    major3.fields.append(field8)
+    major3.fields.append(field9)
+    major3.fields.append(field11)
+
+    # Mechanical Engineering
+    major4.fields.append(field4)
+    major4.fields.append(field7)
+    major4.fields.append(field8)
+    major4.fields.append(field9)
+    major4.fields.append(field11)
+
+
+    db.session.add(major1) # Add Majors
+    db.session.add(major2)
+    db.session.add(major3)
+    db.session.add(major4) 
+
+    db.session.add(field1) # Add Fields
+    db.session.add(field2)
+    db.session.add(field3)
+    db.session.add(field4)
+    db.session.add(field5)
+    db.session.add(field6)
+    db.session.add(field7)
+    db.session.add(field8)
+    db.session.add(field9)
+    db.session.add(field10)
+    db.session.add(field11)
+
+    db.session.add(fieldNA)
+    
+    db.session.commit()
 
 
 if __name__ == "__main__":
@@ -187,12 +190,12 @@ def create_user2(user_type, username, email, password, wsu_id, first_name, last_
 def fill_db():
 
     # User: andy | Faculty
-    new_user = create_user1('Faculty', 'andy', 'aofallon@wsy.edu', 'abc', '444444444')
+    new_user = create_user1('Faculty', 'andy', 'aofallon@wsu.edu', 'abc', '444444444')
     db.session.add(new_user)
     print("Debug: Added New Faculty: [andy]")
 
     # User: sakire | Faculty
-    new_user = create_user1('Faculty', 'sakire', 'sakire@wsy.edu', 'abc', '55555555')
+    new_user = create_user1('Faculty', 'sakire', 'sakire@wsu.edu', 'abc', '55555555')
     db.session.add(new_user)
     print("Debug: Added New Faculty: [sakire]")
 
