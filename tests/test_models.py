@@ -1,4 +1,6 @@
 import warnings
+
+from wtforms import fields
 warnings.filterwarnings("ignore")
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -43,38 +45,86 @@ class TestModels(unittest.TestCase):
         self.assertTrue(u2.check_password('123'))
 
 
-    ##Tests whether has the student has actually applied to a post after sending the application
+    #Tests whether has the student has actually applied to a post after sending the application
     def test_has_applied(self):
         f1 = create_user1('Faculty', 'andy', 'aofallon@wsy.edu', 'abc', '444444444')
         db.session.add(f1)
         p1 = Post(user_id =f1.id, title='My post', body='This is my test post.', time_commitment = '20', start_date = datetime.datetime(2023, 5, 11), end_date = datetime.datetime(2024, 1, 21))
         db.session.add(p1)
         db.session.commit()
-        self.assertEqual(Post.query.all.first().id, p1.id)
+        self.assertEqual(Post.query.all()[0].id, p1.id)
         u2 = Student(username='Tay', wsu_id = '111127598', email ='jingren.tay@wsu.edu', user_type = 'Student')
         u2.set_password('abc')
+        db.session.add(u2)
+        db.session.commit()
         u2.apply(p1,'Hi','Bob')
         db.session.commit()
         self.assertEqual(u2.has_applied(p1), True)
+
+        
+        p2 = Post(user_id =f1.id, title='My post', body='This is my 2nd test post.', time_commitment = '100', start_date = datetime.datetime(2023, 5, 11), end_date = datetime.datetime(2024, 1, 21))
+        db.session.add(p2)
+        db.session.commit()
+        self.assertEqual(Post.query.all()[1].id, p2.id)
+        db.session.commit()
+        self.assertEqual(u2.has_applied(p2), False)
         
         
-    
-    ##Tests both student and faculty are displaying the correct status before and after reviewing
+    def test_get_user_posts(self):
+        init_majors_and_fields()
+        f1 = create_user1('Faculty', 'sakire', 'sakire@wsu.edu', 'abc', '55555555')
+        db.session.add(f1)
+        _majors = Major.query.slice(0,2) # Gets first two majors in list (TODO: if you can find a better way of sorts majors please change)
+        fields = _majors.first().fields
+        faculty_user = User.query.filter_by(username = 'sakire').first()
+        p1 = Post(user_id = faculty_user.id, title= 'Database Integrity', 
+            body = 'We are looking for 3-4 year undergrad students who enjoy working in the fields of networking and cybersecurity. We are teaming up with Amazon to make penetration software that will test the integrity of their AWS systems. You do not need to be an expert on databases nor security, but it would be very helpful.', 
+            majors = _majors,
+            fields = fields,
+            time_commitment = '25',
+            start_date = datetime.datetime(2022, 1, 10),
+            end_date = datetime.datetime(2022, 5, 21)
+            )
+        db.session.add(p1)
+        db.session.commit()
+        self.assertEqual(f1.get_user_posts().all(), [p1])
+
+
+    #Tests both student and faculty are displaying the correct status before and after reviewing
     def test_get_status(self):
-        # u1 = Faculty(username='test', wsu_id = '111111111', email='testy.tester@wsu.com', user_type = 'Faculty')
-        # u1.set_password('123')
-        # p1 = Post(user_id = u1.id, title='My post', body='This is my test post.', time_commitment = '20', start_date = datetime.datetime(2023, 5, 11), end_date = datetime.datetime(2024, 1, 21))
-        # db.session.add(p1)
-        # db.session.commit()
-        # u2 = Student(username='Tay', wsu_id = '111127598', email ='jingren.tay@wsu.edu', user_type = 'Student')
-        # u2.set_password('abc')
-        # u2.apply(p1,'Hi','Bob')
-        # db.session.commit()
-        # self.assertEqual(u2.get_status(u2), 'Pending')
-        pass
+        u1 = Faculty(username='test', wsu_id = '111111111', email='testy.tester@wsu.com', user_type = 'Faculty')
+        u1.set_password('123')
+        db.session.add(u1)
+        db.session.commit()
+        p1 = Post(user_id = u1.id, title='My post', body='This is my test post.', time_commitment = '20', start_date = datetime.datetime(2023, 5, 11), end_date = datetime.datetime(2024, 1, 21))
+        db.session.add(p1)
+        db.session.commit()
+        u2 = Student(username='Tay', wsu_id = '111127598', email ='jingren.tay@wsu.edu', user_type = 'Student')
+        u2.set_password('abc')
+        db.session.add(u2)
+        db.session.commit()
+        u2.apply(p1,'Hi','Bob')
+        db.session.commit()
+        self.assertEqual(u2.get_status(p1), 'Pending')
+
+    def test_get_status_application(self):
+        u1 = Faculty(username='test', wsu_id = '111111111', email='testy.tester@wsu.com', user_type = 'Faculty')
+        u1.set_password('123')
+        db.session.add(u1)
+        db.session.commit()
+        p1 = Post(user_id = u1.id, title='My post', body='This is my test post.', time_commitment = '20', start_date = datetime.datetime(2023, 5, 11), end_date = datetime.datetime(2024, 1, 21))
+        db.session.add(p1)
+        db.session.commit()
+        u2 = Student(username='Tay', wsu_id = '111127598', email ='jingren.tay@wsu.edu', user_type = 'Student')
+        u2.set_password('abc')
+        db.session.add(u2)
+        db.session.commit()
+        u2.apply(p1,'Hi','Bob')
+        db.session.commit()
+        self.assertEqual(Application.query.all()[0].status, 'Pending')
         
-    
-    ##Tests both student and faculty have correct user type registered into the database
+
+    #Tests both student and faculty have correct user type registered into the database
     def test_get_user_type(self):
         u1 = Student(username='test', wsu_id = '111111111', email='testy.tester@wsu.com', user_type = 'Student')
         db.session.add(u1)
@@ -86,7 +136,17 @@ class TestModels(unittest.TestCase):
         db.session.commit()
         self.assertEqual(u2.get_user_type(), 'Faculty')
 
-    ##test the function can_apply where student should not be able to apply if there is no wsu_id
+    def test_get_major(self):
+        init_majors_and_fields()
+        s1 = create_user2('Student', 'reagan', 'reagan.kelley@wsu.edu', 'abc', '11663871', 'Reagan', 'Kelley', '2094804983', 
+                            'Computer Science', ['Machine Learning', 'Robotics', 'Circuit Design', 'Unix-Linux Systems'], 
+                            2.67, datetime.datetime(2023, 5, 20), 'cs360 - A, cs322 - A, cs223 - A', 'C/C++, Javascript, Haskell, Java', 'None')
+        db.session.add(s1)
+        db.session.commit()
+        self.assertEqual(s1.get_major(), 'Computer Science')
+
+
+    #test the function can_apply where student should not be able to apply if there is no wsu id in the profile
     def test_can_apply_student(self):
         u1 = Student(username='test', wsu_id = '111111111', email='testy.tester@wsu.com', user_type = 'Student')
         db.session.add(u1)
@@ -100,10 +160,38 @@ class TestModels(unittest.TestCase):
 
 
     def test_apply_student(self):
-        pass
+        u1 = Student(username='test', wsu_id = '111111111', email='testy.tester@wsu.com', user_type = 'Student')
+        db.session.add(u1)
+        db.session.commit()
+        f1 = create_user1('Faculty', 'andy', 'aofallon@wsy.edu', 'abc', '444444444')
+        db.session.add(f1)
+        db.session.commit()
+        p1 = Post(user_id =f1.id, title='My post', body='This is my test post.', time_commitment = '20', start_date = datetime.datetime(2023, 5, 11), end_date = datetime.datetime(2024, 1, 21))
+        db.session.add(p1)
+        db.session.commit()
+        u1.apply(p1,'Hi', 'KC Wang')
+        db.session.commit()
+        self.assertEqual(Application.query.all()[0].applicant_id, u1.id)
+        self.assertEqual(Application.query.all()[0].post_id, p1.id)
+
+
 
     def test_unapply_student(self):
-        pass
+        u1 = Student(username='test', wsu_id = '111111111', email='testy.tester@wsu.com', user_type = 'Student')
+        db.session.add(u1)
+        db.session.commit()
+        f1 = create_user1('Faculty', 'andy', 'aofallon@wsy.edu', 'abc', '444444444')
+        db.session.add(f1)
+        db.session.commit()
+        p1 = Post(user_id =f1.id, title='My post', body='This is my test post.', time_commitment = '20', start_date = datetime.datetime(2023, 5, 11), end_date = datetime.datetime(2024, 1, 21))
+        db.session.add(p1)
+        db.session.commit()
+        u1.apply(p1,'Hi', 'KC Wang')
+        db.session.commit()
+        u1.unapply(p1)
+        db.session.commit()
+        self.assertEqual(Application.query.all(), [])
+        
 
     def test_can_apply_faculty(self):
         u1 = Faculty(username='test', wsu_id = '111111111', email='testy.tester@wsu.com', user_type = 'Faculty')
@@ -113,7 +201,7 @@ class TestModels(unittest.TestCase):
 
     
 
-    def test_post_1(self):
+    def test_post(self):
         u1 = Faculty(username='test', wsu_id = '111111111', email='testy.tester@wsu.com', user_type = 'faculty')
         db.session.add(u1)
         db.session.commit()
@@ -138,6 +226,49 @@ class TestModels(unittest.TestCase):
         self.assertEqual(u1.posts[1].time_commitment, '100')
         self.assertEqual(u1.posts[1].start_date, datetime.datetime(2024, 10, 12).date())
         self.assertEqual(u1.posts[1].end_date, datetime.datetime(2025, 1, 17).date())
+
+    def test_get_fields(self):
+        f1 = create_user1('Faculty', 'andy', 'aofallon@wsu.edu', 'abc', '444444444')
+        db.session.add(f1)
+        db.session.commit()
+        major1 = Major(name = 'Computer Science', id = 1)
+        field1 = Field(field = 'Machine Learning', id = 1)
+        db.session.add(major1)
+        db.session.add(field1)
+        faculty_user = User.query.filter_by(username = 'andy').first()
+        p1 = Post(user_id = faculty_user.id, title= 'Everyone Loves Checkers', 
+            body = 'If you are interested in machine learning, do I have a lab position for you. We are teaming up with the International Association for Professional Checkers Players to create a machine learning AI that will test the skills of the best checker players across the world. Applicants who have taken intro to machine learning courses and further will have a competitive advantage in receiving a position for this lab.', 
+            majors = [major1],
+            fields = [field1],
+            time_commitment = '10-20',
+            start_date = datetime.datetime(2022, 6, 2),
+            end_date = datetime.datetime(2022, 8, 28)
+            )
+        db.session.add(p1)
+        db.session.commit()
+        self.assertEqual(p1.get_fields().all() , [field1])
+        
+
+    def test_get_majors(self):
+        f1 = create_user1('Faculty', 'andy', 'aofallon@wsu.edu', 'abc', '444444444')
+        db.session.add(f1)
+        db.session.commit()
+        major1 = Major(name = 'Computer Science', id = 1)
+        field1 = Field(field = 'Machine Learning', id = 1)
+        db.session.add(major1)
+        db.session.add(field1)
+        faculty_user = User.query.filter_by(username = 'andy').first()
+        p1 = Post(user_id = faculty_user.id, title= 'Everyone Loves Checkers', 
+            body = 'If you are interested in machine learning, do I have a lab position for you. We are teaming up with the International Association for Professional Checkers Players to create a machine learning AI that will test the skills of the best checker players across the world. Applicants who have taken intro to machine learning courses and further will have a competitive advantage in receiving a position for this lab.', 
+            majors = [major1],
+            fields = [field1],
+            time_commitment = '10-20',
+            start_date = datetime.datetime(2022, 6, 2),
+            end_date = datetime.datetime(2022, 8, 28)
+            )
+        db.session.add(p1)
+        db.session.commit()
+        self.assertEqual(p1.get_majors().all() , [major1])
 
     
 
