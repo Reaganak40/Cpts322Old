@@ -160,8 +160,11 @@ def create_user2(user_type, username, email, password, wsu_id, first_name, last_
     new_user.phone_no = phone_no
 
     # Get major
-    print(Major.query.filter_by(name = major_name).first())
-    new_user.major = Major.query.filter_by(name = major_name).first().id
+    #print(Major.query.filter_by(name = major_name).first())
+    if(Major.query.filter_by(name = major_name).first() == None):
+        new_user.major = None
+    else:
+        new_user.major = Major.query.filter_by(name = major_name).first().id
 
     # Get_fields
     field_list = []
@@ -202,7 +205,7 @@ def fill_db():
     # User: reagan | Student
     new_user = create_user2('Student', 'reagan', 'reagan.kelley@wsu.edu', 'abc', '11663871', 'Reagan', 'Kelley', '2094804983', 
                             'Computer Science', ['Machine Learning', 'Robotics', 'Circuit Design', 'Unix-Linux Systems'], 
-                            2.67, datetime.datetime(2023, 5, 20), 'cs360 - A, cs322 - A, cs223 - A', 'C/C++, Javascript, Haskell, Java', 'None')
+                            4.97, datetime.datetime(2023, 5, 20), 'cs360 - A, cs322 - A, cs223 - A', 'C/C++, Javascript, Haskell, Java', 'None')
     db.session.add(new_user)
     print("Debug: Added New Student: [reagan]")
 

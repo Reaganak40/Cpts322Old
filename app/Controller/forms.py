@@ -162,7 +162,7 @@ class ProfileForm(FlaskForm):
     def validate_wsu_id(self, wsu_id):
         print(wsu_id.data)
         user = User.query.filter_by(wsu_id = wsu_id.data).first()
-        if user is None:
+        if (user is not None) and (user.id != current_user.id):
             raise ValidationError('This ID is used by another account. Please enter your real WSU ID.')
 
 # ================================================================
@@ -176,6 +176,4 @@ class ApplicationForm(FlaskForm):
     personal_statement = TextAreaField("Brief Statement - Why do you want this position?", validators=[DataRequired(), Length(min=0, max = 1500)])
     faculty_ref_name = StringField("Provide One Faculty reference and their contact information", validators=[DataRequired(), Length(min=0, max = 60)])
     submit = SubmitField('Send Application')
-
-
 
