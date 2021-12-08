@@ -28,8 +28,9 @@ class TestModels(unittest.TestCase):
         db.drop_all()
         self.app_context.pop()
 
-    #Tests password hashing for both student and faculty users.
-    def test_password_hashing(self): 
+# TEST: USER (FACULTY & STUDENT)
+
+    def test_password_hashing(self): # TEST INITIATIVE: Passwords are being saved correctly
         u1 = User(username = 'test', wsu_id = '111111111', email='testy.tester@wsu.edu', user_type = 'Student')
         u2 = User(username = 'test2', wsu_id = '222222222', email='testy2.tester@wsu.edu', user_type = 'Faculty')
         u1.set_password('abc')
@@ -41,7 +42,7 @@ class TestModels(unittest.TestCase):
         self.assertFalse(u2.check_password('abc'))
         self.assertTrue(u2.check_password('123'))
 
-    def test_post_1(self):
+    def test_post_1(self): # TEST INITIATIVE: Datebase allocation
         u1 = Faculty(username='test', wsu_id = '111111111', email='testy.tester@wsu.com', user_type = 'faculty')
         db.session.add(u1)
         db.session.commit()
@@ -59,7 +60,7 @@ class TestModels(unittest.TestCase):
 
 # TEST: APPLICATION
 
-    def test_application_1(self):
+    def test_application_1(self): # TEST INITIATIVE: Relationship validity
         init_majors_and_fields()
         # faculty user
         f1 =  create_user1('Faculty', 'sakire', 'sakire@wsy.edu', 'abc', '55555555')
@@ -86,7 +87,7 @@ class TestModels(unittest.TestCase):
         self.assertEqual(s1.id, a2.get_applicant().id)           #    testing: if application belongs to student
         self.assertEqual('Test Position 1', a2.get_position())   #    testing: if application relationship with post is correct
 
-    def test_application_2(self):
+    def test_application_2(self): # TEST INITIATIVE: Application relationship on multiple applications for one post
         init_majors_and_fields()
         # faculty user 1
         f1 =  create_user1('Faculty', 'sakire', 'sakire@wsu.edu', 'abc', '55555555')
@@ -140,7 +141,7 @@ class TestModels(unittest.TestCase):
         self.assertEqual([], s2.applications)                    #    testing: that student 2 never applied
 
 
-    def test_application_3(self):
+    def test_application_3(self): # TEST INITIATIVE: Phantom Applications (From Post Deletion)
         init_majors_and_fields()
         # faculty user
         f1 =  create_user1('Faculty', 'sakire', 'sakire@wsy.edu', 'abc', '55555555')
@@ -183,7 +184,7 @@ class TestModels(unittest.TestCase):
 
 # TEST: MAJORS
 
-    def test_majors_1(self):
+    def test_majors_1(self):  # TEST INITIATIVE: Database allocation
         major1 = Major(name = 'Computer Science', id = 1)
         major2 = Major(name = 'Computer Engineering', id = 2)
         major3 = Major(name = 'Electrical Engineering', id = 3)
@@ -193,15 +194,16 @@ class TestModels(unittest.TestCase):
         db.session.add(major2)
         db.session.add(major3)
         db.session.add(major4) 
+        db.session.commit()
 
         self.assertEqual(4, Major.query.count())                             #    testing: verify 4 majors have been made
         self.assertEqual('Computer Science', major1.get_major_name())        #    testing: major1 is correct
         self.assertEqual('Electrical Engineering', major3.get_major_name())  #    testing: major3 is correct
 
-    def test_majors_2(self):
+    def test_majors_2(self): # TEST INITIATIVE: Relationship validity
         init_majors_and_fields() # populate database with majors connected to fields (and vice versa)
 
-        major2 = Major.query.all()[1] # 3rd major created
+        major2 = Major.query.all()[1] # 2nd major created
 
         self.assertEqual('Computer Engineering', major2.get_major_name())  #    testing: major2 is correct
 
@@ -210,8 +212,33 @@ class TestModels(unittest.TestCase):
         self.assertEqual(6, len(major_fields))  # testing: major2's fields were properly assigned
 
 # TEST: FIELDS
+    def test_fields_1(self): # TEST INITIATIVE: Database allocation
+        # Research Fields
+        field1 = Field(field = 'Machine Learning', id = 1)
+        field2 = Field(field = 'Networking', id = 2)
+        field3 = Field(field = 'Data Science', id = 3)
+        field4 = Field(field = 'Logic Circuits', id = 4)
 
+        db.session.add(field1) # Add Majors
+        db.session.add(field2)
+        db.session.add(field3)
+        db.session.add(field4) 
+        db.session.commit()
+        
+        self.assertEqual(4, Field.query.count())                        #    testing: verify 4 fields have been made
+        self.assertEqual('Machine Learning', field1.get_name())         #    testing: field1 is correct
+        self.assertEqual('Data Science', field3.get_name())             #    testing: field3 is correct
 
+    def test_fields_2(self):  # TEST INITIATIVE: Relationship validity
+        init_majors_and_fields() # populate database with majors connected to fields (and vice versa)
+
+        field6 = Field.query.filter_by(id = 6).first() # 6th field created
+
+        self.assertEqual('Quantum Computing', field6.get_name())  #    testing: field6 is correct
+
+        field_majors = field6.get_majors() # init_majors_and_fields() assigns 3 majors to Quantum Computing
+        
+        self.assertEqual(3, len(field_majors))  # testing: field6's majors were properly assigned
 
 
 
