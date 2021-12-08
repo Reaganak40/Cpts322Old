@@ -182,6 +182,33 @@ def create_user2(user_type, username, email, password, wsu_id, first_name, last_
     
     return new_user
 
+def create_post(user, title, body, major_list, field_list, time_commitment, start_date, end_date):
+    majors = []
+    for major_name in major_list:
+        newmajor = Major.query.filter_by(name = major_name).first()
+        if (newmajor is not None):
+            majors.append(newmajor)
+
+    fields = []
+    for field_name in field_list:
+        for major in majors:
+            newfield = Field.query.filter_by(field = field_name).first()
+
+            if(newfield is not None):
+                if newfield in major.fields:
+                    fields.append(newfield)
+
+    newPost = Post( user_id = user.id, title= title, body = body,
+                    majors = majors,
+                    fields = fields,
+                    time_commitment = time_commitment,
+                    start_date = start_date,
+                    end_date = end_date
+                    )
+
+    db.session.add(newPost)
+    return newPost
+
 # ================================================================
 #   Name:           Fill Database
 #   Description:    If in debug fills database with data
@@ -261,6 +288,16 @@ def fill_db():
             )
     db.session.add(newPost)
     print("Debug: Added New Post: [Everyone Loves Checkers]")
+
+    # Post:
+    faculty_user = User.query.filter_by(username = 'andy').first()
+    newPost = create_post(faculty_user, 'Test Post', 
+                            "Description", 
+                            ['Computer Science', 'Electrical Engineering'],
+                            ['Unix-Linux Systems', 'Mobile Devices'], '40', 
+                            datetime.datetime(2022, 6, 2),
+                            datetime.datetime(2022, 8, 28)
+                            )
 
 
     # Commit changes to database
