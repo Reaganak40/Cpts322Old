@@ -1,9 +1,12 @@
 import os
+from textwrap import fill
 import pytest
 from app import create_app, db
 from app.Model.models import User, Student, Faculty, Post, Major, Field
+from flask_login import current_user
 from config import Config
-
+from project import create_user1, create_user2, init_majors_and_fields, fill_db
+import datetime
 
 class TestConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'sqlite://'
@@ -24,95 +27,14 @@ def test_client():
     yield testing_client 
     ctx.pop()
 
-def new_user(user_name, wsuid, e_mail, usertype, passw): # Initializes a new user
-    user = User(username = user_name, wsu_id = wsuid, email = e_mail, user_type = usertype)
-    user.set_password(passw)
-    return user
+@pytest.fixture
+def init_database():
 
-def init_majors_and_fields():
-    if Major.query.count() == 0:
-        major1 = Major(name = 'Computer Science', id = 1)
-        major2 = Major(name = 'Computer Engineering', id = 2)
-        major3 = Major(name = 'Electrical Engineering', id = 3)
-        major4 = Major(name = 'Mechanical Engineering', id = 4)
-
-        fieldNA = Field(field = 'Empty Field', id = -1)
-        # Research Fields
-        field1 = Field(field = 'Machine Learning', id = 1)
-        field2 = Field(field = 'Networking', id = 2)
-        field3 = Field(field = 'Data Science', id = 3)
-        field4 = Field(field = 'Logic Circuits', id = 4)
-        field5 = Field(field = 'Unix-Linux Systems', id = 5)
-        field6 = Field(field = 'Quantum Computing', id = 6)
-        field7 = Field(field = 'Circuit Design', id = 7)
-        field8 = Field(field = 'Robotics', id = 8)
-        field9 = Field(field = 'Electronics', id = 9)
-        field10 = Field(field = 'Cyber Security', id = 10)
-        field11 = Field(field = 'Mobile Devices', id = 11)
-
-        # Build relationship between majors and fields
-        # Computer Science
-        major1.fields.append(field1)
-        major1.fields.append(field2)
-        major1.fields.append(field3)
-        major1.fields.append(field5)
-        major1.fields.append(field6)
-        major1.fields.append(field10)
-
-        # Computer Engineering
-        major2.fields.append(field1)
-        major2.fields.append(field2)
-        major2.fields.append(field4)
-        major2.fields.append(field6)
-        major2.fields.append(field8)
-        major2.fields.append(field11)
-
-        # Electrical Engineering
-        major3.fields.append(field4)
-        major3.fields.append(field6)
-        major3.fields.append(field7)
-        major3.fields.append(field8)
-        major3.fields.append(field9)
-        major3.fields.append(field11)
-
-        # Mechanical Engineering
-        major4.fields.append(field4)
-        major4.fields.append(field7)
-        major4.fields.append(field8)
-        major4.fields.append(field9)
-        major4.fields.append(field11)
-
-        db.session.add(major1) # Add Majors
-        db.session.add(major2)
-        db.session.add(major3)
-        db.session.add(major4) 
-
-        db.session.add(field1) # Add Fields
-        db.session.add(field2)
-        db.session.add(field3)
-        db.session.add(field4)
-        db.session.add(field5)
-        db.session.add(field6)
-        db.session.add(field7)
-        db.session.add(field8)
-        db.session.add(field9)
-        db.session.add(field10)
-        db.session.add(field11)
-
-        db.session.add(fieldNA)
-        
-        db.session.commit()
-        pass
-    pass
-
-@pytest.fixture(scope='module')
-def init_database(): # Initializes the database
     db.create_all()
+
+    # these two functions are project debug functions that do what we want: fill db with users and posts
     init_majors_and_fields()
-    user1 = new_user(user_name = 'sakire', wsuid = '111111111', e_mail = 'sakire@wsu.edu', usertype = 'Faculty', passw = 'abc')
-    user2 = new_user(user_name = 'denise', wsuid = '222222222', e_mail = 'denise.tanumihardja@wsu.edu', usertype = 'Student', passw = '123')
-    db.session.add(user1)
-    db.session.add(user2)
+    fill_db()
     db.session.commit()
 
     yield 
@@ -142,9 +64,13 @@ def test_login_page(test_client): # Tests the login page
     assert response.status_code == 200
     assert b"Login" in response.data
 
-def test_logout_page(test_client): # Tests the logout page
+def test_logout_page(test_client, init_database): # Tests the logout page
+    response = test_client.get('/login')
+    assert response.status_code == 200
+    assert b"Login" in response.data
+    
     response = test_client.get('/logout')
-    assert response.status_code == 302
+    assert response.status_code == 200
 
 def test_invalidlogin(test_client,init_database): # Tests for invalid login
     response = test_client.post('/register', data = dict(username = 'andy', wsu_id = '234345456', email = 'andy.majoris@wsu.edu', 
@@ -181,41 +107,48 @@ def test_login_logout(request,test_client,init_database): # Tests for logging in
 #     assert response1.status_code == 302
 #     assert response2.status_code == 302
 
-# def test_index_posts(test_client): # Tests if index shows posts
-#     pass
+def test_postposition_page(test_client, init_database):
 
-# def test_index_sort(test_client): # Tests if the index autosorts posts as recommended
-#     pass
-    
+    #login
+    response = test_client.post('/login', 
+                        data=dict(username='sakire', password='abc',remember_me=False),
+                        follow_redirects = True)
+    assert response.status_code == 200
 
-# def test_profile_page(test_client): # Tests the student profile page
-#     response = test_client.get('/student_profile')
-#     assert response.status_code == 302
+    response = test_client.get('/postposition')
+    assert response.status_code == 200
+    assert b"New Post" in response.data
 
-# def test_profile_access(test_client): # Tests if only student users can access profile page.
-#     response1 = test_client.post('/login', data = dict(username='denise', password = '321'), follow_redirects = True)
-#     assert response1.status_code == 200
-#     response1 = test_client.get('/logout', follow_redirects = True)
 
-#     response2 = test_client.post('/login', data = dict(username='denise', password = '321'), follow_redirects = True)
-#     assert response1.status_code == 200
-#     assert b"You do not have permission to access this page" in response2.data
-#     response2 = test_client.get('/logout', follow_redirects = True)
+def test_postposition_form(test_client, init_database):
 
-# def test_update_profile_page(test_client): # Tests the student profile update page
-#     response = test_client.get('/student_profile_update')
-#     assert response.status_code == 200
+    #login
+    response = test_client.post('/login', 
+                        data=dict(username='sakire', password='abc',remember_me=False),
+                        follow_redirects = True)
+    assert response.status_code == 200
+    assert b"Welcome to Lab Opportunities!" in response.data
 
-# def test_update_profile(test_client): # Tests the updating of the student's profile
-#     pass
 
-# def test_post(test_client, init_database):
-#     response = test_client.post('/login', data = dict(username = 'sakire', password = 'abc', remember_me = False), follow_redirects = True) # Tests 
-#     assert response.status_code == 200
-#     assert b"Welcome to Lab Opportunities!" in response.data
+    #make a post
+    major_ids = [1,3,4]
+    majors = db.session.query(Major).filter(Major.id.in_(n for n in major_ids)).all()
 
-#     response = test_client.get('/postposition')
-#     assert response.status_code == 200
-#     assert b"Post New Smile" in response.data
+    field_id_list = []
+    fields = Field.query.all()
 
-    
+    for field in fields: # look at every field
+        majors_for_field = field.majors # get the majors for that field
+        for major in majors_for_field:
+            if major.id in major_ids:   # if a selected major is assigned to this field add it to the list
+                field_id_list.append(field.id)
+                break
+    fields = db.session.query(Field).filter(Field.id.in_(n for n in field_id_list)).all()
+
+    response = test_client.post('/postposition', 
+                        data=dict(title='New Position Post', body='This is a description of the position',majors= majors, fields = fields,
+                        time_commitment = "30 to 40", start_date = "1/10/2022",
+                        end_date = "5/21/2022", follow_redirects = True))
+    assert response.status_code == 200
+    ##assert b"Welcome to Lab Opportunities!" in response.data
+

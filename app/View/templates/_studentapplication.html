@@ -50,7 +50,7 @@
 
              {% elif applicant.get_status() == 'Interview' %}
 
-             <p style="color:rgb(240, 117, 69)">  </p><br>
+             <p style="color:rgb(240, 117, 69); ">  </p><br>
              <form action = "{{url_for('routes.review', postid = post.id, userid = student.id)}}" method="post">
                 <input type="submit", value="Approved for Interview", class="review_interview_button">
              </form>
@@ -71,7 +71,7 @@
 
              {% elif applicant.get_status() == 'Interview' %}
 
-             <b style="color:lightsalmon"> Approved for Interview </b>
+             <b style="color:lightsalmon;"> Approved for Interview </b>
 
              {% elif applicant.get_status() == 'Hired' %}
               

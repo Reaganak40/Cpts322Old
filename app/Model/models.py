@@ -18,8 +18,7 @@ def load_user(id):
 postMajors = db.Table('postMajors',
     db.Column('post_id', db.Integer, db.ForeignKey('post.id')),
     db.Column('major_id', db.Integer, db.ForeignKey('major.id')))
-def __repr__(self):
-        return '<Post ID: {} , Major Name: {}>'.format(self.post_id,self.major_name)
+
 
 # ================================================================
 # Relationship: Every post can have multiple fields
@@ -27,8 +26,7 @@ def __repr__(self):
 postFields = db.Table('postFields',
     db.Column('post_id', db.Integer, db.ForeignKey('post.id')),
     db.Column('field_id', db.Integer, db.ForeignKey('field.id')))
-def __repr__(self):
-        return '<Post ID: {} , Field Name: {}>'.format(self.post_id,self.field_name)
+
 
 # ================================================================
 # Relationship: Every Research Field can have multiple majors
@@ -36,8 +34,7 @@ def __repr__(self):
 majorFields = db.Table('majorFields', 
      db.Column('field_id', db.Integer, db.ForeignKey('field.id')),
      db.Column('major_id', db.Integer, db.ForeignKey('major.id')))
-def __repr__ (self):
-     return '<Major Name: {}, Field Name: {}>'.format(self.major_name, self.field_name)
+
 
 # ================================================================
 # Relationship: Every student can have multiple fields
@@ -45,8 +42,7 @@ def __repr__ (self):
 studentFields = db.Table('studentFields', 
      db.Column('field_id', db.Integer, db.ForeignKey('field.id')),
      db.Column('student_id', db.Integer, db.ForeignKey('student.id')))
-def __repr__ (self):
-     return '<Student Name: {}, Field Name: {}>'.format(self.username, self.field_name)
+
      
 # ================================================================
 #   Name:           User Model
