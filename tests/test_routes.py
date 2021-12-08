@@ -56,21 +56,17 @@ def test_register(test_client, init_database): # Tests the register function
     assert reg.first().wsu_id == '918273645'
     assert reg.first().email == 'joe.kelley@wsu.edu'
     assert reg.first().user_type == 'student'
-    assert response.status_code == 200  
-    assert b"You are registered! Please fill in your profile information."
-
-def test_login_page(test_client): # Tests the login page
-    response = test_client.get('/login')
-    assert response.status_code == 200
-    assert b"Login" in response.data
+    assert b"You are registered! Please fill in your profile information." in response.data
+     
 
 def test_logout_page(test_client, init_database): # Tests the logout page
     response = test_client.get('/login')
+    
     assert response.status_code == 200
     assert b"Login" in response.data
     
     response = test_client.get('/logout')
-    assert response.status_code == 200
+    assert response.status_code == 302
 
 def test_invalidlogin(test_client,init_database): # Tests for invalid login
     response = test_client.post('/register', data = dict(username = 'andy', wsu_id = '234345456', email = 'andy.majoris@wsu.edu', 
@@ -101,11 +97,11 @@ def test_login_logout(request,test_client,init_database): # Tests for logging in
     assert b"Sign In" in response2.data
     assert b"Please log in to access this page." in response2.data
 
-# def test_index_page(test_client): # Tests the index page
-#     response1 = test_client.get('/')
-#     response2 = test_client.get('/index')
-#     assert response1.status_code == 302
-#     assert response2.status_code == 302
+def test_index_page(test_client): # Tests the index page
+    response1 = test_client.get('/')
+    response2 = test_client.get('/index')
+    assert response1.status_code == 302
+    assert response2.status_code == 302
 
 def test_postposition_page(test_client, init_database):
 
@@ -117,7 +113,7 @@ def test_postposition_page(test_client, init_database):
 
     response = test_client.get('/postposition')
     assert response.status_code == 200
-    assert b"New Post" in response.data
+    assert b"Create New Position Post" in response.data
 
 
 def test_postposition_form(test_client, init_database):
