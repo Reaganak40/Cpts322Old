@@ -526,7 +526,7 @@ a:hover {
   color: white;
 	border: 1px solid gray;
 	background-color: rgb(189, 5, 42);
-  margin-left: 15%;
+  margin-left: 0%;
 }
 
 .submit_button:hover{
@@ -632,7 +632,7 @@ a:hover {
   border-radius: 30px;
   cursor: pointer;
   font-weight: normal;
-  width : 80%;
+  width : 100%;
 	font-size: 14;
 	padding : 5px;
   color: black;
@@ -676,4 +676,57 @@ a:hover {
   left:40%;
 	text-align: center;
   font-weight: bold;
+}
+
+
+.profile_button {
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: normal;
+  width : 30%;
+	font-size: 20;
+	padding : 10px;
+  color: white;
+	border: 1px solid gray;
+	background-color: rgb(189, 5, 42);
+ 
+}
+
+.profile_button:hover{
+  background-color: white;
+  color: rgb(189, 5, 42);
+}
+
+.matchtags{
+  
+    text-align: center;
+    font-family: sans-serif;
+    padding: 8px;
+    border-radius: 25px;
+    background: lightgreen;
+    margin: 5px;
+    color:black;
+    display: inline-block;
+  
+  
+}
+
+.personal_statement{
+  margin-left: 15%;
+  font-size: 16;
+  font-family: sans-serif;
+}
+
+.faculty_ref{
+  margin-left: 15%;
+  font-size: 16;
+  font-family: sans-serif;
+}
+
+
+.field_name{
+  margin-left: 15%;
+  font-size: 18;
+  font-family: sans-serif;
+  
 }
