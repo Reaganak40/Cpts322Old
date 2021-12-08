@@ -15,9 +15,6 @@ from flask_login import current_user, login_user, logout_user, login_required
 bp_routes = Blueprint('routes', __name__)
 bp_routes.template_folder = Config.TEMPLATE_FOLDER #'..\\View\\templates'
 
-
-
-
 # ================================================================
 #   Name:           rand_quotes
 #   Description:    Generates a random quote.
@@ -25,7 +22,6 @@ bp_routes.template_folder = Config.TEMPLATE_FOLDER #'..\\View\\templates'
 #   Changed By:     Denise Tanumihardja
 #   Change Details: First implementation
 # ================================================================
-
 def rand_quotes():
     quotes = {
         "0": "'A ship does not sail with yesterday's winds.' -Louis L'Amour",
@@ -49,11 +45,10 @@ def rand_quotes():
         "18": "'Without some goal and some efforts to reach it, no man can live.' -Fyodor Dostoyevsky",
         "19": "'A goal is a dream with a deadline.' -Napoleon Hill",
         "20": "'Remember to celebrate milestones as you prepare for the road ahead.' -Nelson Mandela",
+        "21": "'All we have to do is decide what to do with the time that is given to us.' -Gandalf",
     }
 
-    return quotes[str(random.randrange(20))]
-
-
+    return quotes[str(random.randrange(22))]
 
 # ================================================================
 #   Name:           get_recommended_posts
