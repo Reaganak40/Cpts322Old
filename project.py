@@ -229,6 +229,11 @@ def fill_db():
     db.session.add(new_user)
     print("Debug: Added New Faculty: [sakire]")
 
+    # User: sakire | Faculty
+    new_user = create_user1('Faculty', 'kc', 'kcwang@wsu.edu', 'abc', '121212121')
+    db.session.add(new_user)
+    print("Debug: Added New Faculty: [kc]")
+
     # User: reagan | Student
     new_user = create_user2('Student', 'reagan', 'reagan.kelley@wsu.edu', 'abc', '11663871', 'Reagan', 'Kelley', '2094804983', 
                             'Computer Science', ['Machine Learning', 'Robotics', 'Circuit Design', 'Unix-Linux Systems'], 
@@ -290,11 +295,11 @@ def fill_db():
     print("Debug: Added New Post: [Everyone Loves Checkers]")
 
     # Post:
-    faculty_user = User.query.filter_by(username = 'andy').first()
-    newPost = create_post(faculty_user, 'Test Post', 
-                            "Description", 
-                            ['Computer Science', 'Electrical Engineering'],
-                            ['Unix-Linux Systems', 'Mobile Devices'], '40', 
+    faculty_user = User.query.filter_by(username = 'kc').first()
+    newPost = create_post(faculty_user, 'Research Position', 
+                            "Performs research activities and analysis; implements, evaluates and recommends adjustments to research procedures. Records observations and measurements and analyzes results. Responsible for synthesizing and independently preparing results for publication. Works under general supervision with a significant degree of creativity and latitude. May coordinate research operations and the daily activities of junior research personnel.", 
+                            ['Computer Engineering', 'Mechanical Engineering'],
+                            ['Robotics', 'Mobile Devices', 'Circuit Design'], '20-30', 
                             datetime.datetime(2022, 6, 2),
                             datetime.datetime(2022, 8, 28)
                             )
