@@ -46,47 +46,37 @@
                     <form action = "{{url_for('routes.updateposition', post_id = post.id)}}" method="get">
                     <input type ="submit", value="Manage Post", class="manage_button">
                     </form>
+            {% endif %}
+                    
+                    
+            {% if current_user.get_user_type() == 'student' %}
+                    {% if current_user.has_applied(post) == false %}
+                        <form action = "{{url_for('routes.submit_application', postid = post.id)}}" method="post">
+                            <input type="submit", value="Send Application", class="apply_button">
+                        </form>
+                    {% else %}
+
+                        {% if current_user.get_status(post) == 'Pending' %}
+                        
+                        <form action = "{{url_for('routes.unapply', postid = post.id)}}" method="post">
+                            <input type="submit", value="Withdraw Application", class="unapply_button">
+                        </form>
+        
+                        {% endif %}
+
                     {% endif %}
                     
-                    
-                    {% if current_user.get_user_type() == 'student' %}
-                    {% if current_user.has_applied(post) == false %}
-                    <form action = "{{url_for('routes.submit_application', postid = post.id)}}" method="post">
-                        <input type="submit", value="Send Application", class="apply_button">
-                    </form>
-                    
-                    
-                    {% elif current_user.get_status(post) == 'Pending' %}
-                    
-                    <form action = "{{url_for('routes.unapply', postid = post.id)}}" method="post">
-                        <input type="submit", value="Withdraw Application", class="unapply_button">
-                    </form>
+            {% endif %}
 
-                    
-                    {% elif current_user.get_status(post) ==  'Reject' %}
-                    
-                    <p style="color:rgb(255, 0, 51); position: absolute; left:15%"> Rejected </p>
-                    
-    
-                    {% elif current_user.get_status(post) == 'Interview' %}
-    
-                    <p style="color:#e2d415; position: absolute; left:15%"> Approved for Interview </p>
 
-                    {% elif current_user.get_status(post) == 'Hired' %}
-
-                    <p style="color:#79d379; position: absolute; left:15%"> Hired </p>
-
-                 {% endif %}
-
-                 {% endif %}
 
             <!-- KEEP THIS HIDDEN ------------------------- -->
             <style>
-                h3.a {
+                h2.a {
                     visibility: hidden;
                 }
             </style>
-            <h3 class="a">hello <br> hello </h3>
+            <h2 class="a">hello </h2>
             <!-- ------------------------------------------- -->
 
         </th>

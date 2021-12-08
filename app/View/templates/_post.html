@@ -8,7 +8,7 @@
 # ================================================================
 -->
 
-<table class = "posttable" style = "width:90%;" valign="top" >
+<table class = "posttable" style = "width:91%;" valign="top" >
     <tr> 
         <!-- Print Job Title -->
         <td colspan="3"><div class="posttitle"> {{post.title}} </div>
@@ -89,8 +89,32 @@
                  
                 <div style = "margin-left: 1%; margin-bottom: 0%; "> <br><b>Posted by:</b> <br> <br> Username: <span class = "useritem">{{post.writer.username }}</span> <br> Email: {{post.writer.email}} 
                 </div>
+                
+                {% if current_user.get_user_type() == 'student' %}
+                {% if current_user.has_applied(post) == true %}
+                
+                {% if current_user.get_status(post) ==  'Reject' %}
+                
+                <span style="color:rgb(255, 0, 51); position: absolute; left:15.25%; margin-top: 0.35%;"> Rejected </span>
+                
+
+                {% elif current_user.get_status(post) == 'Interview' %}
+
+                <span style="color:#e2d415; position: absolute; left:15.25%; margin-top: 0.35%;"> Approved for Interview </span>
+
+                {% elif current_user.get_status(post) == 'Hired' %}
+
+                <span style="color:#79d379; position: absolute; left:15.25%; margin-top: 0.35%;"> Hired </span>
+                
+               
+                {% endif %}
                 <br>
-                <br><br>
+
+                {% endif %}
+                {% endif %}
+
+
+
                 
                  </div>
              </div> 
