@@ -12,7 +12,7 @@ class TestConfig(Config):
     DEBUG = True
     TESTING = True
 
-pytest.fixture(scope='module')
+@pytest.fixture(scope='module')
 def test_client():
     flask_app = create_app(config_class = TestConfig)
 
@@ -105,7 +105,7 @@ def init_majors_and_fields():
         pass
     pass
 
-@pytest.fixture
+@pytest.fixture(scope='module')
 def init_database(): # Initializes the database
     db.create_all()
     init_majors_and_fields()
@@ -124,63 +124,62 @@ def test_register_page(test_client): # Tests the register page
     assert response.status_code == 200
     assert b"Register" in response.data
 
-# def test_register(test_client, init_database): # Tests the register function
-#     response = test_client.post('/register', data = dict(username = 'reagan', wsu_id = '333333333', email = 'reagan.kelley@wsu.edu', user_type = 'Student', password = "abc", password2 = "abc"), follow_redirects = True)
-#     assert response.status_code == 200
+def test_register(test_client, init_database): # Tests the register function
+    response = test_client.post('/register', data = dict(username = 'joe', wsu_id = '918273645', email = 'joe.kelley@wsu.edu', 
+                                                    type = 0, password = "abc", password2 = "abc"), follow_redirects = True)
+    assert response.status_code == 200
 
-#     reg = db.session.query(User).filter(User.username == 'reagan')
-#     assert reg.count() == 1
-#     assert reg.first().wsu_id == '333333333'
-#     assert reg.first().email == 'reagan.kelley@wsu.edu'
-#     assert reg.first().user_type == 'Student'
-#     assert b"Sign In" in response.data   
-#     assert b"Please log in to access this page." in response.data
+    reg = User.query.filter_by(username = 'joe')
+    assert reg.count() == 1
+    assert reg.first().wsu_id == '918273645'
+    assert reg.first().email == 'joe.kelley@wsu.edu'
+    assert reg.first().user_type == 'student'
+    assert response.status_code == 200  
+    assert b"You are registered! Please fill in your profile information."
 
-# def test_login_page(test_client): # Tests the login page
-#     response = test_client.get('/login')
-#     assert response.status_code == 200
-#     assert b"Login" in response.data
+def test_login_page(test_client): # Tests the login page
+    response = test_client.get('/login')
+    assert response.status_code == 200
+    assert b"Login" in response.data
 
-# def test_logout_page(test_client): # Tests the logout page
-#     response = test_client.get('/logout')
-#     assert response.status_code == 200
-#     assert b"Logout" in response.data
+def test_logout_page(test_client): # Tests the logout page
+    response = test_client.get('/logout')
+    assert response.status_code == 302
 
-# def test_invalidlogin(test_client,init_database): # Tests for invalid login
-#     response1 = test_client.post('/login', data = dict(username='denise', password = '321'), follow_redirects = True)
-#     assert response1.status_code == 200
-#     assert b"Invalid username or password" in response1.data
+def test_invalidlogin(test_client,init_database): # Tests for invalid login
+    response = test_client.post('/register', data = dict(username = 'andy', wsu_id = '234345456', email = 'andy.majoris@wsu.edu', 
+                                                    type = 1, password = "abc", password2 = "abc"), follow_redirects = True)
 
-#     response2 = test_client.post('/login', data = dict(username = 'sakire', password = 'cba'), follow_redirects = True)
-#     assert response2.status_code == 200
-#     assert b"Invalid username or password" in response2.data
+    response1 = test_client.post('/login', data = dict(username='joe', password = '321'), follow_redirects = True)
+    assert response1.status_code == 200
+    assert b"Invalid username or password" in response1.data
 
-# def test_login_logout(request,test_client,init_database): # Tests for logging in and logging out
-#     response1 = test_client.post('/login', data = dict(username = 'sakire', password = 'abc'), follow_redirects = True)
-#     assert response1.status_code == 200
-#     assert b"Welcome to Lab Opportunities!" in response1.data
+    response2 = test_client.post('/login', data = dict(username = 'andy', password = 'cba'), follow_redirects = True)
+    assert response2.status_code == 200
+    assert b"Invalid username or password" in response2.data
 
-#     response1 = test_client.get('/logout', follow_redirects = True)
-#     assert response1.status_code == 200
-#     assert b"Sign In" in response1.data
-#     assert b"Please log in to access this page." in response1.data
+def test_login_logout(request,test_client,init_database): # Tests for logging in and logging out
+    response1 = test_client.post('/login', data = dict(username = 'andy', password = 'abc'), follow_redirects = True)
+    assert response1.status_code == 200
 
-#     response2 = test_client.post('/login', data = dict(username = 'denise', password = '123'), follow_redirects = True)
-#     assert response2.status_code == 200
-#     assert b"Welcome to Lab Opportunities!" in response2.data
+    response1 = test_client.get('/logout', follow_redirects = True)
+    assert response1.status_code == 200
+    assert b"Sign In" in response1.data
+    assert b"Please log in to access this page." in response1.data
 
-#     response2 = test_client.get('/logout', follow_redirects = True)
-#     assert response2.status_code == 200
-#     assert b"Sign In" in response2.data
-#     assert b"Please log in to access this page." in response2.data
+    response2 = test_client.post('/login', data = dict(username = 'joe', password = '123'), follow_redirects = True)
+    assert response2.status_code == 200
+
+    response2 = test_client.get('/logout', follow_redirects = True)
+    assert response2.status_code == 200
+    assert b"Sign In" in response2.data
+    assert b"Please log in to access this page." in response2.data
 
 # def test_index_page(test_client): # Tests the index page
 #     response1 = test_client.get('/')
 #     response2 = test_client.get('/index')
-#     assert response1.status_code == 200
-#     assert response2.status_code == 200
-#     assert b"Welcome to Lab Opportunities!" in response1.data
-#     assert b"Welcome to Lab Opportunities!" in response2.data
+#     assert response1.status_code == 302
+#     assert response2.status_code == 302
 
 # def test_index_posts(test_client): # Tests if index shows posts
 #     pass
@@ -191,7 +190,7 @@ def test_register_page(test_client): # Tests the register page
 
 # def test_profile_page(test_client): # Tests the student profile page
 #     response = test_client.get('/student_profile')
-#     assert response.status_code == 200
+#     assert response.status_code == 302
 
 # def test_profile_access(test_client): # Tests if only student users can access profile page.
 #     response1 = test_client.post('/login', data = dict(username='denise', password = '321'), follow_redirects = True)

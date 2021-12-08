@@ -175,6 +175,7 @@ def create_user2(user_type, username, email, password, wsu_id, first_name, last_
     new_user.prior_research = prior_research
     
     return new_user
+
 # ================================================================
 #   Name:           Fill Database
 #   Description:    If in debug fills database with data
