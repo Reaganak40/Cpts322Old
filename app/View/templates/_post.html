@@ -44,11 +44,38 @@
             <br>
             <!-- Print Major Tags --> <a style = "margin-left: 0.75%" class = "fa fa-mortar-board"></a>
             {% for major in post.get_majors().all() %}
-                <b class= "posttags"></div>{{ major.get_major_name() }} </b> 
+                    {% if current_user.get_user_type() == 'student' %}
+                        
+                        {% if major.id == current_user.major  %}
+                        <b class= "matchtags"></div>{{ major.get_major_name() }} </b>
+
+                        {% else %}
+                        <b class= "posttags"></div>{{ major.get_major_name() }} </b> 
+                        {% endif %}
+                
+                    {% else %}
+                    <b class= "posttags"></div>{{ major.get_major_name() }} </b> 
+
+                    {% endif %}
+                
             {% endfor %}
+
+            
+
             <br> <br> <a style = "margin-left: 1%" class ="fa fa-lightbulb-o"></a>
             {% for field in post.get_fields().all() %}
-                <b class= "fieldtags"></div>{{ field.get_name() }}</b> 
+                    {% if current_user.get_user_type() == 'student' %}
+                    
+                        {% if field in current_user.fields %}
+                        <b class= "matchtags"></div>{{ field.get_name() }} </b>
+
+                        {% else %}
+                        <b class= "fieldtags"></div>{{ field.get_name() }} </b> 
+                        {% endif %}
+                    {% else %}
+                    <b class= "fieldtags"></div>{{ field.get_name() }}</b> 
+                    
+                    {% endif %}
             {% endfor %}
             
             

@@ -20,7 +20,7 @@
         
         <div style="margin-left: 15%;">
             <!--Displays the form item for the post's `title`.--> 
-            <b>{{ form.title.label }} </b><br>
+            <b style = "font-family: sans-serif;">{{ form.title.label }} </b><br>
             {{ form.title(class="formtitle") }}<br><br>
 
 
@@ -30,7 +30,7 @@
             {% endfor %}
 
             <!--Displays the form item for the post's ` body`.-->   
-            <b >{{ form.body.label }}</b><br> <br>
+            <b style = "font-family: sans-serif;">{{ form.body.label }}</b><br> <br>
             {{ form.body(class="formbody") }}<br><br>
             
             <!-- Body Form Errors -->   
@@ -39,7 +39,7 @@
             {% endfor %}
 
             <!--Displays the form item for the post's ` time commitment`.-->   
-            <b>{{ form.time_commitment.label }}</b><br>
+            <b style = "font-family: sans-serif;">{{ form.time_commitment.label }}</b><br>
             {{ form.time_commitment(class="formtitle") }}<br><br>
             
             <!-- Time Commitment Form Errors -->   
@@ -48,7 +48,7 @@
             {% endfor %}
 
             <!--Displays the form item for the post's `start & end date`.-->   
-            <b>{{ form.start_date.label }} and {{ form.end_date.label }} (MM/DD/YYYY)</b><br>
+            <b style = "font-family: sans-serif;">{{ form.start_date.label }} and {{ form.end_date.label }} (MM/DD/YYYY)</b><br>
             {{ form.start_date(class="formtitle")}}  to  {{ form.end_date(class="formtitle") }}<br><br>
             
             <!-- Start Date Form Errors -->   

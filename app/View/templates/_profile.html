@@ -49,14 +49,14 @@
 {% endif %}
 
 
-<p style="margin-left: 15%; font-size: 25;"><i class = "fa fa-lightbulb-o"> Interested Research Topics: <br> <br>
+<p style="margin-left: 15%; font-size: 25;"> <i class = "fa fa-lightbulb-o" > Interested Research Topics: <br> <br>
 
     {% for field in profile.fields %}
-        - {{  field.get_name() }} <br>
+    <span class = "field_name" > - {{ field.get_name()}}  <br></span>
     {% endfor %}
 </i></p>
 
-<br>
+
 {% if profile.elect_courses %}
 <p style="margin-left: 15%; font-size: 25;"><i class = "fa fa-book"> Technical Elective Courses: <br> <br>{{ profile.elect_courses }} </i></p>
 {% else %}
